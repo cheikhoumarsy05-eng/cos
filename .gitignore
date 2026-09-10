@@ -33,3 +33,7 @@ yarn-error.log*
 !.vscode/extensions.json
 .idea
 
+
+# local database/tools
+backup-local.sql
+reset-db.mjs

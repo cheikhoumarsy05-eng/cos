@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# First-time setup: deps, .env, DB schema. Safe to re-run (idempotent).
+# First-time setup: deps, .env, DB schema, seed content. Safe to re-run (idempotent).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -47,8 +47,15 @@ else
   fi
   if yes N | pnpm migrate; then
     echo "Migrations applied."
+    # Seed content so the site isn't blank on first run (idempotent — skips anything already present).
+    step "Seeding initial content"
+    if pnpm seed; then
+      echo "Content seeded."
+    else
+      echo "Seeding failed — run it later with: pnpm seed"
+    fi
   else
-    echo "Migrations skipped or failed. On a fresh DB run: pnpm migrate"
+    echo "Migrations skipped or failed. On a fresh DB run: pnpm migrate && pnpm seed"
     echo "(If prompted about dev-mode data loss, that DB was already dev-pushed — a fresh clone won't hit this.)"
   fi
 fi

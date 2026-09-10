@@ -31,16 +31,16 @@ Both are required. `PAYLOAD_SECRET` signs auth tokens — keep it secret and sta
 First time, from a fresh clone (requires a running PostgreSQL server):
 
 ```bash
-pnpm setup          # installs deps, creates .env (with a generated PAYLOAD_SECRET), creates the database, runs migrations
+pnpm setup          # installs deps, creates .env (with a generated PAYLOAD_SECRET), creates the database, runs migrations, seeds content
 ```
 
-`pnpm setup` will create the database automatically if the Postgres CLI (`createdb`) is installed. It does not install or start the Postgres server itself — that must already be running.
+`pnpm setup` will create the database automatically if the Postgres CLI (`createdb`) is installed. It does not install or start the Postgres server itself — that must already be running. After migrations it seeds the initial content, so the site isn't blank on first run.
 
 Edit `.env` and set `DATABASE_URI` to your Postgres connection string (setup will remind you). Then:
 
 ```bash
-pnpm migrate        # if setup skipped it because the DB wasn't configured yet
-pnpm dev            # http://localhost:3000  (admin at /admin)
+pnpm migrate && pnpm seed   # if setup skipped them because the DB wasn't configured yet
+pnpm dev                    # http://localhost:3000  (admin at /admin)
 ```
 
 Or do it manually:
@@ -48,15 +48,16 @@ Or do it manually:
 ```bash
 pnpm install
 cp .env.example .env   # then fill in DATABASE_URI and PAYLOAD_SECRET
+pnpm migrate && pnpm seed
 pnpm dev
 ```
 
-In development, Payload auto-syncs the DB schema, so no manual migration step is needed to start.
+Without seeding, the frontend renders empty — all sections (hero, about, projects, experience, etc.) come from Payload, so a fresh database shows nothing until `pnpm seed` runs.
 
-Optional first-run helpers:
+Optional:
 
 ```bash
-pnpm seed           # seed initial content (loads .env)
+pnpm seed           # (re)seed initial content — idempotent, safe to re-run
 ```
 
 ## Scripts
@@ -72,7 +73,7 @@ pnpm seed           # seed initial content (loads .env)
 | `pnpm migrate:create <name>` | Generate a new migration from schema changes |
 | `pnpm generate:types` | Regenerate `src/payload-types.ts` |
 | `pnpm generate:importmap` | Regenerate the admin import map |
-| `pnpm seed` | Seed content (`node --env-file=.env src/seed.ts`) |
+| `pnpm seed` | Seed/refresh initial content (idempotent). Uses `payload run` |
 
 > The `payload` / `migrate*` scripts do **not** auto-load `.env`. For local migrate/status commands, prefix them:
 > ```bash

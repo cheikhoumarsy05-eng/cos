@@ -35,6 +35,16 @@ if [ -z "${DATABASE_URI:-}" ] || printf '%s' "$DATABASE_URI" | grep -q 'user:pas
   echo "DATABASE_URI is not configured yet — skipping migrations."
   echo "Edit .env, then run: pnpm migrate"
 else
+  # Create the database itself if the Postgres CLI is available (harmless if it already exists).
+  if command -v createdb >/dev/null; then
+    if createdb "$DATABASE_URI" 2>/dev/null; then
+      echo "Database created."
+    else
+      echo "Database already exists or couldn't be created — continuing."
+    fi
+  else
+    echo "createdb not found — assuming the database already exists (skip if using Docker/cloud Postgres)."
+  fi
   if yes N | pnpm migrate; then
     echo "Migrations applied."
   else

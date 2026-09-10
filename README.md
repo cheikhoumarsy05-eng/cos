@@ -28,11 +28,13 @@ Both are required. `PAYLOAD_SECRET` signs auth tokens — keep it secret and sta
 
 ## Getting started (local)
 
-First time, from a fresh clone:
+First time, from a fresh clone (requires a running PostgreSQL server):
 
 ```bash
-pnpm setup          # installs deps, creates .env (with a generated PAYLOAD_SECRET), runs migrations
+pnpm setup          # installs deps, creates .env (with a generated PAYLOAD_SECRET), creates the database, runs migrations
 ```
+
+`pnpm setup` will create the database automatically if the Postgres CLI (`createdb`) is installed. It does not install or start the Postgres server itself — that must already be running.
 
 Edit `.env` and set `DATABASE_URI` to your Postgres connection string (setup will remind you). Then:
 
@@ -61,7 +63,7 @@ pnpm seed           # seed initial content (loads .env)
 
 | Script | Description |
 | --- | --- |
-| `pnpm setup` | First-time setup: install deps, create `.env`, run migrations |
+| `pnpm setup` | First-time setup: install deps, create `.env`, create the database, run migrations |
 | `pnpm dev` | Next dev server on port 3000 |
 | `pnpm build` | Production build |
 | `pnpm start` | Serve the production build (port 3000) |

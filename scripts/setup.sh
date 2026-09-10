@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# First-time setup: deps, .env, DB schema. Safe to re-run (idempotent).
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+step() { printf '\n\033[1m==> %s\033[0m\n' "$1"; }
+
+# 1. Tooling
+command -v pnpm >/dev/null || { echo "pnpm not found. Install: npm i -g pnpm (or corepack enable)"; exit 1; }
+
+# 2. Dependencies
+step "Installing dependencies"
+pnpm install
+
+# 3. .env (never clobber an existing one)
+if [ -f .env ]; then
+  step ".env already exists — leaving it untouched"
+else
+  step "Creating .env from .env.example"
+  cp .env.example .env
+  # Generate a secret if the placeholder is still blank.
+  if grep -q '^PAYLOAD_SECRET=$' .env; then
+    secret="$(node -e 'console.log(require("crypto").randomBytes(32).toString("hex"))')"
+    # portable in-place edit (BSD + GNU sed)
+    sed -i.bak "s|^PAYLOAD_SECRET=.*|PAYLOAD_SECRET=$secret|" .env && rm -f .env.bak
+    echo "Generated PAYLOAD_SECRET."
+  fi
+  echo "Set DATABASE_URI in .env to your Postgres connection string before continuing."
+fi
+
+# 4. Migrations — only if the DB is reachable; otherwise tell the user, don't fail the whole setup.
+step "Applying database migrations"
+set -a; . ./.env; set +a
+if [ -z "${DATABASE_URI:-}" ] || printf '%s' "$DATABASE_URI" | grep -q 'user:password@'; then
+  echo "DATABASE_URI is not configured yet — skipping migrations."
+  echo "Edit .env, then run: pnpm migrate"
+else
+  if yes N | pnpm migrate; then
+    echo "Migrations applied."
+  else
+    echo "Migrations skipped or failed. On a fresh DB run: pnpm migrate"
+    echo "(If prompted about dev-mode data loss, that DB was already dev-pushed — a fresh clone won't hit this.)"
+  fi
+fi
+
+step "Done. Start the app with: pnpm dev"

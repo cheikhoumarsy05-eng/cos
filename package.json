@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@9.12.0",
   "scripts": {
+    "setup": "bash scripts/setup.sh",
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",

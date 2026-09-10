@@ -28,9 +28,25 @@ Both are required. `PAYLOAD_SECRET` signs auth tokens — keep it secret and sta
 
 ## Getting started (local)
 
+First time, from a fresh clone:
+
+```bash
+pnpm setup          # installs deps, creates .env (with a generated PAYLOAD_SECRET), runs migrations
+```
+
+Edit `.env` and set `DATABASE_URI` to your Postgres connection string (setup will remind you). Then:
+
+```bash
+pnpm migrate        # if setup skipped it because the DB wasn't configured yet
+pnpm dev            # http://localhost:3000  (admin at /admin)
+```
+
+Or do it manually:
+
 ```bash
 pnpm install
-pnpm dev            # http://localhost:3000  (admin at /admin)
+cp .env.example .env   # then fill in DATABASE_URI and PAYLOAD_SECRET
+pnpm dev
 ```
 
 In development, Payload auto-syncs the DB schema, so no manual migration step is needed to start.
@@ -45,6 +61,7 @@ pnpm seed           # seed initial content (loads .env)
 
 | Script | Description |
 | --- | --- |
+| `pnpm setup` | First-time setup: install deps, create `.env`, run migrations |
 | `pnpm dev` | Next dev server on port 3000 |
 | `pnpm build` | Production build |
 | `pnpm start` | Serve the production build (port 3000) |

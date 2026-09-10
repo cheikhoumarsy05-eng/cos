@@ -1,6 +1,6 @@
+import config from "@payload-config";
 import { getPayload } from "payload";
-import config from "./payload.config";
-import { projects as projectData } from "./data/projects";
+import { projects as projectData } from "./data/projects.js";
 
 const ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL || "cheikhoumarsy05@gmail.com";
 const ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD || "changeme123";
@@ -145,7 +145,13 @@ const run = async () => {
   } });
 
   payload.logger.info("✅ Seed complete.");
-  process.exit(0);
 };
 
-run().catch((e) => { console.error(e); process.exit(1); });
+// Top-level await so `payload run` (which does `await import(file)`) waits for the
+// async work to finish before the process exits. A fire-and-forget `run()` exits early.
+try {
+  await run();
+} catch (e) {
+  console.error("Seed failed:", e);
+  process.exit(1);
+}

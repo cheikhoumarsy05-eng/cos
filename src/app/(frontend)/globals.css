@@ -154,6 +154,12 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .about-portrait .cap { margin-top: 10px; font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--stone-2); }
 .metrics { display: none; }
 .facts { margin-top: clamp(24px, 4vw, 36px); }
+
+/* ABOUT KPIS */
+.about-kpis { border-top: 3px solid var(--ink); }
+.kpi { padding: clamp(20px, 3vw, 32px) 0; border-bottom: 1px solid var(--line); }
+.kpi-n { display: block; font-family: var(--font-display); font-weight: 900; font-variant-numeric: tabular-nums; font-size: clamp(60px, 8vw, 104px); line-height: 0.84; letter-spacing: -0.04em; color: var(--accent); }
+.kpi-l { display: block; font-family: var(--font-display); font-weight: 700; font-size: clamp(11px, 1.2vw, 14px); letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone-2); margin-top: 10px; line-height: 1.4; }
 .facts .row { display: grid; grid-template-columns: 38% 1fr; gap: 16px; padding: 13px 0; border-top: 1px solid var(--line); }
 .facts .row:last-child { border-bottom: 1px solid var(--line); }
 .facts .k { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone-2); }

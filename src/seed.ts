@@ -36,9 +36,9 @@ const run = async () => {
   // 3. experience
   if ((await payload.find({ collection: "experience", limit: 1 })).totalDocs === 0) {
     const xp = [
-      { when: "Juin–Août 2026 · Août–Oct 2025", role: "Stagiaire Ingénieur — Bureau de Contrôle Technique", org: "SEATEC Sénégal", points: ["Vérification des plans de coffrage et de ferraillage selon le BAEL.", "Vérification des notes de calcul sous Robot Structural Analysis (RSA).", "Contrôle qualité sur chantier et rédaction de rapports techniques."] },
-      { when: "Août–Sept 2024", role: "Stagiaire Conducteur de Travaux — Plomberie", org: "SENTRA BTP SA", points: ["Suivi des travaux de plomberie sur un programme de 222 villas.", "Supervision du gros œuvre d'une villa R+3."] },
-      { when: "Juin–Juil 2023", role: "Stagiaire Conducteur de Travaux", org: "SENTRA BTP SA", points: ["Fondations d'un immeuble R+7 avec sous-sol.", "Coordination des équipes sur site."] },
+      { when: "Juin–Août 2026 · Août–Oct 2025", role: "Stagiaire Ingénieur — Bureau de Contrôle Technique", org: "SEATEC Sénégal", points: ["Vérification des plans de coffrage et de ferraillage selon le BAEL.", "Vérification des notes de calcul.", "Contrôle qualité sur chantier et rédaction de rapports techniques."] },
+      { when: "Août–Sept 2024", role: "Stagiaire Conducteur de Travaux — Plomberie", org: "SENTRA BTP SA", points: ["Suivi des travaux de plomberie sur un programme de 222 villas.", "Supervision des travaux du gros œuvre d'une villa R+3.", "Gestion des approvisionnements et établissement des attachements."] },
+      { when: "Juin–Juil 2023", role: "Stagiaire Conducteur de Travaux", org: "SENTRA BTP SA", points: ["Suivi des travaux de fondation d'un immeuble R+7 avec sous-sol.", "Supervision et coordination des équipes sur chantier.", "Gestion des stocks et approvisionnement en matériaux."] },
     ];
     await Promise.all(xp.map((e, order) => payload.create({ collection: "experience", data: { order, when: e.when, role: e.role, org: e.org, points: e.points.map((value) => ({ value })) } })));
     payload.logger.info("Seeded experience");
@@ -83,7 +83,7 @@ const run = async () => {
       { value: "Ingénieur de conception en génie civil orienté structures, je travaille le dimensionnement en béton armé et charpente métallique selon les Eurocodes et le BAEL, la vérification de conformité en bureau de contrôle technique, et la dynamique des structures. Je développe aussi mes propres outils de calcul sous Python pour automatiser l'analyse et le dimensionnement." },
       { value: "Polyvalent entre le bureau d'études et le terrain, j'ai suivi des chantiers de gros œuvre et de plomberie et mené une publication scientifique sur l'analyse dynamique des ponts ferroviaires à grande vitesse." },
     ],
-    statYears: "3+ ans", statProjects: "5 projets", statPublication: "1 publication", statNote: "Zenodo, 2026",
+    statYears: "3+ ans", statProjects: "20+ projets", statPublication: "1 publication", statNote: "Zenodo, 2026",
     portraitSrc: "/img/portrait.webp", portraitFallback: "/img/portrait.jpg",
     portraitAlt: "Cheikh Oumar Sy, ingénieur en génie civil",
     facts: [

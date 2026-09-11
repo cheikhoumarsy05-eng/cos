@@ -1,6 +1,5 @@
 import Interactions from "./components/Interactions";
 import Projects from "./components/Projects";
-import Image from "next/image";
 import { getContent, mediaUrl, mediaAlt, toProject } from "./lib/content";
 import type { Project } from "@/data/projects";
 
@@ -21,10 +20,6 @@ export default async function Home() {
   const site = c.site as any;
   const st = site.sectionTitles ?? {};
 
-  const heroImg = mediaUrl(hero.image) ?? hero.imageSrc;
-  const heroImgAlt = mediaAlt(hero.image) ?? hero.imageAlt;
-  const portraitImg = mediaUrl(about.portrait) ?? about.portraitSrc;
-  const portraitAlt = mediaAlt(about.portrait) ?? about.portraitAlt;
 
   // normalize CMS project docs into the component's shape
   const projects: Project[] = (c.projects as any[]).map(toProject);
@@ -85,13 +80,7 @@ export default async function Home() {
                   <a className="btn btn-primary arrow" href="#projets">Voir les projets</a>
                   <a className="btn btn-outline" href={site.cvUrl} target="_blank" rel="noopener">Télécharger le CV</a>
                 </div>
-              </div>
-              <div className="hero-media">
-                <div className="frame">
-                  <Image src={heroImg} alt={heroImgAlt} fill priority sizes="(max-width: 900px) 100vw, 640px" style={{ objectFit: "cover" }} />
-                </div>
-                <div className="cap"><span>{hero.imageCaption}</span><span>{hero.imageYear}</span></div>
-              </div>
+              </div></div>
             </div>
             <div className="hero-strip">
               <div className="item"><span className="k">Statut</span><span className="v avail"><span className="dot" aria-hidden="true" />{hero.availability}</span></div>
@@ -109,20 +98,19 @@ export default async function Home() {
               <div className="reveal">
                 <p className="about-lead">{about.lead}</p>
                 {(about.body ?? []).map((b: any) => <p className="about-body" key={b.id ?? b.value}>{b.value}</p>)}
-                <p className="about-stat">
-                  <span>{about.statYears}</span> terrain &amp; bureau d&apos;études.{" "}
-                  <span>{about.statProjects}</span> de conception, contrôle &amp; recherche.{" "}
-                  <span>{about.statPublication}</span> scientifique — <em>{about.statNote}</em>.
-                </p>
               </div>
-              <div className="about-portrait reveal">
-                <div className="frame">
-                  <Image src={portraitImg} alt={portraitAlt} fill sizes="(max-width: 900px) 100vw, 420px" style={{ objectFit: "cover" }} />
+              <div className="about-kpis reveal">
+                <div className="kpi">
+                  <span className="kpi-n">20+</span>
+                  <span className="kpi-l">Projets de conception</span>
                 </div>
-                <div className="facts">
-                  {(about.facts ?? []).map((f: any) => (
-                    <div className="row" key={f.id ?? f.k}><span className="k">{f.k}</span><span className="v">{f.v}</span></div>
-                  ))}
+                <div className="kpi">
+                  <span className="kpi-n">20+</span>
+                  <span className="kpi-l">Examens de plans effectués</span>
+                </div>
+                <div className="kpi">
+                  <span className="kpi-n">20+</span>
+                  <span className="kpi-l">Étudiants &amp; professionnels formés en calcul structure</span>
                 </div>
               </div>
             </div>

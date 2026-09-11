@@ -6,7 +6,7 @@ import type { Project } from "@/data/projects";
 
 // ISR: render from cache, revalidate periodically. Content stays editable via
 // /admin; changes appear within the revalidate window (or on manual revalidate).
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const c = await getContent();

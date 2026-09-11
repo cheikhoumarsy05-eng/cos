@@ -249,7 +249,7 @@ export default async function Home() {
                 <h3 className="contact-title">{contact.title}</h3>
                 <p className="contact-lead">{contact.lead}</p>
                 <div className="hero-actions" style={{ marginTop: 28 }}>
-                  <a className="btn btn-ink arrow" href={`mailto:${contact.email}?subject=Stage%20Ing%C3%A9nieur%20Structures`}>Écrire un e-mail</a>
+                  <a className="btn btn-ink arrow" href={`mailto:${contact.email}?subject=${encodeURIComponent("Prise de contact — Ingénieur génie civil")}`}>Écrire un e-mail</a>
                   <a className="btn btn-outline" href={site.cvUrl} target="_blank" rel="noopener">Télécharger le CV</a>
                 </div>
               </div>

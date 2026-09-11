@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidateHomeAfterChange, revalidateHomeAfterDelete } from "@/hooks/revalidateHome";
 
 export const Projects: CollectionConfig = {
   slug: "projects",
@@ -8,6 +9,7 @@ export const Projects: CollectionConfig = {
     group: "Contenu",
   },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateHomeAfterChange], afterDelete: [revalidateHomeAfterDelete] },
   fields: [
     { name: "index", type: "text", required: true, admin: { description: "Numéro d'index, ex. 01" } },
     { name: "order", type: "number", required: true, defaultValue: 0, admin: { description: "Ordre d'affichage (croissant)" } },

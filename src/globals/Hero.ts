@@ -1,9 +1,11 @@
 import type { GlobalConfig } from "payload";
+import { revalidateHomeAfterGlobalChange } from "@/hooks/revalidateHome";
 
 export const Hero: GlobalConfig = {
   slug: "hero",
   admin: { group: "Sections" },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateHomeAfterGlobalChange] },
   fields: [
     { name: "folioLabel", type: "text", required: true, defaultValue: "Portfolio · Ingénieur Structures" },
     { name: "nameLine1", type: "text", required: true, defaultValue: "Cheikh" },

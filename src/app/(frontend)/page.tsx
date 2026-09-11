@@ -4,9 +4,12 @@ import Image from "next/image";
 import { getContent, mediaUrl, mediaAlt, toProject } from "./lib/content";
 import type { Project } from "@/data/projects";
 
-// ISR: render from cache, revalidate periodically. Content stays editable via
-// /admin; changes appear within the revalidate window (or on manual revalidate).
-export const dynamic = "force-dynamic";
+// The homepage is statically prerendered for a fast TTFB. CMS edits appear
+// immediately: every collection/global has an afterChange/afterDelete hook
+// (src/hooks/revalidateHome.ts) that calls revalidatePath("/") on save, so the
+// static entry is invalidated on demand. `revalidate` is only a safety-net
+// fallback in case a write ever bypasses those hooks.
+export const revalidate = 3600;
 
 export default async function Home() {
   const c = await getContent();

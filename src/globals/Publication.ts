@@ -1,9 +1,11 @@
 import type { GlobalConfig } from "payload";
+import { revalidateHomeAfterGlobalChange } from "@/hooks/revalidateHome";
 
 export const Publication: GlobalConfig = {
   slug: "publication",
   admin: { group: "Sections" },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateHomeAfterGlobalChange] },
   fields: [
     { name: "title", type: "text", required: true },
     { name: "sub", type: "text", required: true, label: "Sous-titre" },

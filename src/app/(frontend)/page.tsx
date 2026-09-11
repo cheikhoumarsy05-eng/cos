@@ -80,7 +80,7 @@ export default async function Home() {
                   <a className="btn btn-primary arrow" href="#projets">Voir les projets</a>
                   <a className="btn btn-outline" href={site.cvUrl} target="_blank" rel="noopener">Télécharger le CV</a>
                 </div>
-              </div></div>
+              </div>
             </div>
             <div className="hero-strip">
               <div className="item"><span className="k">Statut</span><span className="v avail"><span className="dot" aria-hidden="true" />{hero.availability}</span></div>

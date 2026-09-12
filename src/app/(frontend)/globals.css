@@ -254,8 +254,10 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .contact { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(40px, 7vw, 88px); align-items: start; }
 @media (max-width: 860px) { .contact { grid-template-columns: 1fr; gap: 40px; } }
 /* Sous-titre du bloc contact : il vient APRÈS le titre de section, sa taille doit
-   donc lui rester inférieure — il montait jusqu'à 120 px contre 64 px pour le titre. */
-.contact-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(21px, 2.8vw, 32px); line-height: 1.1; letter-spacing: -0.01em; text-transform: uppercase; max-width: 26ch; }
+   donc lui rester nettement inférieure — il montait jusqu'à 120 px contre 64 px pour
+   le titre. Dimensionné pour tenir sur une seule ligne à toutes les largeurs, et
+   `nowrap` l'y tient quoi qu'il arrive. */
+.contact-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(15px, 1.9vw, 22px); line-height: 1.2; letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap; }
 .contact-lead { font-family: var(--font-body); font-size: clamp(15.5px, 1.6vw, 17.5px); line-height: 1.6; color: var(--ink-2); margin-top: 16px; max-width: 46ch; font-weight: 400; }
 .contact-coords .row { padding: 16px 0; border-top: 1px solid var(--line); }
 .contact-coords .row:last-child { border-bottom: 1px solid var(--line); }

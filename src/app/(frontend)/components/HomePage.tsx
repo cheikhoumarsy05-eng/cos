@@ -135,7 +135,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           <div className="wrap hero-grid">
             <div className="hero-top">
               <div>
-                <p className="hero-folio"><span className="hero-folio-n">00</span>{hero.folioLabel}</p>
+                <p className="hero-folio">{hero.folioLabel}</p>
                 <h1 className="hero-name">
                   {hero.nameLine1}<br />{hero.nameLine2} <span className="accent">{hero.nameAccent}</span>
                 </h1>

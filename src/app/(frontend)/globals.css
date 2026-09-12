@@ -46,10 +46,12 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .wrap { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
 .section { padding-block: clamp(64px, 10vw, 148px); position: relative; }
 /* Deux sections de même fond qui se suivent cumulent leurs marges, sans
-   changement de bande pour ponctuer l'écart : le creux se voit. On resserre le
-   haut de la seconde. Les passages d'une bande à l'autre gardent leur ampleur,
-   la rupture de couleur y occupant déjà l'espace. */
-.section:not([class*="band-"]) + .section:not([class*="band-"]) { padding-top: clamp(30px, 4vw, 60px); }
+   changement de bande pour ponctuer l'écart : le creux se voit. On resserre les
+   DEUX côtés — le bas de la première autant que le haut de la seconde, l'essentiel
+   du creux venant de la marge basse. Les passages d'une bande à l'autre gardent
+   leur ampleur, la rupture de couleur y occupant déjà l'espace. */
+.section:not([class*="band-"]):has(+ .section:not([class*="band-"])) { padding-bottom: clamp(26px, 3.4vw, 52px); }
+.section:not([class*="band-"]) + .section:not([class*="band-"]) { padding-top: clamp(26px, 3.4vw, 52px); }
 .band-paper2 { background: var(--paper-2); }
 .band-ink { background: var(--ink); color: var(--on-ink); }
 

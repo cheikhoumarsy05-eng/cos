@@ -193,10 +193,12 @@ const run = async () => {
   await payload.updateGlobal({ slug: "site", data: {
     brand: "Cheikh Oumar Sy", cvUrl: "/cv-cheikh-oumar-sy.pdf", footerNote: "Conçu à Dakar.",
     sectionTitles: {
-      about: "À propos", experience: "Expérience", experienceLead: "Bureau de contrôle, conduite de travaux, chantier.",
-      research: "Recherche appliquée", projects: "Projets",
+      about: "Chiffres & preuves", expertise: "Expertise",
+      experience: "Expérience", experienceLead: "Bureau de contrôle, conduite de travaux, chantier.",
+      research: "Recherche appliquée", projects: "Projets sélectionnés", projectsNav: "Projets",
       projectsLead: "Conception, modélisation et calcul de bâtiments résidentiels — du volume à l'élément.",
-      freelance: "Freelance", skills: "Compétences", education: "Formation", contact: "Contact",
+      freelance: "Freelance", skills: "Compétences", education: "Formation",
+      contact: "Un projet ou une opportunité ?", contactNav: "Contact",
     },
   } });
 

@@ -3,6 +3,7 @@ import * as migration_20260911_202253_stats_and_publications from './20260911_20
 import * as migration_20260912_020433_relax_image_text_fields from './20260912_020433_relax_image_text_fields';
 import * as migration_20260912_035121_expertise_hero_publication_metrics from './20260912_035121_expertise_hero_publication_metrics';
 import * as migration_20260912_040009_stat_years_default from './20260912_040009_stat_years_default';
+import * as migration_20260912_043752_experience_key_points from './20260912_043752_experience_key_points';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20260912_040009_stat_years_default.up,
     down: migration_20260912_040009_stat_years_default.down,
-    name: '20260912_040009_stat_years_default'
+    name: '20260912_040009_stat_years_default',
+  },
+  {
+    up: migration_20260912_043752_experience_key_points.up,
+    down: migration_20260912_043752_experience_key_points.down,
+    name: '20260912_043752_experience_key_points'
   },
 ];

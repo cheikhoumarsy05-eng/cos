@@ -249,9 +249,30 @@ export interface Experience {
   when: string;
   role: string;
   org: string;
+  /**
+   * Affichée après l'organisation. Laisser vide pour ne rien afficher.
+   */
+  city?: string | null;
+  /**
+   * 2 à 3 lignes, affichées avant les missions. Optionnel.
+   */
+  summary?: string | null;
   points?:
     | {
         value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Référentiels, outils et compétences mobilisés. Affichés sur une ligne, séparés par des points médians.
+   */
+  keyPoints?:
+    | {
+        value: string;
+        /**
+         * Pour les référentiels et normes, qui priment sur les logiciels.
+         */
+        strong?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -446,10 +467,19 @@ export interface ExperienceSelect<T extends boolean = true> {
   when?: T;
   role?: T;
   org?: T;
+  city?: T;
+  summary?: T;
   points?:
     | T
     | {
         value?: T;
+        id?: T;
+      };
+  keyPoints?:
+    | T
+    | {
+        value?: T;
+        strong?: T;
         id?: T;
       };
   updatedAt?: T;

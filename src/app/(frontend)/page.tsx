@@ -234,8 +234,19 @@ export default async function Home() {
                   <div className="xp-when">{e.when}</div>
                   <div>
                     <h3 className="xp-role">{e.role}</h3>
-                    <p className="xp-org">{e.org}</p>
+                    <p className="xp-org">{e.org}{e.city ? <span className="xp-city"> · {e.city}</span> : null}</p>
+                    {e.summary && <p className="xp-summary">{e.summary}</p>}
                     <ul className="xp-points">{(e.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
+                    {(e.keyPoints ?? []).length > 0 && (
+                      <div className="xp-keys">
+                        <span className="xp-keys-label">Points clés</span>
+                        <p className="xp-keys-list">
+                          {(e.keyPoints as any[]).map((k) => (
+                            <span className={"xp-key" + (k.strong ? " is-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
+                          ))}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

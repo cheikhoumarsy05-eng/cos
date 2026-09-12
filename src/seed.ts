@@ -36,11 +36,11 @@ const run = async () => {
   // 3. experience
   if ((await payload.find({ collection: "experience", limit: 1 })).totalDocs === 0) {
     const xp = [
-      { when: "Juin–Août 2026 · Août–Oct 2025", role: "Stagiaire Ingénieur — Bureau de Contrôle Technique", org: "SEATEC Sénégal", points: ["Vérification des plans de coffrage et de ferraillage selon le BAEL.", "Vérification des notes de calcul sous Robot Structural Analysis (RSA).", "Contrôle qualité sur chantier et rédaction de rapports techniques."] },
-      { when: "Août–Sept 2024", role: "Stagiaire Conducteur de Travaux — Plomberie", org: "SENTRA BTP SA", points: ["Suivi des travaux de plomberie sur un programme de 222 villas.", "Supervision du gros œuvre d'une villa R+3."] },
-      { when: "Juin–Juil 2023", role: "Stagiaire Conducteur de Travaux", org: "SENTRA BTP SA", points: ["Fondations d'un immeuble R+7 avec sous-sol.", "Coordination des équipes sur site."] },
+      { when: "Juin–Août 2026 · Août–Oct 2025", role: "Stagiaire Ingénieur — Bureau de Contrôle Technique", org: "SEATEC Sénégal", points: ["Vérification des plans de coffrage et de ferraillage selon le BAEL.", "Vérification des notes de calcul sous Robot Structural Analysis (RSA).", "Contrôle qualité sur chantier et rédaction de rapports techniques."], keys: [{ value: "Eurocodes", strong: true }, { value: "BAEL", strong: true }, { value: "DTU", strong: true }, { value: "RSA", strong: false }, { value: "Plans de coffrage & ferraillage", strong: false }, { value: "Notes de calcul", strong: false }, { value: "Contrôle chantier", strong: false }] },
+      { when: "Août–Sept 2024", role: "Stagiaire Conducteur de Travaux — Plomberie", org: "SENTRA BTP SA", points: ["Suivi des travaux de plomberie sur un programme de 222 villas.", "Supervision du gros œuvre d'une villa R+3."], keys: [{ value: "Suivi d'exécution", strong: false }, { value: "Lecture de plans", strong: false }, { value: "Réseaux plomberie", strong: false }, { value: "Contrôle chantier", strong: false }, { value: "Approvisionnement", strong: false }, { value: "Coordination", strong: false }] },
+      { when: "Juin–Juil 2023", role: "Stagiaire Conducteur de Travaux", org: "SENTRA BTP SA", points: ["Fondations d'un immeuble R+7 avec sous-sol.", "Coordination des équipes sur site."], keys: [{ value: "Gros œuvre", strong: false }, { value: "Lecture de plans", strong: false }, { value: "Suivi de chantier", strong: false }, { value: "Coordination", strong: false }, { value: "Contrôle d'exécution", strong: false }, { value: "Approvisionnement", strong: false }] },
     ];
-    await Promise.all(xp.map((e, order) => payload.create({ collection: "experience", data: { order, when: e.when, role: e.role, org: e.org, points: e.points.map((value) => ({ value })) } })));
+    await Promise.all(xp.map((e, order) => payload.create({ collection: "experience", data: { order, when: e.when, role: e.role, org: e.org, points: e.points.map((value) => ({ value })), keyPoints: e.keys } })));
     payload.logger.info("Seeded experience");
   }
 

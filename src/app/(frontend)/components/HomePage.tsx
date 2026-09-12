@@ -3,7 +3,8 @@ import Projects from "./Projects";
 import PublicationCarousel from "./PublicationCarousel";
 import Image from "next/image";
 import { getContent, mediaUrl, mediaAlt, toProject } from "../lib/content";
-import { dict, localeHref, LOCALES, type Locale } from "../lib/i18n";
+import LangSwitch from "./LangSwitch";
+import { dict, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
 import type { Project } from "@/data/projects";
 
@@ -93,15 +94,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           <nav className="nav-links" aria-label={t.mainNav}>
             {NAV.map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
           </nav>
-          <div className="lang-switch" role="group" aria-label={t.localeSwitchLabel}>
-            {LOCALES.map((l) =>
-              l === locale ? (
-                <span className="lang is-on" key={l} aria-current="true">{l.toUpperCase()}</span>
-              ) : (
-                <a className="lang" key={l} href={localeHref(l)} hrefLang={l} lang={l}>{l.toUpperCase()}</a>
-              )
-            )}
-          </div>
+          <LangSwitch locale={locale} label={t.localeSwitchLabel} />
           <a className="nav-cta" href={site.cvUrl} target="_blank" rel="noopener">CV</a>
           <button className="menu-toggle" id="menu-open" aria-label={t.openMenu} aria-controls="overlay-menu">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18 M3 12h18 M3 17h18" stroke="currentColor" strokeWidth="1.6" fill="none" /></svg>
@@ -122,16 +115,8 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           ))}
         </nav>
         <div className="overlay-foot">
-          {/* La barre du haut est masquée sous 900 px : le sélecteur de langue est repris ici. */}
-          <div className="lang-switch lang-switch-overlay" role="group" aria-label={t.localeSwitchLabel}>
-            {LOCALES.map((l) =>
-              l === locale ? (
-                <span className="lang is-on" key={l} aria-current="true">{l.toUpperCase()}</span>
-              ) : (
-                <a className="lang" key={l} href={localeHref(l)} hrefLang={l} lang={l}>{l.toUpperCase()}</a>
-              )
-            )}
-          </div>
+          {/* La barre du haut est masquée sous 860 px : le sélecteur est repris ici. */}
+          <LangSwitch locale={locale} label={t.localeSwitchLabel} variant="overlay" />
           <a href={site.cvUrl} target="_blank" rel="noopener">{t.downloadCv}</a>
           <a href={`mailto:${contact.email}`}>{contact.email}</a>
           <span>{contact.location}</span>

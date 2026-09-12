@@ -18,6 +18,12 @@ export function localeHref(locale: Locale): string {
   return locale === DEFAULT_LOCALE ? "/" : `/${locale}`;
 }
 
+/** Nom de chaque langue dans sa propre langue — jamais traduit. */
+export const LOCALE_NAMES: Record<Locale, string> = {
+  fr: "Français",
+  en: "English",
+};
+
 /* Le français fait référence : le type `Dict` en dérive, et l'anglais doit en
    reprendre toutes les clés — une omission devient une erreur de compilation. */
 const fr = {

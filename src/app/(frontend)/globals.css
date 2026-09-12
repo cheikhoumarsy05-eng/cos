@@ -75,20 +75,36 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .nav-cta:hover { background: var(--accent-2); }
 .menu-toggle { display: none; width: 46px; height: 46px; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 2px; }
 .menu-toggle svg { width: 22px; height: 22px; }
-/* Sélecteur de langue — FR / EN séparés d'une barre oblique, langue active à l'encre.
+/* Sélecteur de langue — un bouton qui déroule la liste des langues.
    Posé juste avant le bouton CV, il se colle à droite avec les autres commandes. */
-.lang-switch { display: flex; align-items: baseline; font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; }
+.lang-switch { position: relative; }
 .topnav-inner .lang-switch { margin-left: auto; }
-.lang-switch .lang + .lang::before { content: "/"; color: var(--line); font-weight: 500; margin: 0 8px; }
-.lang { color: var(--stone-2); transition: color 0.2s var(--e-out); }
-.lang.is-on { color: var(--ink); }
-a.lang:hover { color: var(--accent); }
+.lang-button { list-style: none; display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; cursor: pointer; transition: border-color 0.2s var(--e-out), color 0.2s var(--e-out); }
+.lang-button:hover { border-color: var(--ink); color: var(--accent); }
+.lang-button::-webkit-details-marker { display: none; }
+.lang-switch[open] > .lang-button { border-color: var(--ink); }
+.lang-caret { width: 11px; height: 11px; transition: transform 0.2s var(--e-out); }
+.lang-switch[open] > .lang-button .lang-caret { transform: rotate(180deg); }
+
+/* Le menu : filet fin, fond papier, aucun arrondi ni ombre — on reste sur le registre technique. */
+.lang-menu { position: absolute; top: calc(100% + 6px); right: 0; z-index: 70; min-width: 156px; margin: 0; padding: 0; list-style: none; background: var(--paper); border: 1px solid var(--ink); border-radius: 2px; }
+.lang-option { display: flex; align-items: baseline; gap: 10px; padding: 10px 13px; font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--ink-2); white-space: nowrap; transition: background 0.15s var(--e-out), color 0.15s var(--e-out); }
+.lang-menu li + li .lang-option { border-top: 1px solid var(--line); }
+.lang-option-code { font-weight: 800; font-size: 11px; letter-spacing: 0.1em; color: var(--stone-2); }
+.lang-option:hover { background: var(--paper-2); color: var(--accent); }
+.lang-option:hover .lang-option-code { color: var(--accent); }
+.lang-option.is-on { color: var(--ink); }
+.lang-option.is-on .lang-option-code { color: var(--accent); }
+
 /* Repris dans le menu plein écran, sur fond orange : les rôles de couleur s'inversent. */
-.lang-switch-overlay { font-size: 13px; }
-.lang-switch-overlay .lang { color: color-mix(in srgb, var(--on-ink) 68%, transparent); }
-.lang-switch-overlay .lang.is-on { color: var(--on-ink); }
-.lang-switch-overlay .lang + .lang::before { color: color-mix(in srgb, var(--on-ink) 45%, transparent); }
-.lang-switch-overlay a.lang:hover { color: var(--on-ink); }
+.lang-switch-overlay .lang-button { border-color: color-mix(in srgb, var(--on-ink) 45%, transparent); color: var(--on-ink); }
+.lang-switch-overlay .lang-button:hover, .lang-switch-overlay[open] > .lang-button { border-color: var(--on-ink); color: var(--on-ink); }
+.lang-switch-overlay .lang-menu { top: auto; bottom: calc(100% + 6px); left: 0; right: auto; }
+/* Le menu garde son fond papier même dans le menu plein écran : il faut reprendre
+   la main sur « .overlay-foot a », plus spécifique que « .lang-option ». */
+.lang-switch-overlay .lang-option { color: var(--ink-2); font-weight: 600; }
+.lang-switch-overlay .lang-option.is-on { color: var(--ink); }
+.lang-switch-overlay .lang-option:hover { color: var(--accent); }
 
 @media (max-width: 860px) { .nav-links, .topnav .nav-cta, .topnav .lang-switch { display: none; } .menu-toggle { display: inline-flex; } }
 

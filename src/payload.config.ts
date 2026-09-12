@@ -47,5 +47,13 @@ export default buildConfig({
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI || "" },
+    // Jamais de push automatique du schéma : cette base est celle de la
+    // production. En mode dev, Payload compare le schéma du code à celui de la
+    // base et pousse les différences directement, puis inscrit un marqueur
+    // "dev" dans payload_migrations. `payload migrate` demande alors une
+    // confirmation interactive — ce qui suspend indéfiniment le build Vercel,
+    // où il n'y a pas de terminal. Toute évolution du schéma passe donc par
+    // une migration explicite (pnpm migrate:create).
+    push: false,
   }),
 });

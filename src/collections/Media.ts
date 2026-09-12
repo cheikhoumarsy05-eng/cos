@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidateHomeAfterChange, revalidateHomeAfterDelete } from "@/hooks/revalidateHome";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -8,6 +9,7 @@ export const Media: CollectionConfig = {
   slug: "media",
   admin: { group: "Contenu" },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateHomeAfterChange], afterDelete: [revalidateHomeAfterDelete] },
   upload: {
     staticDir: path.resolve(dirname, "../../public/uploads"),
     mimeTypes: ["image/*"],

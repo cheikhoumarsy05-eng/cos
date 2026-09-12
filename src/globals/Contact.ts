@@ -1,9 +1,11 @@
 import type { GlobalConfig } from "payload";
+import { revalidateHomeAfterGlobalChange } from "@/hooks/revalidateHome";
 
 export const Contact: GlobalConfig = {
   slug: "contact",
   admin: { group: "Sections" },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateHomeAfterGlobalChange] },
   fields: [
     { name: "title", type: "text", required: true, defaultValue: "Disponible pour un stage de 4 à 6 mois." },
     { name: "lead", type: "textarea", required: true },

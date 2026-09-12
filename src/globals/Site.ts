@@ -1,9 +1,11 @@
 import type { GlobalConfig } from "payload";
+import { revalidateHomeAfterGlobalChange } from "@/hooks/revalidateHome";
 
 export const Site: GlobalConfig = {
   slug: "site",
   admin: { group: "Sections" },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateHomeAfterGlobalChange] },
   fields: [
     { name: "brand", type: "text", required: true, defaultValue: "Cheikh Oumar Sy" },
     { name: "cvUrl", type: "text", required: true, defaultValue: "/cv-cheikh-oumar-sy.pdf" },

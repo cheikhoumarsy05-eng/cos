@@ -26,12 +26,13 @@ export function mediaAlt(m: unknown): string | null {
 
 export async function getContent() {
   const payload = await payloadClient();
-  const [hero, about, publication, skills, contact, site, projects, experience, freelance, education] =
+  const [hero, about, publication, skills, stats, contact, site, projects, experience, freelance, education] =
     await Promise.all([
       payload.findGlobal({ slug: "hero" }),
       payload.findGlobal({ slug: "about" }),
       payload.findGlobal({ slug: "publication" }),
       payload.findGlobal({ slug: "skills" }),
+      payload.findGlobal({ slug: "stats" }),
       payload.findGlobal({ slug: "contact" }),
       payload.findGlobal({ slug: "site" }),
       payload.find({ collection: "projects", limit: 100, sort: "order" }),
@@ -45,6 +46,7 @@ export async function getContent() {
     about,
     publication,
     skills,
+    stats,
     contact,
     site,
     projects: projects.docs,

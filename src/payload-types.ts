@@ -100,6 +100,7 @@ export interface Config {
     about: About;
     publication: Publication;
     skills: Skill;
+    stats: Stat;
     contact: Contact;
     site: Site;
   };
@@ -108,6 +109,7 @@ export interface Config {
     about: AboutSelect<false> | AboutSelect<true>;
     publication: PublicationSelect<false> | PublicationSelect<true>;
     skills: SkillsSelect<false> | SkillsSelect<true>;
+    stats: StatsSelect<false> | StatsSelect<true>;
     contact: ContactSelect<false> | ContactSelect<true>;
     site: SiteSelect<false> | SiteSelect<true>;
   };
@@ -615,8 +617,11 @@ export interface About {
       }[]
     | null;
   statYears: string;
+  statYearsText: string;
   statProjects: string;
+  statProjectsText: string;
   statPublication: string;
+  statPublicationText: string;
   statNote: string;
   /**
    * Recommandé. Sinon, renseignez le chemin ci-dessous.
@@ -641,21 +646,29 @@ export interface About {
  */
 export interface Publication {
   id: number;
-  title: string;
-  sub: string;
-  points?:
+  /**
+   * Ajoutez plusieurs publications : la section devient un carrousel qui glisse entre elles.
+   */
+  items?:
     | {
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  doi: string;
-  doiUrl: string;
-  sideFacts?:
-    | {
-        k: string;
-        v: string;
-        accent?: boolean | null;
+        title: string;
+        sub: string;
+        points?:
+          | {
+              value: string;
+              id?: string | null;
+            }[]
+          | null;
+        doi: string;
+        doiUrl: string;
+        sideFacts?:
+          | {
+              k: string;
+              v: string;
+              accent?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -668,6 +681,10 @@ export interface Publication {
  */
 export interface Skill {
   id: number;
+  technicalLabel: string;
+  toolsLabel: string;
+  toolsNote: string;
+  personalLabel: string;
   technical?:
     | {
         value: string;
@@ -684,6 +701,30 @@ export interface Skill {
   personal?:
     | {
         value: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stats".
+ */
+export interface Stat {
+  id: number;
+  title: string;
+  lead?: string | null;
+  /**
+   * Chaque chiffre : une valeur mise en avant (ex. « 20+ ») et un libellé.
+   */
+  items?:
+    | {
+        /**
+         * ex. 20+
+         */
+        value: string;
+        label: string;
         id?: string | null;
       }[]
     | null;
@@ -767,8 +808,11 @@ export interface AboutSelect<T extends boolean = true> {
         id?: T;
       };
   statYears?: T;
+  statYearsText?: T;
   statProjects?: T;
+  statProjectsText?: T;
   statPublication?: T;
+  statPublicationText?: T;
   statNote?: T;
   portrait?: T;
   portraitSrc?: T;
@@ -790,22 +834,27 @@ export interface AboutSelect<T extends boolean = true> {
  * via the `definition` "publication_select".
  */
 export interface PublicationSelect<T extends boolean = true> {
-  title?: T;
-  sub?: T;
-  points?:
+  items?:
     | T
     | {
-        value?: T;
-        id?: T;
-      };
-  doi?: T;
-  doiUrl?: T;
-  sideFacts?:
-    | T
-    | {
-        k?: T;
-        v?: T;
-        accent?: T;
+        title?: T;
+        sub?: T;
+        points?:
+          | T
+          | {
+              value?: T;
+              id?: T;
+            };
+        doi?: T;
+        doiUrl?: T;
+        sideFacts?:
+          | T
+          | {
+              k?: T;
+              v?: T;
+              accent?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;
@@ -817,6 +866,10 @@ export interface PublicationSelect<T extends boolean = true> {
  * via the `definition` "skills_select".
  */
 export interface SkillsSelect<T extends boolean = true> {
+  technicalLabel?: T;
+  toolsLabel?: T;
+  toolsNote?: T;
+  personalLabel?: T;
   technical?:
     | T
     | {
@@ -834,6 +887,24 @@ export interface SkillsSelect<T extends boolean = true> {
     | T
     | {
         value?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stats_select".
+ */
+export interface StatsSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  items?:
+    | T
+    | {
+        value?: T;
+        label?: T;
         id?: T;
       };
   updatedAt?: T;

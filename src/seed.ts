@@ -1,6 +1,6 @@
+import config from "@payload-config";
 import { getPayload } from "payload";
-import config from "./payload.config";
-import { projects as projectData } from "./data/projects";
+import { projects as projectData } from "./data/projects.js";
 
 const ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL || "cheikhoumarsy05@gmail.com";
 const ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD || "changeme123";
@@ -83,7 +83,9 @@ const run = async () => {
       { value: "Ingénieur de conception en génie civil orienté structures, je travaille le dimensionnement en béton armé et charpente métallique selon les Eurocodes et le BAEL, la vérification de conformité en bureau de contrôle technique, et la dynamique des structures. Je développe aussi mes propres outils de calcul sous Python pour automatiser l'analyse et le dimensionnement." },
       { value: "Polyvalent entre le bureau d'études et le terrain, j'ai suivi des chantiers de gros œuvre et de plomberie et mené une publication scientifique sur l'analyse dynamique des ponts ferroviaires à grande vitesse." },
     ],
-    statYears: "3+ ans", statProjects: "5 projets", statPublication: "1 publication", statNote: "Zenodo, 2026",
+    statYears: "3+ ans", statYearsText: "terrain & bureau d'études.",
+    statProjects: "5 projets", statProjectsText: "de conception, contrôle & recherche.",
+    statPublication: "1 publication", statPublicationText: "scientifique", statNote: "Zenodo, 2026",
     portraitSrc: "/img/portrait.webp", portraitFallback: "/img/portrait.jpg",
     portraitAlt: "Cheikh Oumar Sy, ingénieur en génie civil",
     facts: [
@@ -94,22 +96,45 @@ const run = async () => {
   } });
 
   await payload.updateGlobal({ slug: "publication", data: {
-    title: "Analyse dynamique d'un pont ferroviaire à grande vitesse",
-    sub: "Vitesses critiques et vérification selon EN 1991-2 — Zenodo, 2026.",
-    points: [
-      { value: "Analyse dynamique sous convois HSLM-A et identification des vitesses critiques de résonance." },
-      { value: "Étude de sensibilité de la réponse structurelle à l'amortissement." },
-      { value: "Dimensionnement d'amortisseurs à masse accordée (AMA / TMD) sous Python." },
-    ],
-    doi: "10.5281/zenodo.20069677", doiUrl: "https://doi.org/10.5281/zenodo.20069677",
-    sideFacts: [
-      { k: "Norme", v: "EN 1991-2", accent: true },
-      { k: "Convois", v: "HSLM-A", accent: false },
-      { k: "Outils", v: "Python · AMA/TMD", accent: false },
+    items: [
+      {
+        title: "Analyse dynamique d'un pont ferroviaire à grande vitesse",
+        sub: "Vitesses critiques et vérification selon EN 1991-2 — Zenodo, 2026.",
+        points: [
+          { value: "Analyse dynamique sous convois HSLM-A et identification des vitesses critiques de résonance." },
+          { value: "Étude de sensibilité de la réponse structurelle à l'amortissement." },
+          { value: "Dimensionnement d'amortisseurs à masse accordée (AMA / TMD) sous Python." },
+        ],
+        doi: "10.5281/zenodo.20069677", doiUrl: "https://doi.org/10.5281/zenodo.20069677",
+        sideFacts: [
+          { k: "Norme", v: "EN 1991-2", accent: true },
+          { k: "Convois", v: "HSLM-A", accent: false },
+          { k: "Outils", v: "Python · AMA/TMD", accent: false },
+        ],
+      },
+      {
+        title: "Dimensionnement optimisé d'amortisseurs à masse accordée",
+        sub: "Réduction des vibrations résonantes des tabliers — étude paramétrique.",
+        points: [
+          { value: "Calage optimal de la fréquence et du taux d'amortissement de l'AMA." },
+          { value: "Comparaison des réponses avec et sans dispositif sur plusieurs vitesses." },
+          { value: "Automatisation complète du calcul et du post-traitement sous Python." },
+        ],
+        doi: "10.5281/zenodo.20069677", doiUrl: "https://doi.org/10.5281/zenodo.20069677",
+        sideFacts: [
+          { k: "Méthode", v: "AMA / TMD", accent: true },
+          { k: "Cible", v: "Résonance", accent: false },
+          { k: "Outils", v: "Python · NumPy", accent: false },
+        ],
+      },
     ],
   } });
 
   await payload.updateGlobal({ slug: "skills", data: {
+    technicalLabel: "Techniques",
+    toolsLabel: "Outils & logiciels",
+    toolsNote: "En gras : maîtrise quotidienne",
+    personalLabel: "Personnelles",
     technical: [
       "Dimensionnement béton armé & charpente métallique (Eurocodes, BAEL)",
       "Production de plans d'exécution",
@@ -124,6 +149,15 @@ const run = async () => {
       { name: "DDC", key: false }, { name: "EXPERT", key: false }, { name: "RMD7", key: false }, { name: "LaTeX", key: false },
     ],
     personal: ["Rigueur", "Analyse & résolution de problèmes", "Gestion de projet", "Polyvalence bureau / terrain", "Adaptabilité"].map((value) => ({ value })),
+  } });
+
+  await payload.updateGlobal({ slug: "stats", data: {
+    title: "En chiffres",
+    items: [
+      { value: "20+", label: "projets de conception archi et béton armé" },
+      { value: "20+", label: "examens de plans" },
+      { value: "20+", label: "étudiants et professionnels formés en calcul de structures" },
+    ],
   } });
 
   await payload.updateGlobal({ slug: "contact", data: {
@@ -145,7 +179,13 @@ const run = async () => {
   } });
 
   payload.logger.info("✅ Seed complete.");
-  process.exit(0);
 };
 
-run().catch((e) => { console.error(e); process.exit(1); });
+// Top-level await so `payload run` (which does `await import(file)`) waits for the
+// async work to finish before the process exits. A fire-and-forget `run()` exits early.
+try {
+  await run();
+} catch (e) {
+  console.error("Seed failed:", e);
+  process.exit(1);
+}

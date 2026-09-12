@@ -87,7 +87,10 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
             )}
 
             <div className="article-body reveal">
-              <RichText data={(article as any).content} />
+              {/* `disableContainer` supprime la div d'emballage de RichText : sans cela les
+                  nœuds ne sont pas enfants directs de .article-body et la règle d'espacement
+                  entre blocs ne s'applique à rien — les paragraphes se touchent. */}
+              <RichText data={(article as any).content} disableContainer />
             </div>
 
             {(article as any).linkedinUrl && (

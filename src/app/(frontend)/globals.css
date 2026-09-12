@@ -196,12 +196,6 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .free-item p { color: var(--ink-2); font-size: 15.5px; }
 
 /* SKILLS */
-.skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 80px); }
-@media (max-width: 860px) { .skills-grid { grid-template-columns: 1fr; } }
-.skill-list { list-style: none; margin: 0; padding: 0; }
-.skill-list li { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: baseline; padding: 15px 0; border-top: 1px solid var(--line); font-size: 16.5px; }
-.skill-list li:first-child { border-top: 0; }
-.skill-list .sn { font-family: var(--font-display); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); font-size: 15px; }
 .subhead { font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: 0; text-transform: uppercase; margin-bottom: 18px; }
 .tool-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 .tool { font-family: var(--font-display); font-weight: 600; padding: 9px 15px; border: 2px solid var(--line); border-radius: 2px; font-size: 13px; letter-spacing: 0.02em; text-transform: uppercase; transition: border-color 0.2s var(--e-out), color 0.2s var(--e-out), background 0.2s var(--e-out); }

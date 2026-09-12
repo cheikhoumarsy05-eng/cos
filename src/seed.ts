@@ -83,7 +83,7 @@ const run = async () => {
       { value: "Ingénieur de conception en génie civil orienté structures, je travaille le dimensionnement en béton armé et charpente métallique selon les Eurocodes et le BAEL, la vérification de conformité en bureau de contrôle technique, et la dynamique des structures. Je développe aussi mes propres outils de calcul sous Python pour automatiser l'analyse et le dimensionnement." },
       { value: "Polyvalent entre le bureau d'études et le terrain, j'ai suivi des chantiers de gros œuvre et de plomberie et mené une publication scientifique sur l'analyse dynamique des ponts ferroviaires à grande vitesse." },
     ],
-    statYears: "3+ ans", statYearsText: "terrain & bureau d'études.",
+    statYears: "4 expériences", statYearsText: "terrain & bureau d'études.",
     statProjects: "5 projets", statProjectsText: "de conception, contrôle & recherche.",
     statPublication: "1 publication", statPublicationText: "scientifique", statNote: "Zenodo, 2026",
     portraitSrc: "/img/portrait.webp", portraitFallback: "/img/portrait.jpg",
@@ -149,6 +149,16 @@ const run = async () => {
       { name: "DDC", key: false }, { name: "EXPERT", key: false }, { name: "RMD7", key: false }, { name: "LaTeX", key: false },
     ],
     personal: ["Rigueur", "Analyse & résolution de problèmes", "Gestion de projet", "Polyvalence bureau / terrain", "Adaptabilité"].map((value) => ({ value })),
+  } });
+
+  await payload.updateGlobal({ slug: "expertise", data: {
+    title: "Expertise",
+    items: [
+      { title: "Calcul structural", description: "Dimensionnement et vérification des structures en béton armé et charpente métallique.", tools: "Eurocodes · BAEL" },
+      { title: "Modélisation numérique", description: "Modélisation et analyse des structures sous logiciels de calcul.", tools: "Robot Structural Analysis · CYPECAD · Revit" },
+      { title: "Contrôle technique", description: "Vérification des plans, notes de calcul, ferraillages et conformité des ouvrages.", tools: "Plans d'exécution · Notes de calcul" },
+      { title: "Recherche appliquée", description: "Dynamique des structures, analyse modale et développement d'outils numériques.", tools: "EN 1991-2 · EN 1990 · Python" },
+    ],
   } });
 
   await payload.updateGlobal({ slug: "stats", data: {

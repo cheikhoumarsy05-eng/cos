@@ -4,11 +4,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type SideFact = { id?: string; k: string; v: string; accent?: boolean | null };
 type Point = { id?: string; value: string };
+type Metric = { id?: string; value: string; label: string };
 export type PublicationItem = {
   id?: string;
   title: string;
   sub: string;
   points?: Point[] | null;
+  metrics?: Metric[] | null;
+  keyResult?: string | null;
   doi: string;
   doiUrl: string;
   sideFacts?: SideFact[] | null;
@@ -20,11 +23,27 @@ function Article({ item }: { item: PublicationItem }) {
       <div>
         <h3 className="pub-title">{item.title}</h3>
         <p className="pub-sub">{item.sub}</p>
+        {(item.metrics ?? []).length > 0 && (
+          <dl className="pub-metrics">
+            {(item.metrics ?? []).map((m) => (
+              <div className="pub-metric" key={m.id ?? m.label}>
+                <dt className="pub-metric-v">{m.value}</dt>
+                <dd className="pub-metric-k">{m.label}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
         <ul className="pub-points">
           {(item.points ?? []).map((pt) => (
             <li key={pt.id ?? pt.value}>{pt.value}</li>
           ))}
         </ul>
+        {item.keyResult && (
+          <p className="pub-keyresult">
+            <span className="pub-keyresult-k">Résultat clé</span>
+            {item.keyResult}
+          </p>
+        )}
         <div className="pub-actions">
           <a className="btn btn-primary arrow" href={item.doiUrl} target="_blank" rel="noopener">
             Lire la publication

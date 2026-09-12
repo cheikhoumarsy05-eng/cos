@@ -159,7 +159,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
     <>
       <div className="proj-index">
         {projects.map((project, i) => (
-          <article className="proj-row reveal" key={project.id} ref={(el) => { rowRefs.current[project.id] = el; }}>
+          <article className={"proj-row reveal" + (project.featured ? " is-featured" : "")} key={project.id} ref={(el) => { rowRefs.current[project.id] = el; }}>
             <div className="proj-main">
               <div className="proj-head">
                 <span className="proj-num">{project.index}</span>

@@ -98,6 +98,7 @@ export interface Config {
   globals: {
     hero: Hero;
     about: About;
+    expertise: Expertise;
     publication: Publication;
     skills: Skill;
     stats: Stat;
@@ -107,6 +108,7 @@ export interface Config {
   globalsSelect: {
     hero: HeroSelect<false> | HeroSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
+    expertise: ExpertiseSelect<false> | ExpertiseSelect<true>;
     publication: PublicationSelect<false> | PublicationSelect<true>;
     skills: SkillsSelect<false> | SkillsSelect<true>;
     stats: StatsSelect<false> | StatsSelect<true>;
@@ -156,6 +158,10 @@ export interface Project {
    */
   order: number;
   type: string;
+  /**
+   * Donne plus de poids visuel au projet (calcul structural).
+   */
+  featured?: boolean | null;
   title: string;
   fieldLabel: string;
   desc: string;
@@ -402,6 +408,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   index?: T;
   order?: T;
   type?: T;
+  featured?: T;
   title?: T;
   fieldLabel?: T;
   desc?: T;
@@ -587,6 +594,14 @@ export interface Hero {
   nameLine1: string;
   nameLine2: string;
   nameAccent: string;
+  /**
+   * Ex. « Ingénieur Génie Civil · Structures »
+   */
+  role?: string | null;
+  /**
+   * Ex. « Calcul structural · Modélisation numérique · Contrôle technique »
+   */
+  disciplines?: string | null;
   sub: string;
   /**
    * Recommandé. Sinon, renseignez le chemin ci-dessous.
@@ -642,6 +657,30 @@ export interface About {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertise".
+ */
+export interface Expertise {
+  id: number;
+  title?: string | null;
+  /**
+   * Chaque domaine : un intitulé, ce qu'il recouvre, et les logiciels ou normes associés.
+   */
+  items?:
+    | {
+        title: string;
+        description: string;
+        /**
+         * Ex. « Eurocodes · BAEL ». Laisser vide si rien de pertinent.
+         */
+        tools?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "publication".
  */
 export interface Publication {
@@ -659,6 +698,20 @@ export interface Publication {
               id?: string | null;
             }[]
           | null;
+        /**
+         * Affichés en grand : une valeur (ex. « 220 km/h ») et son libellé (ex. « Vitesse de service »).
+         */
+        metrics?:
+          | {
+              value: string;
+              label: string;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Mis en évidence sous les points. Laisser vide pour ne rien afficher.
+         */
+        keyResult?: string | null;
         doi: string;
         doiUrl: string;
         sideFacts?:
@@ -759,6 +812,7 @@ export interface Site {
   footerNote: string;
   sectionTitles?: {
     about?: string | null;
+    expertise?: string | null;
     experience?: string | null;
     experienceLead?: string | null;
     research?: string | null;
@@ -781,6 +835,8 @@ export interface HeroSelect<T extends boolean = true> {
   nameLine1?: T;
   nameLine2?: T;
   nameAccent?: T;
+  role?: T;
+  disciplines?: T;
   sub?: T;
   image?: T;
   imageSrc?: T;
@@ -831,6 +887,24 @@ export interface AboutSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertise_select".
+ */
+export interface ExpertiseSelect<T extends boolean = true> {
+  title?: T;
+  items?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        tools?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "publication_select".
  */
 export interface PublicationSelect<T extends boolean = true> {
@@ -845,6 +919,14 @@ export interface PublicationSelect<T extends boolean = true> {
               value?: T;
               id?: T;
             };
+        metrics?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+        keyResult?: T;
         doi?: T;
         doiUrl?: T;
         sideFacts?:
@@ -940,6 +1022,7 @@ export interface SiteSelect<T extends boolean = true> {
     | T
     | {
         about?: T;
+        expertise?: T;
         experience?: T;
         experienceLead?: T;
         research?: T;

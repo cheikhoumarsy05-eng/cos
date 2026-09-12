@@ -17,6 +17,7 @@ import { About } from "./globals/About";
 import { Publication } from "./globals/Publication";
 import { Skills } from "./globals/Skills";
 import { Stats } from "./globals/Stats";
+import { Expertise } from "./globals/Expertise";
 import { Contact } from "./globals/Contact";
 import { Site } from "./globals/Site";
 
@@ -29,7 +30,7 @@ export default buildConfig({
     meta: { titleSuffix: "· Cheikh Oumar Sy" },
   },
   collections: [Projects, Experience, Freelance, Education, Media, Users],
-  globals: [Hero, About, Publication, Skills, Stats, Contact, Site],
+  globals: [Hero, About, Expertise, Publication, Skills, Stats, Contact, Site],
   editor: lexicalEditor(),
   // Sharp powers upload image resizing (thumb/wide, webp conversion).
   sharp,

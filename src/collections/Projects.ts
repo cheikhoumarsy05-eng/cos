@@ -14,6 +14,7 @@ export const Projects: CollectionConfig = {
     { name: "index", type: "text", required: true, admin: { description: "Numéro d'index, ex. 01" } },
     { name: "order", type: "number", required: true, defaultValue: 0, admin: { description: "Ordre d'affichage (croissant)" } },
     { name: "type", type: "text", required: true, label: "Type / eyebrow" },
+    { name: "featured", type: "checkbox", defaultValue: false, label: "Mettre en avant", admin: { description: "Donne plus de poids visuel au projet (calcul structural)." } },
     { name: "title", type: "text", required: true, label: "Titre" },
     { name: "fieldLabel", type: "text", required: true, label: "Légende du visuel" },
     { name: "desc", type: "textarea", required: true, label: "Description" },

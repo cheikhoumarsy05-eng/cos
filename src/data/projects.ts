@@ -18,6 +18,8 @@ export type Project = {
   images: ProjectImage[];
   /** Optional dimension label shown on the media field corner */
   fieldLabel: string;
+  /** Mis en avant depuis le CMS : projet de calcul structural */
+  featured?: boolean;
 };
 
 export const projects: Project[] = [

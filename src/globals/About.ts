@@ -9,7 +9,7 @@ export const About: GlobalConfig = {
   fields: [
     { name: "lead", type: "textarea", required: true, label: "Accroche" },
     { name: "body", type: "array", label: "Paragraphes", fields: [{ name: "value", type: "textarea", required: true }] },
-    { name: "statYears", type: "text", required: true, defaultValue: "3+ ans" },
+    { name: "statYears", type: "text", required: true, defaultValue: "4 expériences" },
     { name: "statYearsText", type: "text", required: true, label: "Texte après « années »", defaultValue: "terrain & bureau d'études." },
     { name: "statProjects", type: "text", required: true, defaultValue: "5 projets" },
     { name: "statProjectsText", type: "text", required: true, label: "Texte après « projets »", defaultValue: "de conception, contrôle & recherche." },

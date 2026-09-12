@@ -16,6 +16,7 @@ export const Site: GlobalConfig = {
       label: "Titres de sections",
       fields: [
         { name: "about", type: "text", defaultValue: "À propos" },
+        { name: "expertise", type: "text", defaultValue: "Expertise" },
         { name: "experience", type: "text", defaultValue: "Expérience" },
         { name: "experienceLead", type: "text", defaultValue: "Bureau de contrôle, conduite de travaux, chantier." },
         { name: "research", type: "text", defaultValue: "Recherche appliquée" },

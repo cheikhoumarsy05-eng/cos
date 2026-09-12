@@ -26,9 +26,9 @@ export default async function Home() {
   const st = site.sectionTitles ?? {};
 
   const heroImg = mediaUrl(hero.image) ?? hero.imageSrc;
-  const heroImgAlt = mediaAlt(hero.image) ?? hero.imageAlt;
+  const heroImgAlt = mediaAlt(hero.image) ?? hero.imageAlt ?? "";
   const portraitImg = mediaUrl(about.portrait) ?? about.portraitSrc;
-  const portraitAlt = mediaAlt(about.portrait) ?? about.portraitAlt;
+  const portraitAlt = mediaAlt(about.portrait) ?? about.portraitAlt ?? "";
 
   // normalize CMS project docs into the component's shape
   const projects: Project[] = (c.projects as any[]).map(toProject);
@@ -96,7 +96,9 @@ export default async function Home() {
                   <div className="frame">
                     <Image src={heroImg} alt={heroImgAlt} fill priority sizes="(max-width: 900px) 100vw, 640px" style={{ objectFit: "cover" }} />
                   </div>
-                  <div className="cap"><span>{hero.imageCaption}</span><span>{hero.imageYear}</span></div>
+                  {(hero.imageCaption || hero.imageYear) && (
+                    <div className="cap"><span>{hero.imageCaption}</span><span>{hero.imageYear}</span></div>
+                  )}
                 </div>
               )}
             </div>

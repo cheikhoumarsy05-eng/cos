@@ -537,11 +537,25 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 /* ============================================================
    ARTICLES & RÉFLEXIONS — cartes éditoriales, 3 / 2 / 1 colonnes
    ============================================================ */
-.art-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 32px); margin-top: clamp(28px, 4vw, 48px); }
-@media (max-width: 1100px) { .art-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 720px)  { .art-grid { grid-template-columns: 1fr; } }
+.art-wrap { margin-top: clamp(28px, 4vw, 48px); }
+/* Rail défilant plutôt que grille : trois cartes visibles en grand écran, deux en
+   tablette, une en téléphone, et le reste accessible en faisant défiler. Le
+   défilement natif du navigateur fait le travail — les flèches ne sont qu'un
+   confort, le rail reste parcourable au doigt et à la molette sans JavaScript. */
+.art-rail { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; padding-bottom: 4px; scrollbar-width: thin; }
+.art-rail::-webkit-scrollbar { height: 3px; }
+.art-rail::-webkit-scrollbar-thumb { background: var(--line); }
+.art-card { display: flex; flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start; }
+@media (max-width: 1100px) { .art-card { flex-basis: calc((100% - 20px) / 2); } }
+@media (max-width: 720px)  { .art-card { flex-basis: 100%; } }
 
-.art-card { display: flex; }
+.art-nav { display: flex; justify-content: flex-end; gap: 10px; margin-top: clamp(18px, 2.4vw, 26px); padding-top: clamp(16px, 2vw, 22px); border-top: 1px solid var(--line); }
+.art-arrow { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 2px; color: var(--ink); transition: border-color 0.2s var(--e-out), background 0.2s var(--e-out), color 0.2s var(--e-out); }
+.art-arrow:hover:not(:disabled) { border-color: var(--accent); background: var(--accent); color: var(--on-ink); }
+.art-arrow:disabled { opacity: 0.3; cursor: default; }
+.art-arrow svg { width: 21px; height: 21px; }
+
+@media (prefers-reduced-motion: reduce) { .art-rail { scroll-behavior: auto; } }
 /* La carte entière est le lien : pas d'ancre imbriquée, une seule cible au clavier. */
 .art-link { display: flex; flex-direction: column; width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: transparent; transition: border-color 0.25s var(--e-out); }
 .art-link:hover { border-color: var(--ink); }
@@ -549,6 +563,10 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 
 .art-cover { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--paper-2); border-bottom: 1px solid var(--line); }
 .art-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--e-out); }
+/* Couverture vectorielle servie en <img> ordinaire : elle doit remplir le cadre
+   comme le ferait next/image en mode « fill ». */
+.art-cover-svg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.article-cover .art-cover-svg { transition: none; }
 .art-link:hover .art-cover img { transform: scale(1.03); }
 /* Sans couverture, on garde le rythme de la grille plutôt qu'un trou. */
 .art-cover-empty { position: absolute; inset: 0; background-image: linear-gradient(to right, color-mix(in srgb, var(--stone) 20%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--stone) 20%, transparent) 1px, transparent 1px); background-size: 26px 26px; opacity: 0.45; }

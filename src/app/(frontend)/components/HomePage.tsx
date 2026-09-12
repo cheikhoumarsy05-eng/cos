@@ -2,7 +2,7 @@ import Interactions from "./Interactions";
 import Projects from "./Projects";
 import PublicationCarousel from "./PublicationCarousel";
 import Image from "next/image";
-import { getContent, getArticles, mediaUrl, mediaAlt, toProject } from "../lib/content";
+import { getContent, getArticles, mediaUrl, mediaAlt, toProject, toArticleCard } from "../lib/content";
 import LangSwitch from "./LangSwitch";
 import ArticleCards from "./ArticleCards";
 import { dict, type Locale } from "../lib/i18n";
@@ -289,7 +289,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                   {st.articlesLead && <p className="ed-lead">{st.articlesLead}</p>}
                 </div>
               </div>
-              <ArticleCards articles={articles} locale={locale} t={t} />
+              <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
             </div>
           </section>
         )}

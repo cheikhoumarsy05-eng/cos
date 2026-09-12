@@ -75,14 +75,19 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
 
             {cover && (
               <div className="article-cover reveal">
-                <Image
-                  src={cover.src}
-                  alt={cover.alt}
-                  fill
-                  sizes="(max-width: 1100px) 100vw, 1000px"
-                  priority
-                  style={{ objectFit: "cover" }}
-                />
+                {cover.vector ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className="art-cover-svg" src={cover.src} alt={cover.alt} />
+                ) : (
+                  <Image
+                    src={cover.src}
+                    alt={cover.alt}
+                    fill
+                    sizes="(max-width: 1100px) 100vw, 1000px"
+                    priority
+                    style={{ objectFit: "cover" }}
+                  />
+                )}
               </div>
             )}
 

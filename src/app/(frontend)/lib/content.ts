@@ -104,11 +104,36 @@ export async function getArticleSlugs(): Promise<string[]> {
   return res.docs.map((d: any) => d.slug).filter(Boolean);
 }
 
-/** Couverture d'un article : le téléversement prime sur le chemin /public. */
-export function articleCover(a: any): { src: string; alt: string } | null {
+/**
+ * Couverture d'un article : le téléversement prime sur le chemin /public.
+ *
+ * `vector` signale un SVG. Next refuse de passer les SVG par son optimiseur
+ * d'images sans `dangerouslyAllowSVG`, garde-fou qu'on ne relâche pas pour une
+ * illustration : ces couvertures sont servies par une balise <img> ordinaire,
+ * ce qui les garde nettes à toute taille et évite un détour par le raster.
+ */
+export function articleCover(a: any): { src: string; alt: string; vector: boolean } | null {
   const src = mediaUrl(a?.cover) ?? a?.coverSrc;
   if (!src) return null;
-  return { src, alt: mediaAlt(a?.cover) ?? a?.coverAlt ?? a?.title ?? "" };
+  return {
+    src,
+    alt: mediaAlt(a?.cover) ?? a?.coverAlt ?? a?.title ?? "",
+    vector: /\.svg(\?|$)/i.test(src),
+  };
+}
+
+/** Réduit un article Payload à la forme simple attendue par la carte (composant client). */
+export function toArticleCard(a: any) {
+  return {
+    id: a.id,
+    slug: a.slug as string,
+    title: a.title as string,
+    category: a.category as string,
+    excerpt: a.excerpt as string,
+    author: a.author as string,
+    date: a.date as string,
+    cover: articleCover(a),
+  };
 }
 
 /** Normalize a Payload project doc to the frontend Project shape. */

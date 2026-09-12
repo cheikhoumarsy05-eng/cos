@@ -15,6 +15,7 @@ export const Projects: CollectionConfig = {
     { name: "order", type: "number", required: true, defaultValue: 0, admin: { description: "Ordre d'affichage (croissant)" } },
     { name: "type", type: "text", required: true, localized: true, label: "Type / eyebrow" },
     { name: "featured", type: "checkbox", defaultValue: false, label: "Mettre en avant", admin: { description: "Donne plus de poids visuel au projet (calcul structural)." } },
+    { name: "drawings", type: "checkbox", defaultValue: false, label: "Planches techniques", admin: { description: "Cochez si les visuels sont des plans et non des rendus : les libellés parlent alors de « planches » et non de « rendus »." } },
     { name: "title", type: "text", required: true, label: "Titre" },
     { name: "fieldLabel", type: "text", required: true, localized: true, label: "Légende du visuel" },
     { name: "desc", type: "textarea", required: true, localized: true, label: "Description" },

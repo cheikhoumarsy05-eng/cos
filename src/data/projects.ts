@@ -20,6 +20,8 @@ export type Project = {
   fieldLabel: string;
   /** Mis en avant depuis le CMS : projet de calcul structural */
   featured?: boolean;
+  /** Les visuels sont des planches techniques et non des rendus. */
+  drawings?: boolean;
 };
 
 export const projects: Project[] = [

@@ -162,6 +162,10 @@ export interface Project {
    * Donne plus de poids visuel au projet (calcul structural).
    */
   featured?: boolean | null;
+  /**
+   * Cochez si les visuels sont des plans et non des rendus : les libellés parlent alors de « planches » et non de « rendus ».
+   */
+  drawings?: boolean | null;
   title: string;
   fieldLabel: string;
   desc: string;
@@ -430,6 +434,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   order?: T;
   type?: T;
   featured?: T;
+  drawings?: T;
   title?: T;
   fieldLabel?: T;
   desc?: T;

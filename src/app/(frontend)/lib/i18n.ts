@@ -65,8 +65,11 @@ const fr = {
 
   seeRenders: "Voir les rendus",
   seeProject: "Voir le projet",
+  seeDrawings: "Voir les planches",
   views: "vues",
+  sheets: "planches",
   projectViews: "Vues du projet",
+  projectSheets: "Planches du projet",
   previousView: "Vue précédente",
   nextView: "Vue suivante",
   close: "Fermer",
@@ -117,8 +120,11 @@ const en: typeof fr = {
 
   seeRenders: "See renders",
   seeProject: "See project",
+  seeDrawings: "See drawings",
   views: "views",
+  sheets: "drawings",
   projectViews: "Project views",
+  projectSheets: "Project drawings",
   previousView: "Previous view",
   nextView: "Next view",
   close: "Close",

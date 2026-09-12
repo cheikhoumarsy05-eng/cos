@@ -25,7 +25,7 @@ function MediaField({ project, priority, t }: { project: Project; priority?: boo
   return (
     <div className={"proj-frame" + (has ? "" : " blueprint-field")} role="img" aria-label={has ? project.images[0].alt : project.fieldLabel}>
       {has ? <Render src={project.images[0].src} alt={project.images[0].alt} priority={priority} /> : <Blueprint id={project.id} />}
-      {has && <span className="badge">{String(project.images.length).padStart(2, "0")} {t.views}</span>}
+      {has && <span className="badge">{String(project.images.length).padStart(2, "0")} {project.drawings ? t.sheets : t.views}</span>}
       <span className="caption">{project.fieldLabel}</span>
     </div>
   );
@@ -95,7 +95,7 @@ function ProjectDetail({ project, onClose, t }: { project: Project; onClose: () 
               )}
               <span className="stage-count" aria-live="polite">{String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}</span>
             </div>
-            <div className="thumbs" role="tablist" aria-label={t.projectViews}>
+            <div className="thumbs" role="tablist" aria-label={project.drawings ? t.projectSheets : t.projectViews}>
               {project.images.map((img, i) => (
                 <button key={img.src} className={"thumb" + (i === active ? " active" : "")} role="tab" aria-selected={i === active} aria-label={fmt(t.viewLabel, { n: i + 1, alt: img.alt })} onClick={() => setActive(i)}>
                   <Render src={img.src} alt="" sizes="120px" />
@@ -178,7 +178,7 @@ export default function Projects({ projects, t }: { projects: Project[]; t: Dict
               <div className="proj-foot">
                 <div className="tag-list">{project.tags.slice(0, 3).map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
                 <button className="proj-open arrow" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
-                  {project.images.length > 0 ? t.seeRenders : t.seeProject}
+                  {project.images.length === 0 ? t.seeProject : project.drawings ? t.seeDrawings : t.seeRenders}
                 </button>
               </div>
             </div>

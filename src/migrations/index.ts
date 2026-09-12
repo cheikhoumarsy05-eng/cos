@@ -9,6 +9,7 @@ import * as migration_20260912_052544_nav_short_labels from './20260912_052544_n
 import * as migration_20260912_062529_nav_home_label from './20260912_062529_nav_home_label';
 import * as migration_20260912_062648_nav_about_label from './20260912_062648_nav_about_label';
 import * as migration_20260912_085057_localisation_fr_en from './20260912_085057_localisation_fr_en';
+import * as migration_20260912_152608_projet_planches from './20260912_152608_projet_planches';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20260912_085057_localisation_fr_en.up,
     down: migration_20260912_085057_localisation_fr_en.down,
-    name: '20260912_085057_localisation_fr_en'
+    name: '20260912_085057_localisation_fr_en',
+  },
+  {
+    up: migration_20260912_152608_projet_planches.up,
+    down: migration_20260912_152608_projet_planches.down,
+    name: '20260912_152608_projet_planches'
   },
 ];

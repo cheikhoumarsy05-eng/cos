@@ -76,6 +76,7 @@ export function toProject(p: any) {
     fieldLabel: p.fieldLabel,
     desc: p.desc,
     featured: Boolean(p.featured),
+    drawings: Boolean(p.drawings),
     specs: (p.specs ?? []).map((s: any) => ({ k: s.k, v: s.v })),
     tags: (p.tags ?? []).map((t: any) => t.value),
     images: (p.images ?? []).flatMap((im: any) => {

@@ -77,10 +77,11 @@ export default async function Home() {
     ],
   };
 
+  /* Navigation en trois temps : l'accueil, tout le corps du site regroupé sous « À propos »
+     (sections 01 à 08), puis le contact. Le scrollspy n'observe que ces trois ancres, donc
+     « À propos » reste actif sur toute la traversée des sections intermédiaires. */
   const NAV: [string, string][] = [
-    ["expertise", st.expertise], ["experience", st.experience], ["projets", st.projectsNav ?? st.projects],
-    ["recherche", st.research], ["freelance", st.freelance],
-    ["competences", st.skills], ["formation", st.education], ["contact", st.contactNav ?? st.contact],
+    ["top", st.home], ["a-propos", st.aboutNav ?? st.about], ["contact", st.contactNav ?? st.contact],
   ];
 
   return (

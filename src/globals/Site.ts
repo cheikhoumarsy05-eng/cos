@@ -15,7 +15,9 @@ export const Site: GlobalConfig = {
       type: "group",
       label: "Titres de sections",
       fields: [
+        { name: "home", type: "text", defaultValue: "Accueil", label: "Accueil — libellé de navigation" },
         { name: "about", type: "text", defaultValue: "À propos" },
+        { name: "aboutNav", type: "text", defaultValue: "À propos", label: "À propos — libellé court (navigation)" },
         { name: "expertise", type: "text", defaultValue: "Expertise" },
         { name: "experience", type: "text", defaultValue: "Expérience" },
         { name: "experienceLead", type: "text", defaultValue: "Bureau de contrôle, conduite de travaux, chantier." },

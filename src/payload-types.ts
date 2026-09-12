@@ -857,7 +857,9 @@ export interface Site {
   cvUrl: string;
   footerNote: string;
   sectionTitles?: {
+    home?: string | null;
     about?: string | null;
+    aboutNav?: string | null;
     expertise?: string | null;
     experience?: string | null;
     experienceLead?: string | null;
@@ -1076,7 +1078,9 @@ export interface SiteSelect<T extends boolean = true> {
   sectionTitles?:
     | T
     | {
+        home?: T;
         about?: T;
+        aboutNav?: T;
         expertise?: T;
         experience?: T;
         experienceLead?: T;

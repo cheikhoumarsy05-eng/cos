@@ -131,6 +131,18 @@ const run = async () => {
   } });
 
   await payload.updateGlobal({ slug: "skills", data: {
+    domains: [
+      { title: "Calcul & dimensionnement structurel", items: "Béton armé · Charpente métallique · Eurocodes · BAEL · États limites · Descente de charges · Vérifications" },
+      { title: "Plans & documentation technique", items: "Plans de coffrage · Plans de ferraillage · Détails constructifs · Notes de calcul · Rapports techniques" },
+      { title: "Contrôle & vérification", items: "Examen de plans · Conformité · Détection des non-conformités · Contrôle qualité" },
+      { title: "Analyse des structures", items: "Analyse statique · Analyse modale · Dynamique des structures · EN 1990 · EN 1991-2" },
+      { title: "Calcul scientifique & numérique", items: "Python · Jupyter Notebook · Modélisation numérique · Automatisation des calculs" },
+      { title: "Économie de la construction", items: "Métrés · Attachements · Devis estimatifs · Quantification" },
+      { title: "Outils d'ingénierie", items: "Robot Structural Analysis · CYPECAD · CBS · Revit · Archicad · AutoCAD · RDM7 · Expert · Graitec" },
+    ],
+  } });
+
+  await payload.updateGlobal({ slug: "skills", data: {
     technicalLabel: "Techniques",
     toolsLabel: "Outils & logiciels",
     toolsNote: "En gras : maîtrise quotidienne",

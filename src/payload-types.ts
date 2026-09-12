@@ -768,6 +768,22 @@ export interface Skill {
   toolsLabel: string;
   toolsNote: string;
   personalLabel: string;
+  /**
+   * Affichés en tableau : un domaine par ligne, ses compétences et référentiels en regard.
+   */
+  domains?:
+    | {
+        title: string;
+        /**
+         * Séparez les éléments par « · ».
+         */
+        items: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Remplacée à l'affichage par le tableau des domaines. Conservée ici, plus affichée sur la page.
+   */
   technical?:
     | {
         value: string;
@@ -982,6 +998,13 @@ export interface SkillsSelect<T extends boolean = true> {
   toolsLabel?: T;
   toolsNote?: T;
   personalLabel?: T;
+  domains?:
+    | T
+    | {
+        title?: T;
+        items?: T;
+        id?: T;
+      };
   technical?:
     | T
     | {

@@ -210,18 +210,18 @@ export default async function Home() {
           <section className="section" id="expertise">
             <div className="wrap">
               <div className="ed-head reveal"><p className="ed-index">02</p><div className="ed-head-text"><h2 className="ed-title">{st.expertise ?? expertise.title}</h2></div></div>
-              <table className="expertise-table reveal">
-                <tbody>
-                  {(expertise.items as any[]).map((it: any, i: number) => (
-                    <tr key={it.id ?? it.title}>
-                      <td className="expertise-n">{String(i + 1).padStart(2, "0")}</td>
-                      <th scope="row" className="expertise-title">{it.title}</th>
-                      <td className="expertise-desc">{it.description}</td>
-                      <td className="expertise-tools">{it.tools}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="expertise-grid">
+                {(expertise.items as any[]).map((it: any, i: number) => (
+                  <article className="expertise-card reveal" key={it.id ?? it.title}>
+                    <p className="expertise-head">
+                      <span className="expertise-n">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="expertise-title">{it.title}</span>
+                    </p>
+                    <p className="expertise-desc">{it.description}</p>
+                    {it.tools && <p className="expertise-tools">{it.tools}</p>}
+                  </article>
+                ))}
+              </div>
             </div>
           </section>
         )}
@@ -292,29 +292,30 @@ export default async function Home() {
         <section className="section" id="competences">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">07</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2></div></div>
-            <div className="skills-grid">
-              <div className="reveal">
-                <h3 className="subhead">{skills.technicalLabel}</h3>
-                <ul className="skill-list">
-                  {(skills.technical ?? []).map((s: any, i: number) => (
-                    <li key={s.id ?? s.value}><span className="sn">{String(i + 1).padStart(2, "0")}</span><span>{s.value}</span></li>
-                  ))}
-                </ul>
-              </div>
-              <div className="reveal">
-                <h3 className="subhead">{skills.toolsLabel}</h3>
-                <div className="tool-grid">
-                  {(skills.tools ?? []).map((t: any) => (
-                    <span className={"tool" + (t.key ? " key" : "")} key={t.id ?? t.name}>{t.name}</span>
-                  ))}
-                </div>
-                <p className="small-label" style={{ marginTop: 14 }}>{skills.toolsNote}</p>
-                <h3 className="subhead" style={{ marginTop: 36 }}>{skills.personalLabel}</h3>
+            <table className="skills-table reveal">
+              <thead>
+                <tr>
+                  <th scope="col">Domaine</th>
+                  <th scope="col">Compétences / référentiels</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(skills.domains ?? []).map((d: any) => (
+                  <tr key={d.id ?? d.title}>
+                    <th scope="row" className="skills-domain">{d.title}</th>
+                    <td className="skills-items">{d.items}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {(skills.personal ?? []).length > 0 && (
+              <div className="skills-personal reveal">
+                <h3 className="subhead">{skills.personalLabel}</h3>
                 <div className="softskills">
                   {(skills.personal ?? []).map((s: any) => <span className="s" key={s.id ?? s.value}>{s.value}</span>)}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
 

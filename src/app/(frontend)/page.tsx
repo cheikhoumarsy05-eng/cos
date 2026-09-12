@@ -78,9 +78,9 @@ export default async function Home() {
   };
 
   const NAV: [string, string][] = [
-    ["expertise", st.expertise], ["experience", st.experience], ["projets", st.projects],
+    ["expertise", st.expertise], ["experience", st.experience], ["projets", st.projectsNav ?? st.projects],
     ["recherche", st.research], ["freelance", st.freelance],
-    ["competences", st.skills], ["formation", st.education], ["contact", st.contact],
+    ["competences", st.skills], ["formation", st.education], ["contact", st.contactNav ?? st.contact],
   ];
 
   return (

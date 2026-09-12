@@ -22,6 +22,8 @@ export const Site: GlobalConfig = {
         { name: "research", type: "text", defaultValue: "Recherche appliquée" },
         { name: "projects", type: "text", defaultValue: "Projets" },
         { name: "projectsLead", type: "text", defaultValue: "Conception, modélisation et calcul de bâtiments résidentiels — du volume à l'élément." },
+        { name: "projectsNav", type: "text", defaultValue: "Projets", label: "Projets — libellé court (navigation)" },
+        { name: "contactNav", type: "text", defaultValue: "Contact", label: "Contact — libellé court (navigation)" },
         { name: "freelance", type: "text", defaultValue: "Freelance" },
         { name: "skills", type: "text", defaultValue: "Compétences" },
         { name: "education", type: "text", defaultValue: "Formation" },

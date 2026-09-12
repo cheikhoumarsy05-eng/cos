@@ -5,6 +5,7 @@ import * as migration_20260912_035121_expertise_hero_publication_metrics from '.
 import * as migration_20260912_040009_stat_years_default from './20260912_040009_stat_years_default';
 import * as migration_20260912_043752_experience_key_points from './20260912_043752_experience_key_points';
 import * as migration_20260912_050519_skills_domains from './20260912_050519_skills_domains';
+import * as migration_20260912_052544_nav_short_labels from './20260912_052544_nav_short_labels';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260912_050519_skills_domains.up,
     down: migration_20260912_050519_skills_domains.down,
-    name: '20260912_050519_skills_domains'
+    name: '20260912_050519_skills_domains',
+  },
+  {
+    up: migration_20260912_052544_nav_short_labels.up,
+    down: migration_20260912_052544_nav_short_labels.down,
+    name: '20260912_052544_nav_short_labels'
   },
 ];

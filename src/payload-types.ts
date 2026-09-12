@@ -864,6 +864,8 @@ export interface Site {
     research?: string | null;
     projects?: string | null;
     projectsLead?: string | null;
+    projectsNav?: string | null;
+    contactNav?: string | null;
     freelance?: string | null;
     skills?: string | null;
     education?: string | null;
@@ -1081,6 +1083,8 @@ export interface SiteSelect<T extends boolean = true> {
         research?: T;
         projects?: T;
         projectsLead?: T;
+        projectsNav?: T;
+        contactNav?: T;
         freelance?: T;
         skills?: T;
         education?: T;

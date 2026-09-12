@@ -7,18 +7,19 @@ export const Expertise: GlobalConfig = {
   access: { read: () => true },
   hooks: { afterChange: [revalidateHomeAfterGlobalChange] },
   fields: [
-    { name: "title", type: "text", label: "Titre de section", defaultValue: "Expertise" },
+    { name: "title", type: "text", localized: true, label: "Titre de section", defaultValue: "Expertise" },
     {
       name: "items",
       type: "array",
       label: "Domaines d'expertise",
       admin: { description: "Chaque domaine : un intitulé, ce qu'il recouvre, et les logiciels ou normes associés." },
       fields: [
-        { name: "title", type: "text", required: true, label: "Domaine" },
-        { name: "description", type: "textarea", required: true, label: "Description" },
+        { name: "title", type: "text", required: true, localized: true, label: "Domaine" },
+        { name: "description", type: "textarea", required: true, localized: true, label: "Description" },
         {
           name: "tools",
           type: "text",
+          localized: true,
           label: "Logiciels / normes",
           admin: { description: "Ex. « Eurocodes · BAEL ». Laisser vide si rien de pertinent." },
         },

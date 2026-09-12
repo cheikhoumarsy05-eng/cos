@@ -7,18 +7,18 @@ export const Skills: GlobalConfig = {
   access: { read: () => true },
   hooks: { afterChange: [revalidateHomeAfterGlobalChange] },
   fields: [
-    { name: "technicalLabel", type: "text", required: true, label: "Titre — Techniques", defaultValue: "Techniques" },
-    { name: "toolsLabel", type: "text", required: true, label: "Titre — Outils & logiciels", defaultValue: "Outils & logiciels" },
-    { name: "toolsNote", type: "text", required: true, label: "Note sous les outils", defaultValue: "En gras : maîtrise quotidienne" },
-    { name: "personalLabel", type: "text", required: true, label: "Titre — Personnelles", defaultValue: "Personnelles" },
+    { name: "technicalLabel", type: "text", required: true, localized: true, label: "Titre — Techniques", defaultValue: "Techniques" },
+    { name: "toolsLabel", type: "text", required: true, localized: true, label: "Titre — Outils & logiciels", defaultValue: "Outils & logiciels" },
+    { name: "toolsNote", type: "text", required: true, localized: true, label: "Note sous les outils", defaultValue: "En gras : maîtrise quotidienne" },
+    { name: "personalLabel", type: "text", required: true, localized: true, label: "Titre — Personnelles", defaultValue: "Personnelles" },
     {
       name: "domains",
       type: "array",
       label: "Domaines de compétences",
       admin: { description: "Affichés en tableau : un domaine par ligne, ses compétences et référentiels en regard." },
       fields: [
-        { name: "title", type: "text", required: true, label: "Domaine" },
-        { name: "items", type: "textarea", required: true, label: "Compétences / référentiels", admin: { description: "Séparez les éléments par « · »." } },
+        { name: "title", type: "text", required: true, localized: true, label: "Domaine" },
+        { name: "items", type: "textarea", required: true, localized: true, label: "Compétences / référentiels", admin: { description: "Séparez les éléments par « · »." } },
       ],
     },
     {
@@ -26,7 +26,7 @@ export const Skills: GlobalConfig = {
       type: "array",
       label: "Compétences techniques (ancienne liste)",
       admin: { description: "Remplacée à l'affichage par le tableau des domaines. Conservée ici, plus affichée sur la page." },
-      fields: [{ name: "value", type: "text", required: true }],
+      fields: [{ name: "value", type: "text", required: true, localized: true }],
     },
     {
       name: "tools",
@@ -41,7 +41,7 @@ export const Skills: GlobalConfig = {
       name: "personal",
       type: "array",
       label: "Compétences personnelles",
-      fields: [{ name: "value", type: "text", required: true }],
+      fields: [{ name: "value", type: "text", required: true, localized: true }],
     },
   ],
 };

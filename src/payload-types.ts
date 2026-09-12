@@ -94,7 +94,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('fr' | 'en') | ('fr' | 'en')[];
   globals: {
     hero: Hero;
     about: About;
@@ -115,7 +115,7 @@ export interface Config {
     contact: ContactSelect<false> | ContactSelect<true>;
     site: SiteSelect<false> | SiteSelect<true>;
   };
-  locale: null;
+  locale: 'fr' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };

@@ -12,3 +12,38 @@ export const SITE_TITLE = "Cheikh Oumar Sy · Ingénieur Génie Civil — Struct
 
 export const SITE_DESCRIPTION =
   "Ingénieur en Génie Civil — spécialisation structures : béton armé, charpente métallique, dynamique des structures. En recherche d'un stage Ingénieur Structures (4–6 mois).";
+
+export const SITE_TITLE_EN = "Cheikh Oumar Sy · Civil Engineer — Structures";
+
+export const SITE_DESCRIPTION_EN =
+  "Civil engineer specialising in structures: reinforced concrete, steel framing, structural dynamics. Looking for a 4–6 month structural engineering internship.";
+
+/** Mots-clés de référencement, par langue. */
+export const SITE_KEYWORDS = {
+  fr: [
+    "ingénieur génie civil",
+    "calcul de structures",
+    "béton armé",
+    "charpente métallique",
+    "Eurocodes",
+    "BAEL",
+    "dynamique des structures",
+    "bureau de contrôle technique",
+    "Dakar",
+    "Sénégal",
+    "stage ingénieur structures",
+  ],
+  en: [
+    "civil engineer",
+    "structural analysis",
+    "reinforced concrete",
+    "steel framing",
+    "Eurocodes",
+    "BAEL",
+    "structural dynamics",
+    "technical inspection office",
+    "Dakar",
+    "Senegal",
+    "structural engineering internship",
+  ],
+} as const;

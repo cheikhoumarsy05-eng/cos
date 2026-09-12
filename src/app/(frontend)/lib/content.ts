@@ -1,5 +1,6 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
+import type { Locale } from "./i18n";
 
 let cached: Awaited<ReturnType<typeof getPayload>> | null = null;
 
@@ -24,22 +25,29 @@ export function mediaAlt(m: unknown): string | null {
   return null;
 }
 
-export async function getContent() {
+/**
+ * Charge tout le contenu de la page d'accueil dans une langue donnée.
+ *
+ * `fallback: true` est actif dans la config Payload : un champ anglais encore
+ * vide ressort avec sa valeur française, de sorte que la page /en reste
+ * entièrement lisible pendant la relecture des traductions.
+ */
+export async function getContent(locale: Locale = "fr") {
   const payload = await payloadClient();
   const [hero, about, expertise, publication, skills, stats, contact, site, projects, experience, freelance, education] =
     await Promise.all([
-      payload.findGlobal({ slug: "hero" }),
-      payload.findGlobal({ slug: "about" }),
-      payload.findGlobal({ slug: "expertise" }),
-      payload.findGlobal({ slug: "publication" }),
-      payload.findGlobal({ slug: "skills" }),
-      payload.findGlobal({ slug: "stats" }),
-      payload.findGlobal({ slug: "contact" }),
-      payload.findGlobal({ slug: "site" }),
-      payload.find({ collection: "projects", limit: 100, sort: "order" }),
-      payload.find({ collection: "experience", limit: 100, sort: "order" }),
-      payload.find({ collection: "freelance", limit: 100, sort: "order" }),
-      payload.find({ collection: "education", limit: 100, sort: "order" }),
+      payload.findGlobal({ slug: "hero", locale }),
+      payload.findGlobal({ slug: "about", locale }),
+      payload.findGlobal({ slug: "expertise", locale }),
+      payload.findGlobal({ slug: "publication", locale }),
+      payload.findGlobal({ slug: "skills", locale }),
+      payload.findGlobal({ slug: "stats", locale }),
+      payload.findGlobal({ slug: "contact", locale }),
+      payload.findGlobal({ slug: "site", locale }),
+      payload.find({ collection: "projects", limit: 100, sort: "order", locale }),
+      payload.find({ collection: "experience", limit: 100, sort: "order", locale }),
+      payload.find({ collection: "freelance", limit: 100, sort: "order", locale }),
+      payload.find({ collection: "education", limit: 100, sort: "order", locale }),
     ]);
 
   return {

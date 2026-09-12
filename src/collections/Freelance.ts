@@ -8,8 +8,8 @@ export const Freelance: CollectionConfig = {
   hooks: { afterChange: [revalidateHomeAfterChange], afterDelete: [revalidateHomeAfterDelete] },
   fields: [
     { name: "order", type: "number", required: true, defaultValue: 0 },
-    { name: "when", type: "text", required: true, label: "Période" },
-    { name: "title", type: "text", required: true, label: "Titre" },
-    { name: "body", type: "textarea", required: true, label: "Description" },
+    { name: "when", type: "text", required: true, localized: true, label: "Période" },
+    { name: "title", type: "text", required: true, localized: true, label: "Titre" },
+    { name: "body", type: "textarea", required: true, localized: true, label: "Description" },
   ],
 };

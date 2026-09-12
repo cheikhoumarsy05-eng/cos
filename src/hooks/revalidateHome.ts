@@ -19,8 +19,11 @@ import type {
  */
 function revalidateHome(payload?: Payload) {
   try {
+    // Le site est bilingue : une même modification du CMS alimente « / » et
+    // « /en », il faut donc invalider les deux entrées statiques.
     revalidatePath("/");
-    payload?.logger?.info?.("Revalidated homepage (/) after CMS change");
+    revalidatePath("/en");
+    payload?.logger?.info?.("Revalidated homepage (/ and /en) after CMS change");
   } catch {
     // No Next.js request context (seed / migrate / CLI). Safe to ignore.
   }

@@ -1,5 +1,7 @@
 "use client";
 
+import type { Dict } from "../lib/i18n";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type SideFact = { id?: string; k: string; v: string; accent?: boolean | null };
@@ -17,7 +19,7 @@ export type PublicationItem = {
   sideFacts?: SideFact[] | null;
 };
 
-function Article({ item }: { item: PublicationItem }) {
+function Article({ item, t }: { item: PublicationItem; t: Dict }) {
   return (
     <div className="pub">
       <div>
@@ -40,7 +42,7 @@ function Article({ item }: { item: PublicationItem }) {
         </ul>
         {item.keyResult && (
           <p className="pub-keyresult">
-            <span className="pub-keyresult-k">Résultat clé</span>
+            <span className="pub-keyresult-k">{t.keyResult}</span>
             {item.keyResult}
           </p>
         )}
@@ -63,7 +65,7 @@ function Article({ item }: { item: PublicationItem }) {
   );
 }
 
-export default function PublicationCarousel({ items }: { items: PublicationItem[] }) {
+export default function PublicationCarousel({ items, t }: { items: PublicationItem[]; t: Dict }) {
   const [active, setActive] = useState(0);
   const viewportRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -107,13 +109,13 @@ export default function PublicationCarousel({ items }: { items: PublicationItem[
   if (!multiple) {
     return (
       <div className="pub-carousel reveal">
-        <Article item={items[0]} />
+        <Article item={items[0]} t={t} />
       </div>
     );
   }
 
   return (
-    <div className="pub-carousel reveal" role="group" aria-roledescription="carrousel" aria-label="Publications">
+    <div className="pub-carousel reveal" role="group" aria-roledescription="carrousel" aria-label={t.publications}>
       <div className="pub-viewport" ref={viewportRef}>
         <div className="pub-track" style={{ transform: `translateX(-${active * 100}%)` }}>
           {items.map((item, i) => (
@@ -124,26 +126,26 @@ export default function PublicationCarousel({ items }: { items: PublicationItem[
               aria-hidden={i !== active}
               inert={i !== active ? true : undefined}
             >
-              <Article item={item} />
+              <Article item={item} t={t} />
             </div>
           ))}
         </div>
       </div>
 
       <div className="pub-nav">
-        <button className="pub-arrow" aria-label="Publication précédente" onClick={() => go(-1)}>
+        <button className="pub-arrow" aria-label={t.previousPublication} onClick={() => go(-1)}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" strokeWidth="1.6" />
           </svg>
         </button>
-        <div className="pub-dots" role="tablist" aria-label="Choisir une publication">
+        <div className="pub-dots" role="tablist" aria-label={t.choosePublication}>
           {items.map((item, i) => (
             <button
               key={item.id ?? item.title}
               className={"pub-dot" + (i === active ? " active" : "")}
               role="tab"
               aria-selected={i === active}
-              aria-label={`Publication ${i + 1} : ${item.title}`}
+              aria-label={`${t.publications} ${i + 1} : ${item.title}`}
               onClick={() => setActive(i)}
             />
           ))}
@@ -151,7 +153,7 @@ export default function PublicationCarousel({ items }: { items: PublicationItem[
         <span className="pub-count" aria-live="polite">
           {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
         </span>
-        <button className="pub-arrow" aria-label="Publication suivante" onClick={() => go(1)}>
+        <button className="pub-arrow" aria-label={t.nextPublication} onClick={() => go(1)}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 5 L16 12 L9 19" fill="none" stroke="currentColor" strokeWidth="1.6" />
           </svg>

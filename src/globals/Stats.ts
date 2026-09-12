@@ -5,8 +5,8 @@ export const Stats: GlobalConfig = {
   admin: { group: "Sections" },
   access: { read: () => true },
   fields: [
-    { name: "title", type: "text", required: true, label: "Titre de section", defaultValue: "En chiffres" },
-    { name: "lead", type: "text", label: "Accroche (optionnelle)" },
+    { name: "title", type: "text", required: true, localized: true, label: "Titre de section", defaultValue: "En chiffres" },
+    { name: "lead", type: "text", localized: true, label: "Accroche (optionnelle)" },
     {
       name: "items",
       type: "array",
@@ -15,7 +15,7 @@ export const Stats: GlobalConfig = {
       admin: { description: "Chaque chiffre : une valeur mise en avant (ex. « 20+ ») et un libellé." },
       fields: [
         { name: "value", type: "text", required: true, label: "Valeur", admin: { description: "ex. 20+" } },
-        { name: "label", type: "text", required: true, label: "Libellé" },
+        { name: "label", type: "text", required: true, localized: true, label: "Libellé" },
       ],
       defaultValue: [
         { value: "20+", label: "projets de conception archi et béton armé" },

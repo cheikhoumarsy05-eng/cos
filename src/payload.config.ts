@@ -31,6 +31,17 @@ export default buildConfig({
   },
   collections: [Projects, Experience, Freelance, Education, Media, Users],
   globals: [Hero, About, Expertise, Publication, Skills, Stats, Contact, Site],
+  // Site bilingue : le français reste la langue par défaut, servie sur « / ».
+  // `fallback` affiche le texte français tant qu'une traduction anglaise est vide,
+  // ce qui évite les trous à l'écran pendant la relecture des traductions.
+  localization: {
+    locales: [
+      { label: "Français", code: "fr" },
+      { label: "English", code: "en" },
+    ],
+    defaultLocale: "fr",
+    fallback: true,
+  },
   editor: lexicalEditor(),
   // Sharp powers upload image resizing (thumb/wide, webp conversion).
   sharp,

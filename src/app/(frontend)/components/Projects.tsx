@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { type Project } from "@/data/projects";
+import { fmt, type Dict } from "../lib/i18n";
 import { Blueprint } from "./Blueprints";
 
 /* Optimized render via next/image (fill + responsive sizes). */
@@ -19,19 +20,19 @@ function Render({ src, alt, priority, sizes }: { src: string; alt: string; prior
   );
 }
 
-function MediaField({ project, priority }: { project: Project; priority?: boolean }) {
+function MediaField({ project, priority, t }: { project: Project; priority?: boolean; t: Dict }) {
   const has = project.images.length > 0;
   return (
     <div className={"proj-frame" + (has ? "" : " blueprint-field")} role="img" aria-label={has ? project.images[0].alt : project.fieldLabel}>
       {has ? <Render src={project.images[0].src} alt={project.images[0].alt} priority={priority} /> : <Blueprint id={project.id} />}
-      {has && <span className="badge">{String(project.images.length).padStart(2, "0")} vues</span>}
+      {has && <span className="badge">{String(project.images.length).padStart(2, "0")} {t.views}</span>}
       <span className="caption">{project.fieldLabel}</span>
     </div>
   );
 }
 
 
-function ProjectDetail({ project, onClose }: { project: Project; onClose: () => void }) {
+function ProjectDetail({ project, onClose, t }: { project: Project; onClose: () => void; t: Dict }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [active, setActive] = useState(0);
   const has = project.images.length > 0;
@@ -63,7 +64,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
     <dialog
       className="proj-dialog"
       ref={dialogRef}
-      aria-label={`Projet : ${project.title}`}
+      aria-label={fmt(t.projectDialog, { title: project.title })}
       onClose={onClose}
     >
       <div className="proj-detail">
@@ -73,7 +74,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
             <p className="detail-kind">{project.type}</p>
             <h3 className="detail-title">{project.title}</h3>
           </div>
-          <button className="detail-close" onClick={() => dialogRef.current?.close()} aria-label="Fermer">
+          <button className="detail-close" onClick={() => dialogRef.current?.close()} aria-label={t.close}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
           </button>
         </div>
@@ -84,19 +85,19 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
               <Render key={project.images[active].src} src={project.images[active].src} alt={project.images[active].alt} priority sizes="(max-width: 1160px) 100vw, 1120px" />
               {count > 1 && (
                 <>
-                  <button className="stage-arrow prev" aria-label="Vue précédente" onClick={() => go(-1)} disabled={active === 0}>
+                  <button className="stage-arrow prev" aria-label={t.previousView} onClick={() => go(-1)} disabled={active === 0}>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
                   </button>
-                  <button className="stage-arrow next" aria-label="Vue suivante" onClick={() => go(1)} disabled={active === count - 1}>
+                  <button className="stage-arrow next" aria-label={t.nextView} onClick={() => go(1)} disabled={active === count - 1}>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
                   </button>
                 </>
               )}
               <span className="stage-count" aria-live="polite">{String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}</span>
             </div>
-            <div className="thumbs" role="tablist" aria-label="Vues du projet">
+            <div className="thumbs" role="tablist" aria-label={t.projectViews}>
               {project.images.map((img, i) => (
-                <button key={img.src} className={"thumb" + (i === active ? " active" : "")} role="tab" aria-selected={i === active} aria-label={`Vue ${i + 1} : ${img.alt}`} onClick={() => setActive(i)}>
+                <button key={img.src} className={"thumb" + (i === active ? " active" : "")} role="tab" aria-selected={i === active} aria-label={fmt(t.viewLabel, { n: i + 1, alt: img.alt })} onClick={() => setActive(i)}>
                   <Render src={img.src} alt="" sizes="120px" />
                 </button>
               ))}
@@ -105,7 +106,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         ) : (
           <div className="stage stage-blueprint">
             {<Blueprint id={project.id} />}
-            <span className="stage-note">Plans, notes de calcul et modèles disponibles sur demande.</span>
+            <span className="stage-note">{t.onRequest}</span>
           </div>
         )}
 
@@ -117,10 +118,10 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                 <div className="dspec" key={s.k}><span className="dk">{s.k}</span><span className="dv">{s.v}</span></div>
               ))}
             </div>
-            <div className="tag-list">{project.tags.map((t) => <span className="tag" key={t}>{t}</span>)}</div>
+            <div className="tag-list">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
             {!has && (
               <div className="detail-cta">
-                <a className="btn btn-outline arrow" href={`mailto:cheikhoumarsy05@gmail.com?subject=${encodeURIComponent(`Demande de plans — ${project.title}`)}`}>Demander les plans</a>
+                <a className="btn btn-outline arrow" href={`mailto:cheikhoumarsy05@gmail.com?subject=${encodeURIComponent(fmt(t.requestSubject, { title: project.title }))}`}>{t.requestDrawings}</a>
               </div>
             )}
           </div>
@@ -130,7 +131,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
   );
 }
 
-export default function Projects({ projects }: { projects: Project[] }) {
+export default function Projects({ projects, t }: { projects: Project[]; t: Dict }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const rowRefs = useRef<Record<string, HTMLElement | null>>({});
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -175,19 +176,19 @@ export default function Projects({ projects }: { projects: Project[] }) {
               </div>
               <p className="proj-desc">{project.desc}</p>
               <div className="proj-foot">
-                <div className="tag-list">{project.tags.slice(0, 3).map((t) => <span className="tag" key={t}>{t}</span>)}</div>
+                <div className="tag-list">{project.tags.slice(0, 3).map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
                 <button className="proj-open arrow" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
-                  {project.images.length > 0 ? "Voir les rendus" : "Voir le projet"}
+                  {project.images.length > 0 ? t.seeRenders : t.seeProject}
                 </button>
               </div>
             </div>
-            <button className="proj-media proj-media-btn" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-label={`Ouvrir ${project.title}`}>
-              <MediaField project={project} priority={i === 0} />
+            <button className="proj-media proj-media-btn" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-label={fmt(t.openProject, { title: project.title })}>
+              <MediaField project={project} priority={i === 0} t={t} />
             </button>
           </article>
         ))}
       </div>
-      {open && <ProjectDetail project={open} onClose={handleClose} />}
+      {open && <ProjectDetail project={open} onClose={handleClose} t={t} />}
     </>
   );
 }

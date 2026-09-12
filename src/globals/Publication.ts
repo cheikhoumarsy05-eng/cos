@@ -14,20 +14,20 @@ export const Publication: GlobalConfig = {
       minRows: 1,
       admin: { description: "Ajoutez plusieurs publications : la section devient un carrousel qui glisse entre elles." },
       fields: [
-        { name: "title", type: "text", required: true },
-        { name: "sub", type: "text", required: true, label: "Sous-titre" },
-        { name: "points", type: "array", label: "Points", fields: [{ name: "value", type: "textarea", required: true }] },
+        { name: "title", type: "text", required: true, localized: true },
+        { name: "sub", type: "text", required: true, localized: true, label: "Sous-titre" },
+        { name: "points", type: "array", label: "Points", fields: [{ name: "value", type: "textarea", required: true, localized: true }] },
         {
           name: "metrics",
           type: "array",
           label: "Chiffres clés",
           admin: { description: "Affichés en grand : une valeur (ex. « 220 km/h ») et son libellé (ex. « Vitesse de service »)." },
           fields: [
-            { name: "value", type: "text", required: true, label: "Valeur" },
-            { name: "label", type: "text", required: true, label: "Libellé" },
+            { name: "value", type: "text", required: true, localized: true, label: "Valeur" },
+            { name: "label", type: "text", required: true, localized: true, label: "Libellé" },
           ],
         },
-        { name: "keyResult", type: "textarea", label: "Résultat clé", admin: { description: "Mis en évidence sous les points. Laisser vide pour ne rien afficher." } },
+        { name: "keyResult", type: "textarea", localized: true, label: "Résultat clé", admin: { description: "Mis en évidence sous les points. Laisser vide pour ne rien afficher." } },
         { name: "doi", type: "text", required: true, label: "DOI (texte)" },
         { name: "doiUrl", type: "text", required: true, label: "Lien DOI" },
         {
@@ -35,8 +35,8 @@ export const Publication: GlobalConfig = {
           type: "array",
           label: "Encart (rail)",
           fields: [
-            { name: "k", type: "text", required: true },
-            { name: "v", type: "text", required: true },
+            { name: "k", type: "text", required: true, localized: true },
+            { name: "v", type: "text", required: true, localized: true },
             { name: "accent", type: "checkbox", defaultValue: false },
           ],
         },

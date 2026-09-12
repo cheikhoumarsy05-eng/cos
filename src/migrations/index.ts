@@ -8,6 +8,7 @@ import * as migration_20260912_050519_skills_domains from './20260912_050519_ski
 import * as migration_20260912_052544_nav_short_labels from './20260912_052544_nav_short_labels';
 import * as migration_20260912_062529_nav_home_label from './20260912_062529_nav_home_label';
 import * as migration_20260912_062648_nav_about_label from './20260912_062648_nav_about_label';
+import * as migration_20260912_085057_localisation_fr_en from './20260912_085057_localisation_fr_en';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20260912_062648_nav_about_label.up,
     down: migration_20260912_062648_nav_about_label.down,
-    name: '20260912_062648_nav_about_label'
+    name: '20260912_062648_nav_about_label',
+  },
+  {
+    up: migration_20260912_085057_localisation_fr_en.up,
+    down: migration_20260912_085057_localisation_fr_en.down,
+    name: '20260912_085057_localisation_fr_en'
   },
 ];

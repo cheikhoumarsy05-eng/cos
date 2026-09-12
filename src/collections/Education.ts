@@ -8,8 +8,8 @@ export const Education: CollectionConfig = {
   hooks: { afterChange: [revalidateHomeAfterChange], afterDelete: [revalidateHomeAfterDelete] },
   fields: [
     { name: "order", type: "number", required: true, defaultValue: 0 },
-    { name: "when", type: "text", required: true, label: "Période" },
-    { name: "title", type: "text", required: true, label: "Diplôme" },
+    { name: "when", type: "text", required: true, localized: true, label: "Période" },
+    { name: "title", type: "text", required: true, localized: true, label: "Diplôme" },
     { name: "org", type: "text", required: true, label: "Établissement" },
   ],
 };

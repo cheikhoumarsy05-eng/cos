@@ -63,7 +63,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 /* nav */
 .topnav { position: sticky; top: 0; z-index: 60; background: var(--paper); border-bottom: 2px solid var(--ink); }
 .topnav.scrolled { box-shadow: 0 1px 0 var(--ink); }
-.topnav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.topnav-inner { display: flex; align-items: center; justify-content: space-between; gap: clamp(20px, 4vw, 56px); height: 64px; }
 .brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; text-transform: uppercase; }
 .brand .brand-mark { color: var(--accent); }
 .nav-links { display: flex; gap: 26px; align-items: center; }
@@ -75,7 +75,22 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .nav-cta:hover { background: var(--accent-2); }
 .menu-toggle { display: none; width: 46px; height: 46px; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 2px; }
 .menu-toggle svg { width: 22px; height: 22px; }
-@media (max-width: 860px) { .nav-links, .topnav .nav-cta { display: none; } .menu-toggle { display: inline-flex; } }
+/* Sélecteur de langue — FR / EN séparés d'une barre oblique, langue active à l'encre.
+   Posé juste avant le bouton CV, il se colle à droite avec les autres commandes. */
+.lang-switch { display: flex; align-items: baseline; font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; }
+.topnav-inner .lang-switch { margin-left: auto; }
+.lang-switch .lang + .lang::before { content: "/"; color: var(--line); font-weight: 500; margin: 0 8px; }
+.lang { color: var(--stone-2); transition: color 0.2s var(--e-out); }
+.lang.is-on { color: var(--ink); }
+a.lang:hover { color: var(--accent); }
+/* Repris dans le menu plein écran, sur fond orange : les rôles de couleur s'inversent. */
+.lang-switch-overlay { font-size: 13px; }
+.lang-switch-overlay .lang { color: color-mix(in srgb, var(--on-ink) 68%, transparent); }
+.lang-switch-overlay .lang.is-on { color: var(--on-ink); }
+.lang-switch-overlay .lang + .lang::before { color: color-mix(in srgb, var(--on-ink) 45%, transparent); }
+.lang-switch-overlay a.lang:hover { color: var(--on-ink); }
+
+@media (max-width: 860px) { .nav-links, .topnav .nav-cta, .topnav .lang-switch { display: none; } .menu-toggle { display: inline-flex; } }
 
 /* overlay menu — hazard field */
 .overlay-menu { position: fixed; inset: 0; z-index: 80; background: var(--accent); color: var(--on-ink); display: grid; grid-template-rows: auto 1fr auto; padding: 20px var(--gutter) 36px; clip-path: inset(0 0 100% 0); transition: clip-path 0.55s var(--e-out); pointer-events: none; }

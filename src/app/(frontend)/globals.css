@@ -533,3 +533,88 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .xp-keys-label { display: block; font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--stone); margin-bottom: 12px; }
 /* Les référentiels priment visuellement sur les logiciels : même bulle, trait et texte à l'encre. */
 .tag-strong { border-color: var(--ink); color: var(--ink); font-weight: 700; }
+
+/* ============================================================
+   ARTICLES & RÉFLEXIONS — cartes éditoriales, 3 / 2 / 1 colonnes
+   ============================================================ */
+.art-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 32px); margin-top: clamp(28px, 4vw, 48px); }
+@media (max-width: 1100px) { .art-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px)  { .art-grid { grid-template-columns: 1fr; } }
+
+.art-card { display: flex; }
+/* La carte entière est le lien : pas d'ancre imbriquée, une seule cible au clavier. */
+.art-link { display: flex; flex-direction: column; width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: transparent; transition: border-color 0.25s var(--e-out); }
+.art-link:hover { border-color: var(--ink); }
+.art-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.art-cover { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--paper-2); border-bottom: 1px solid var(--line); }
+.art-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--e-out); }
+.art-link:hover .art-cover img { transform: scale(1.03); }
+/* Sans couverture, on garde le rythme de la grille plutôt qu'un trou. */
+.art-cover-empty { position: absolute; inset: 0; background-image: linear-gradient(to right, color-mix(in srgb, var(--stone) 20%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--stone) 20%, transparent) 1px, transparent 1px); background-size: 26px 26px; opacity: 0.45; }
+
+.art-body { display: flex; flex-direction: column; flex: 1; padding: clamp(18px, 2vw, 26px); }
+.art-meta { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.art-cat { color: var(--accent); }
+.art-date { color: var(--stone); }
+.art-title { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(17px, 1.7vw, 21px); line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); margin-top: 12px; transition: color 0.2s var(--e-out); }
+.art-link:hover .art-title { color: var(--accent); }
+.art-excerpt { display: block; font-family: var(--font-body); font-size: clamp(14px, 1.4vw, 15px); line-height: 1.6; color: var(--ink-2); margin-top: 10px; }
+.art-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin: auto 0 0; padding-top: clamp(16px, 2vw, 22px); }
+.art-author { font-family: var(--font-body); font-size: 12.5px; color: var(--stone-2); }
+.art-more { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+
+/* ============================================================
+   PAGE D'ARTICLE
+   ============================================================ */
+/* La page d'article n'a pas de menu plein écran : sous 860 px, la barre doit
+   donc garder le sélecteur de langue et le CV, sans quoi le lecteur mobile
+   perd tout moyen de changer de langue. Les deux liens de navigation, eux,
+   restent masqués — le retour se fait par « Tous les articles » dans la page. */
+@media (max-width: 860px) {
+  .topnav-article .lang-switch { display: block; }
+  .topnav-article .nav-cta { display: inline-block; }
+  .topnav-article .topnav-inner { gap: 14px; }
+}
+
+.article-page { padding-top: clamp(30px, 4vw, 60px); }
+.article-page .wrap { max-width: 860px; }
+.article-back { margin: 0 0 clamp(22px, 3vw, 34px); }
+.article-back-end { margin: clamp(34px, 4vw, 52px) 0 0; padding-top: clamp(22px, 3vw, 30px); border-top: 1px solid var(--line); }
+/* Les flèches de ces trois libellés ont besoin d'un vrai blanc : l'espace
+   contenu dans `content` est réduit au rendu. */
+.arrow-back::before { content: "\2190"; margin-right: 8px; }
+.article-source .arrow::after { margin-left: 7px; }
+.art-more.arrow::after { margin-left: 6px; }
+
+.article-head { border-top: 3px solid var(--ink); padding-top: clamp(18px, 2.4vw, 26px); }
+.article-meta { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0; font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.article-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 5vw, 56px); line-height: 1.02; letter-spacing: -0.02em; text-transform: uppercase; margin: clamp(14px, 2vw, 20px) 0 0; }
+.article-lead { font-family: var(--font-serif); font-size: clamp(17px, 2vw, 21px); line-height: 1.5; color: var(--ink-2); margin: clamp(16px, 2vw, 22px) 0 0; max-width: 60ch; }
+.article-byline { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone-2); margin: clamp(16px, 2vw, 22px) 0 0; }
+
+.article-cover { position: relative; aspect-ratio: 16 / 9; overflow: hidden; margin: clamp(28px, 4vw, 46px) 0 0; border: 2px solid var(--ink); border-radius: var(--radius); background: var(--paper-2); }
+
+/* Corps de l'article : la largeur de ligne prime, on vise environ 68 caractères. */
+.article-body { margin-top: clamp(30px, 4vw, 48px); font-family: var(--font-body); font-size: clamp(16px, 1.7vw, 17.5px); line-height: 1.7; color: var(--ink-2); }
+.article-body > * + * { margin-top: 1.15em; }
+.article-body h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.12; letter-spacing: -0.01em; color: var(--ink); margin-top: 1.9em; }
+.article-body h3 { font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 2vw, 22px); line-height: 1.2; color: var(--ink); margin-top: 1.6em; }
+.article-body h4 { font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--stone-2); margin-top: 1.5em; }
+/* Un titre appartient au texte qu'il introduit : on resserre le lien. */
+.article-body h2 + *, .article-body h3 + *, .article-body h4 + * { margin-top: 0.55em; }
+.article-body strong { font-weight: 700; color: var(--ink); }
+.article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.article-body a:hover { color: var(--accent-2); }
+.article-body ul, .article-body ol { margin-left: 0; padding-left: 1.35em; }
+.article-body li + li { margin-top: 0.5em; }
+.article-body ul li::marker { color: var(--accent); }
+.article-body ol li::marker { font-family: var(--font-display); font-weight: 700; color: var(--accent); }
+.article-body blockquote { margin-left: 0; padding: 2px 0 2px clamp(16px, 2vw, 24px); border-left: 3px solid var(--accent); font-family: var(--font-serif); font-size: clamp(17px, 1.9vw, 20px); font-style: italic; line-height: 1.5; color: var(--ink); }
+.article-body img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); margin-block: 1.6em; }
+.article-body hr { border: 0; border-top: 1px solid var(--line); margin-block: 2em; }
+.article-body table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.article-body th, .article-body td { text-align: left; padding: 10px 14px 10px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.article-body th { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone); }
+
+.article-source { margin: clamp(30px, 4vw, 44px) 0 0; padding-top: clamp(18px, 2.4vw, 24px); border-top: 1px solid var(--line); font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; }

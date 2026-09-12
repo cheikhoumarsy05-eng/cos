@@ -49,6 +49,32 @@ export const revalidateHomeAfterChange: CollectionAfterChangeHook = ({
   return doc;
 };
 
+/**
+ * Articles : en plus de la page d'accueil, qui liste les cartes, il faut
+ * invalider la page de l'article lui-même, dans les deux langues.
+ */
+function revalidateArticle(doc: any, payload?: Payload) {
+  revalidateHome(payload);
+  const slug = doc?.slug;
+  if (!slug) return;
+  try {
+    revalidatePath(`/articles/${slug}`);
+    revalidatePath(`/en/articles/${slug}`);
+  } catch {
+    // Hors contexte de requête Next (seed / migrate / CLI).
+  }
+}
+
+export const revalidateArticleAfterChange: CollectionAfterChangeHook = ({ doc, req, context }) => {
+  if (!context?.disableRevalidate) revalidateArticle(doc, req?.payload);
+  return doc;
+};
+
+export const revalidateArticleAfterDelete: CollectionAfterDeleteHook = ({ doc, req, context }) => {
+  if (!context?.disableRevalidate) revalidateArticle(doc, req?.payload);
+  return doc;
+};
+
 /** For collections shown on the homepage (delete). */
 export const revalidateHomeAfterDelete: CollectionAfterDeleteHook = ({
   doc,

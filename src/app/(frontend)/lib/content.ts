@@ -66,6 +66,51 @@ export async function getContent(locale: Locale = "fr") {
   };
 }
 
+/**
+ * Articles publiés, du plus récent au plus ancien.
+ *
+ * `depth: 1` résout la relation vers Media pour disposer de l'URL de couverture
+ * sans requête supplémentaire.
+ */
+export async function getArticles(locale: Locale = "fr") {
+  const payload = await payloadClient();
+  const res = await payload.find({
+    collection: "articles",
+    limit: 200,
+    sort: "-date",
+    locale,
+    depth: 1,
+  });
+  return res.docs;
+}
+
+/** Un article par son identifiant d'URL, ou null s'il n'existe pas. */
+export async function getArticle(slug: string, locale: Locale = "fr") {
+  const payload = await payloadClient();
+  const res = await payload.find({
+    collection: "articles",
+    where: { slug: { equals: slug } },
+    limit: 1,
+    locale,
+    depth: 1,
+  });
+  return res.docs[0] ?? null;
+}
+
+/** Tous les identifiants d'URL, pour le prérendu statique et le sitemap. */
+export async function getArticleSlugs(): Promise<string[]> {
+  const payload = await payloadClient();
+  const res = await payload.find({ collection: "articles", limit: 500, depth: 0, pagination: false });
+  return res.docs.map((d: any) => d.slug).filter(Boolean);
+}
+
+/** Couverture d'un article : le téléversement prime sur le chemin /public. */
+export function articleCover(a: any): { src: string; alt: string } | null {
+  const src = mediaUrl(a?.cover) ?? a?.coverSrc;
+  if (!src) return null;
+  return { src, alt: mediaAlt(a?.cover) ?? a?.coverAlt ?? a?.title ?? "" };
+}
+
 /** Normalize a Payload project doc to the frontend Project shape. */
 export function toProject(p: any) {
   return {

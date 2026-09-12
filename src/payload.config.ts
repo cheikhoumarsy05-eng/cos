@@ -9,6 +9,7 @@ import sharp from "sharp";
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Projects } from "./collections/Projects";
+import { Articles } from "./collections/Articles";
 import { Experience } from "./collections/Experience";
 import { Freelance } from "./collections/Freelance";
 import { Education } from "./collections/Education";
@@ -29,7 +30,7 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: { titleSuffix: "· Cheikh Oumar Sy" },
   },
-  collections: [Projects, Experience, Freelance, Education, Media, Users],
+  collections: [Projects, Articles, Experience, Freelance, Education, Media, Users],
   globals: [Hero, About, Expertise, Publication, Skills, Stats, Contact, Site],
   // Site bilingue : le français reste la langue par défaut, servie sur « / ».
   // `fallback` affiche le texte français tant qu'une traduction anglaise est vide,

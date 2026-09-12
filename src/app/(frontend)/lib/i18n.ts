@@ -18,6 +18,20 @@ export function localeHref(locale: Locale): string {
   return locale === DEFAULT_LOCALE ? "/" : `/${locale}`;
 }
 
+/** Adresse d'un article dans une langue : /articles/x en français, /en/articles/x en anglais. */
+export function articleHref(locale: Locale, slug: string): string {
+  return locale === DEFAULT_LOCALE ? `/articles/${slug}` : `/${locale}/articles/${slug}`;
+}
+
+/** Date lisible, dans la langue de lecture. */
+export function formatDate(value: string | Date, locale: Locale): string {
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  return new Intl.DateTimeFormat(locale === "fr" ? "fr-FR" : "en-GB", {
+    day: "numeric", month: "long", year: "numeric",
+  }).format(d);
+}
+
 /** Nom de chaque langue dans sa propre langue — jamais traduit. */
 export const LOCALE_NAMES: Record<Locale, string> = {
   fr: "Français",
@@ -76,6 +90,13 @@ const fr = {
   openProject: "Ouvrir {title}",
   projectDialog: "Projet : {title}",
   viewLabel: "Vue {n} : {alt}",
+  articles: "Articles & Réflexions",
+  readArticle: "Lire l'article",
+  articleBy: "Par",
+  publishedOnLinkedin: "Publié initialement sur LinkedIn",
+  backToPortfolio: "Retour au portfolio",
+  allArticles: "Tous les articles",
+  articleNotFound: "Article introuvable",
   requestDrawings: "Demander les plans",
   requestSubject: "Demande de plans — {title}",
   onRequest: "Plans, notes de calcul et modèles disponibles sur demande.",
@@ -131,6 +152,13 @@ const en: typeof fr = {
   openProject: "Open {title}",
   projectDialog: "Project: {title}",
   viewLabel: "View {n}: {alt}",
+  articles: "Articles & Reflections",
+  readArticle: "Read the article",
+  articleBy: "By",
+  publishedOnLinkedin: "Originally published on LinkedIn",
+  backToPortfolio: "Back to the portfolio",
+  allArticles: "All articles",
+  articleNotFound: "Article not found",
   requestDrawings: "Request drawings",
   requestSubject: "Drawing request — {title}",
   onRequest: "Drawings, design notes and models available on request.",

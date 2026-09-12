@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { LOCALES, LOCALE_NAMES, localeHref, type Locale } from "../lib/i18n";
+import { LOCALES, LOCALE_NAMES, localeHref, articleHref, type Locale } from "../lib/i18n";
 
 /**
  * Sélecteur de langue : un bouton unique qui déroule la liste des langues.
@@ -20,10 +20,13 @@ export default function LangSwitch({
   locale,
   label,
   variant = "topnav",
+  slug,
 }: {
   locale: Locale;
   label: string;
   variant?: "topnav" | "overlay";
+  /** Sur une page d'article, bascule vers le même article dans l'autre langue. */
+  slug?: string;
 }) {
   const ref = useRef<HTMLDetailsElement>(null);
 
@@ -60,7 +63,7 @@ export default function LangSwitch({
           <li key={l}>
             <a
               className={"lang-option" + (l === locale ? " is-on" : "")}
-              href={localeHref(l)}
+              href={slug ? articleHref(l, slug) : localeHref(l)}
               hrefLang={l}
               lang={l}
               aria-current={l === locale ? "true" : undefined}

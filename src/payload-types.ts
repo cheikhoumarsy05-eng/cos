@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     projects: Project;
+    articles: Article;
     experience: Experience;
     freelance: Freelance;
     education: Education;
@@ -81,6 +82,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
     experience: ExperienceSelect<false> | ExperienceSelect<true>;
     freelance: FreelanceSelect<false> | FreelanceSelect<true>;
     education: EducationSelect<false> | EducationSelect<true>;
@@ -244,6 +246,63 @@ export interface Media {
   };
 }
 /**
+ * Analyses et réflexions. Le plus récent s'affiche en premier.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: number;
+  title: string;
+  /**
+   * En minuscules, sans accent ni espace. Ex. « surelever-un-batiment ». Évitez de le changer une fois l'article partagé.
+   */
+  slug: string;
+  date: string;
+  author: string;
+  /**
+   * Ex. « Structures », « Réglementation », « Terrain ».
+   */
+  category: string;
+  /**
+   * Deux à trois lignes, affichées sur la carte.
+   */
+  excerpt: string;
+  /**
+   * Recommandé. Sinon, renseignez le chemin ci-dessous.
+   */
+  cover?: (number | null) | Media;
+  /**
+   * Alternative au téléversement, ex. /articles/surelevation.webp
+   */
+  coverSrc?: string | null;
+  coverAlt?: string | null;
+  /**
+   * Titres, listes, citations, liens, gras et images sont pris en charge.
+   */
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Si l'article a d'abord paru ailleurs, le lien apparaît en fin de page. Laisser vide sinon.
+   */
+  linkedinUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "experience".
  */
@@ -364,6 +423,10 @@ export interface PayloadLockedDocument {
         value: number | Project;
       } | null)
     | ({
+        relationTo: 'articles';
+        value: number | Article;
+      } | null)
+    | ({
         relationTo: 'experience';
         value: number | Experience;
       } | null)
@@ -460,6 +523,25 @@ export interface ProjectsSelect<T extends boolean = true> {
         alt?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  date?: T;
+  author?: T;
+  category?: T;
+  excerpt?: T;
+  cover?: T;
+  coverSrc?: T;
+  coverAlt?: T;
+  content?: T;
+  linkedinUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -869,6 +951,8 @@ export interface Site {
     experience?: string | null;
     experienceLead?: string | null;
     research?: string | null;
+    articles?: string | null;
+    articlesLead?: string | null;
     projects?: string | null;
     projectsLead?: string | null;
     projectsNav?: string | null;
@@ -1090,6 +1174,8 @@ export interface SiteSelect<T extends boolean = true> {
         experience?: T;
         experienceLead?: T;
         research?: T;
+        articles?: T;
+        articlesLead?: T;
         projects?: T;
         projectsLead?: T;
         projectsNav?: T;

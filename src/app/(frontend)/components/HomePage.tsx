@@ -2,14 +2,15 @@ import Interactions from "./Interactions";
 import Projects from "./Projects";
 import PublicationCarousel from "./PublicationCarousel";
 import Image from "next/image";
-import { getContent, mediaUrl, mediaAlt, toProject } from "../lib/content";
+import { getContent, getArticles, mediaUrl, mediaAlt, toProject } from "../lib/content";
 import LangSwitch from "./LangSwitch";
+import ArticleCards from "./ArticleCards";
 import { dict, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
 import type { Project } from "@/data/projects";
 
 export default async function HomePage({ locale }: { locale: Locale }) {
-  const c = await getContent(locale);
+  const [c, articles] = await Promise.all([getContent(locale), getArticles(locale)]);
   const t = dict(locale);
   const hero = c.hero as any;
   const about = c.about as any;
@@ -72,6 +73,11 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       },
     ],
   };
+
+  /* Les numéros de section se suivent sans trou même quand une section est absente —
+     « Articles & réflexions » ne s'affiche qu'une fois un premier texte publié. */
+  let compteur = 0;
+  const n = () => String(++compteur).padStart(2, "0");
 
   /* Navigation en trois temps : l'accueil, tout le corps du site regroupé sous « À propos »
      (sections 01 à 08), puis le contact. Le scrollspy n'observe que ces trois ancres, donc
@@ -163,7 +169,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* À PROPOS */}
         <section className="section band-paper2" id="a-propos">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">01</p><div className="ed-head-text"><h2 className="ed-title">{st.about}</h2></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.about}</h2></div></div>
             <div className="about-grid">
               <div className="reveal">
                 <p className="about-lead">{about.lead}</p>
@@ -209,7 +215,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {(expertise?.items ?? []).length > 0 && (
           <section className="section" id="expertise">
             <div className="wrap">
-              <div className="ed-head reveal"><p className="ed-index">02</p><div className="ed-head-text"><h2 className="ed-title">{st.expertise ?? expertise.title}</h2></div></div>
+              <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.expertise ?? expertise.title}</h2></div></div>
               <div className="expertise-grid">
                 {(expertise.items as any[]).map((it: any, i: number) => (
                   <article className="expertise-card reveal" key={it.id ?? it.title}>
@@ -229,7 +235,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* EXPÉRIENCE */}
         <section className="section" id="experience">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">03</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2><p className="ed-lead">{st.experienceLead}</p></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2><p className="ed-lead">{st.experienceLead}</p></div></div>
             <div className="xp">
               {(c.experience as any[]).map((e) => (
                 <div className="xp-row reveal" key={e.id}>
@@ -259,7 +265,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* PROJETS */}
         <section className="section" id="projets">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">04</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
             <Projects projects={projects} t={t} />
           </div>
         </section>
@@ -267,15 +273,31 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* RECHERCHE */}
         <section className="section band-ink" id="recherche">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">05</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
             <PublicationCarousel items={pubItems} t={t} />
           </div>
         </section>
 
+        {/* ARTICLES & RÉFLEXIONS */}
+        {articles.length > 0 && (
+          <section className="section" id="articles">
+            <div className="wrap">
+              <div className="ed-head reveal">
+                <p className="ed-index">{n()}</p>
+                <div className="ed-head-text">
+                  <h2 className="ed-title">{st.articles}</h2>
+                  {st.articlesLead && <p className="ed-lead">{st.articlesLead}</p>}
+                </div>
+              </div>
+              <ArticleCards articles={articles} locale={locale} t={t} />
+            </div>
+          </section>
+        )}
+
         {/* FREELANCE */}
         <section className="section band-paper2" id="freelance">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">06</p><div className="ed-head-text"><h2 className="ed-title">{st.freelance}</h2></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.freelance}</h2></div></div>
             <div className="free">
               {(c.freelance as any[]).map((f) => (
                 <div className="free-item reveal" key={f.id}>
@@ -291,7 +313,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* COMPÉTENCES */}
         <section className="section" id="competences">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">07</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2></div></div>
             <table className="skills-table reveal">
               <thead>
                 <tr>
@@ -333,7 +355,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* FORMATION */}
         <section className="section band-paper2" id="formation">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">08</p><div className="ed-head-text"><h2 className="ed-title">{st.education}</h2></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.education}</h2></div></div>
             <div className="edu">
               {(c.education as any[]).map((e) => (
                 <div className="edu-row" key={e.id}>
@@ -348,7 +370,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* CONTACT */}
         <section className="section" id="contact">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">09</p><div className="ed-head-text"><h2 className="ed-title">{st.contact}</h2></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.contact}</h2></div></div>
             <div className="contact">
               <div className="reveal">
                 <h3 className="contact-title">{contact.title}</h3>

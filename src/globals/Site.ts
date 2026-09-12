@@ -22,6 +22,8 @@ export const Site: GlobalConfig = {
         { name: "experience", type: "text", localized: true, defaultValue: "Expérience" },
         { name: "experienceLead", type: "text", localized: true, defaultValue: "Bureau de contrôle, conduite de travaux, chantier." },
         { name: "research", type: "text", localized: true, defaultValue: "Recherche appliquée" },
+        { name: "articles", type: "text", localized: true, defaultValue: "Articles & Réflexions" },
+        { name: "articlesLead", type: "text", localized: true, defaultValue: "Analyses, retours d'expérience et réflexions autour de l'ingénierie civile, des structures et du secteur de la construction." },
         { name: "projects", type: "text", localized: true, defaultValue: "Projets" },
         { name: "projectsLead", type: "text", localized: true, defaultValue: "Conception, modélisation et calcul de bâtiments résidentiels — du volume à l'élément." },
         { name: "projectsNav", type: "text", localized: true, defaultValue: "Projets", label: "Projets — libellé court (navigation)" },

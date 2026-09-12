@@ -10,6 +10,7 @@ import * as migration_20260912_062529_nav_home_label from './20260912_062529_nav
 import * as migration_20260912_062648_nav_about_label from './20260912_062648_nav_about_label';
 import * as migration_20260912_085057_localisation_fr_en from './20260912_085057_localisation_fr_en';
 import * as migration_20260912_152608_projet_planches from './20260912_152608_projet_planches';
+import * as migration_20260912_160025_articles from './20260912_160025_articles';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20260912_152608_projet_planches.up,
     down: migration_20260912_152608_projet_planches.down,
-    name: '20260912_152608_projet_planches'
+    name: '20260912_152608_projet_planches',
+  },
+  {
+    up: migration_20260912_160025_articles.up,
+    down: migration_20260912_160025_articles.down,
+    name: '20260912_160025_articles'
   },
 ];

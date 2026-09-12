@@ -210,16 +210,18 @@ export default async function Home() {
           <section className="section" id="expertise">
             <div className="wrap">
               <div className="ed-head reveal"><p className="ed-index">02</p><div className="ed-head-text"><h2 className="ed-title">{st.expertise ?? expertise.title}</h2></div></div>
-              <div className="expertise-grid">
-                {(expertise.items as any[]).map((it: any, i: number) => (
-                  <article className="expertise-item reveal" key={it.id ?? it.title}>
-                    <span className="expertise-n">{String(i + 1).padStart(2, "0")}</span>
-                    <h3 className="expertise-title">{it.title}</h3>
-                    <p className="expertise-desc">{it.description}</p>
-                    {it.tools && <p className="expertise-tools">{it.tools}</p>}
-                  </article>
-                ))}
-              </div>
+              <table className="expertise-table reveal">
+                <tbody>
+                  {(expertise.items as any[]).map((it: any, i: number) => (
+                    <tr key={it.id ?? it.title}>
+                      <td className="expertise-n">{String(i + 1).padStart(2, "0")}</td>
+                      <th scope="row" className="expertise-title">{it.title}</th>
+                      <td className="expertise-desc">{it.description}</td>
+                      <td className="expertise-tools">{it.tools}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
         )}
@@ -240,11 +242,11 @@ export default async function Home() {
                     {(e.keyPoints ?? []).length > 0 && (
                       <div className="xp-keys">
                         <span className="xp-keys-label">Points clés</span>
-                        <p className="xp-keys-list">
+                        <div className="tag-list">
                           {(e.keyPoints as any[]).map((k) => (
-                            <span className={"xp-key" + (k.strong ? " is-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
+                            <span className={"tag" + (k.strong ? " tag-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
                           ))}
-                        </p>
+                        </div>
                       </div>
                     )}
                   </div>

@@ -91,12 +91,14 @@ export default async function Home() {
                   <a className="btn btn-outline" href={site.cvUrl} target="_blank" rel="noopener">Télécharger le CV</a>
                 </div>
               </div>
-              <div className="hero-media">
-                <div className="frame">
-                  <Image src={heroImg} alt={heroImgAlt} fill priority sizes="(max-width: 900px) 100vw, 640px" style={{ objectFit: "cover" }} />
+              {heroImg && (
+                <div className="hero-media">
+                  <div className="frame">
+                    <Image src={heroImg} alt={heroImgAlt} fill priority sizes="(max-width: 900px) 100vw, 640px" style={{ objectFit: "cover" }} />
+                  </div>
+                  <div className="cap"><span>{hero.imageCaption}</span><span>{hero.imageYear}</span></div>
                 </div>
-                <div className="cap"><span>{hero.imageCaption}</span><span>{hero.imageYear}</span></div>
-              </div>
+              )}
             </div>
             <div className="hero-strip">
               <div className="item"><span className="k">Statut</span><span className="v avail"><span className="dot" aria-hidden="true" />{hero.availability}</span></div>
@@ -136,9 +138,11 @@ export default async function Home() {
                 )}
               </div>
               <div className="about-portrait reveal">
-                <div className="frame">
-                  <Image src={portraitImg} alt={portraitAlt} fill sizes="(max-width: 900px) 100vw, 420px" style={{ objectFit: "cover" }} />
-                </div>
+                {portraitImg && (
+                  <div className="frame">
+                    <Image src={portraitImg} alt={portraitAlt} fill sizes="(max-width: 900px) 100vw, 420px" style={{ objectFit: "cover" }} />
+                  </div>
+                )}
                 <div className="facts">
                   {(about.facts ?? []).map((f: any) => (
                     <div className="row" key={f.id ?? f.k}><span className="k">{f.k}</span><span className="v">{f.v}</span></div>

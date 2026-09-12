@@ -594,9 +594,9 @@ export interface Hero {
   image?: (number | null) | Media;
   imageSrc?: string | null;
   imageFallback?: string | null;
-  imageAlt: string;
-  imageCaption: string;
-  imageYear: string;
+  imageAlt?: string | null;
+  imageCaption?: string | null;
+  imageYear?: string | null;
   availability: string;
   location: string;
   domain: string;
@@ -629,7 +629,7 @@ export interface About {
   portrait?: (number | null) | Media;
   portraitSrc?: string | null;
   portraitFallback?: string | null;
-  portraitAlt: string;
+  portraitAlt?: string | null;
   facts?:
     | {
         k: string;

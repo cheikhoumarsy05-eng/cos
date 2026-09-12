@@ -19,7 +19,7 @@ export const About: GlobalConfig = {
     { name: "portrait", type: "upload", relationTo: "media", label: "Portrait (téléversé)", admin: { description: "Recommandé. Sinon, renseignez le chemin ci-dessous." } },
     { name: "portraitSrc", type: "text", label: "Portrait (chemin /public)", defaultValue: "/img/portrait.webp" },
     { name: "portraitFallback", type: "text", defaultValue: "/img/portrait.jpg" },
-    { name: "portraitAlt", type: "text", required: true, defaultValue: "Cheikh Oumar Sy, ingénieur en génie civil" },
+    { name: "portraitAlt", type: "text", label: "Texte alternatif", defaultValue: "Cheikh Oumar Sy, ingénieur en génie civil" },
     { name: "facts", type: "array", label: "Faits", fields: [
       { name: "k", type: "text", required: true },
       { name: "v", type: "text", required: true },

@@ -308,6 +308,17 @@ export default async function Home() {
                 ))}
               </tbody>
             </table>
+            {(skills.tools ?? []).length > 0 && (
+              <div className="skills-tools reveal">
+                <h3 className="subhead">{skills.toolsLabel}</h3>
+                <div className="tool-grid">
+                  {(skills.tools as any[]).map((t: any) => (
+                    <span className={"tool" + (t.key ? " key" : "")} key={t.id ?? t.name}>{t.name}</span>
+                  ))}
+                </div>
+                {skills.toolsNote && <p className="tools-note small-label">{skills.toolsNote}</p>}
+              </div>
+            )}
             {(skills.personal ?? []).length > 0 && (
               <div className="skills-personal reveal">
                 <h3 className="subhead">{skills.personalLabel}</h3>

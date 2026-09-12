@@ -138,7 +138,7 @@ const run = async () => {
       { title: "Analyse des structures", items: "Analyse statique · Analyse modale · Dynamique des structures · EN 1990 · EN 1991-2" },
       { title: "Calcul scientifique & numérique", items: "Python · Jupyter Notebook · Modélisation numérique · Automatisation des calculs" },
       { title: "Économie de la construction", items: "Métrés · Attachements · Devis estimatifs · Quantification" },
-      { title: "Outils d'ingénierie", items: "Robot Structural Analysis · CYPECAD · CBS · Revit · Archicad · AutoCAD · RDM7 · Expert · Graitec" },
+      // Les outils ne figurent plus dans le tableau : ils ont leur propre bloc à pastilles, alimenté par « tools » ci-dessous.
     ],
   } });
 

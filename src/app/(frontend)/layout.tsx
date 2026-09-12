@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Spectral, Geist } from "next/font/google";
 import "./globals.css";
+import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/site";
 
 const display = Archivo({
   subsets: ["latin"],
@@ -29,10 +30,40 @@ const body = Geist({
   fallback: ["system-ui", "sans-serif"],
 });
 
+const TITLE = SITE_TITLE;
+const DESCRIPTION = SITE_DESCRIPTION;
+
 export const metadata: Metadata = {
-  title: "Cheikh Oumar Sy · Ingénieur Génie Civil — Structures",
-  description:
-    "Ingénieur en Génie Civil — spécialisation structures : béton armé, charpente métallique, dynamique des structures. En recherche d'un stage Ingénieur Structures (4–6 mois).",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  applicationName: "Portfolio — Cheikh Oumar Sy",
+  authors: [{ name: "Cheikh Oumar Sy", url: SITE_URL }],
+  creator: "Cheikh Oumar Sy",
+  keywords: [
+    "ingénieur génie civil",
+    "calcul de structures",
+    "béton armé",
+    "charpente métallique",
+    "Eurocodes",
+    "BAEL",
+    "dynamique des structures",
+    "bureau de contrôle technique",
+    "Dakar",
+    "Sénégal",
+    "stage ingénieur structures",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "profile",
+    locale: "fr_FR",
+    url: "/",
+    siteName: "Cheikh Oumar Sy — Ingénieur Génie Civil",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

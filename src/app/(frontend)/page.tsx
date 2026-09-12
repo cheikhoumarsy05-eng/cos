@@ -3,6 +3,7 @@ import Projects from "./components/Projects";
 import PublicationCarousel from "./components/PublicationCarousel";
 import Image from "next/image";
 import { getContent, mediaUrl, mediaAlt, toProject } from "./lib/content";
+import { SITE_URL } from "@/lib/site";
 import type { Project } from "@/data/projects";
 
 // The homepage is statically prerendered for a fast TTFB. CMS edits appear
@@ -33,6 +34,48 @@ export default async function Home() {
   // normalize CMS project docs into the component's shape
   const projects: Project[] = (c.projects as any[]).map(toProject);
 
+  // Données structurées schema.org, construites depuis le CMS pour rester
+  // synchronisées avec le contenu. Les DOI rendent les publications
+  // vérifiables : c'est ce qui distingue un profil attesté d'une simple
+  // page d'auto-déclaration.
+  const personId = `${SITE_URL}#person`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": personId,
+        name: site.brand,
+        jobTitle: "Ingénieur Génie Civil — Structures",
+        description: about.lead,
+        url: SITE_URL,
+        ...(contact.email ? { email: `mailto:${contact.email}` } : {}),
+        ...(contact.phoneHref ? { telephone: contact.phoneHref } : {}),
+        address: { "@type": "PostalAddress", addressLocality: "Dakar", addressCountry: "SN" },
+        sameAs: [contact.linkedin, contact.github].filter(Boolean),
+        knowsAbout: ((skills.technical ?? []) as any[]).map((k) => k.value),
+      },
+      ...((pub.items ?? []) as any[]).map((it) => ({
+        "@type": "ScholarlyArticle",
+        headline: it.title,
+        ...(it.sub ? { description: it.sub } : {}),
+        ...(it.doiUrl ? { url: it.doiUrl } : {}),
+        ...(it.doi
+          ? { identifier: { "@type": "PropertyValue", propertyID: "DOI", value: it.doi } }
+          : {}),
+        author: { "@id": personId },
+        inLanguage: "fr",
+      })),
+      {
+        "@type": "WebSite",
+        url: SITE_URL,
+        name: site.brand,
+        inLanguage: "fr",
+        about: { "@id": personId },
+      },
+    ],
+  };
+
   const NAV: [string, string][] = [
     ["a-propos", st.about], ["experience", st.experience], ["recherche", st.research],
     ["projets", st.projects], ["freelance", st.freelance],
@@ -41,6 +84,10 @@ export default async function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="topnav" id="topnav">
         <div className="wrap topnav-inner">
           <a href="#top" className="brand" aria-label={`${site.brand} — accueil`}>

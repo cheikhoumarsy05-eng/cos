@@ -113,7 +113,23 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .lang-switch-overlay .lang-option.is-on { color: var(--ink); }
 .lang-switch-overlay .lang-option:hover { color: var(--accent); }
 
-@media (max-width: 860px) { .nav-links, .topnav .nav-cta, .topnav .lang-switch { display: none; } .menu-toggle { display: inline-flex; } }
+@media (max-width: 860px) { .nav-links { display: none; } .menu-toggle { display: inline-flex; } }
+/* Sous 560 px, le CV et le sélecteur de langue restent dans la barre plutôt que
+   d'être relégués au menu : ce sont les deux commandes qu'on vient chercher en
+   premier. Tout est resserré pour qu'ils tiennent à côté de la marque. */
+@media (max-width: 560px) {
+  .topnav-inner { gap: 10px; height: 58px; }
+  .brand { font-size: 14px; }
+  .topnav .lang-button { height: 32px; padding: 0 8px; gap: 5px; font-size: 11px; }
+  .topnav .nav-cta { padding: 8px 12px; font-size: 12px; }
+  .menu-toggle { width: 40px; height: 40px; }
+  .menu-toggle svg { width: 20px; height: 20px; }
+}
+@media (max-width: 380px) {
+  .topnav-inner { gap: 8px; }
+  .brand { font-size: 12px; }
+  .topnav .nav-cta { padding: 8px 10px; }
+}
 
 /* overlay menu — hazard field */
 .overlay-menu { position: fixed; inset: 0; z-index: 80; background: var(--accent); color: var(--on-ink); display: grid; grid-template-rows: auto 1fr auto; padding: 20px var(--gutter) 36px; clip-path: inset(0 0 100% 0); transition: clip-path 0.55s var(--e-out); pointer-events: none; }

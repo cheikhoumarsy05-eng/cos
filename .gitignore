@@ -37,3 +37,5 @@ yarn-error.log*
 # local database/tools
 backup-local.sql
 reset-db.mjs
+.vercel
+.env*

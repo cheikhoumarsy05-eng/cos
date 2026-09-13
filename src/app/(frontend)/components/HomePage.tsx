@@ -393,7 +393,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
 
       <footer className="foot">
         <div className="wrap foot-inner">
-          <span>© Sancres.com · {new Date().getFullYear()}</span>
+          <span>© {site.brand} · {new Date().getFullYear()}</span>
           <div className="foot-links">
             <a className="link" href={firstPub.doiUrl} target="_blank" rel="noopener">{t.zenodoPublication}</a>
             <a className="link" href={contact.linkedin} target="_blank" rel="noopener">LinkedIn</a>

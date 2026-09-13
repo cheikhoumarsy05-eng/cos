@@ -16,14 +16,57 @@ export type ArticleCard = {
   cover: Cover;
 };
 
+/** Une carte article : couverture et corps, la carte entière étant le lien. */
+function Carte({ a, i, locale, t }: { a: ArticleCard; i: number; locale: Locale; t: Dict }) {
+  return (
+    <article className="art-card">
+      <a className="art-link" href={articleHref(locale, a.slug)}>
+        <span className="art-cover">
+          {a.cover ? (
+            a.cover.vector ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="art-cover-svg" src={a.cover.src} alt={a.cover.alt} loading={i === 0 ? "eager" : "lazy"} />
+            ) : (
+              <Image
+                src={a.cover.src}
+                alt={a.cover.alt}
+                fill
+                sizes="(max-width: 820px) 100vw, 46vw"
+                priority={i === 0}
+                style={{ objectFit: "cover" }}
+              />
+            )
+          ) : (
+            <span className="art-cover-empty" aria-hidden="true" />
+          )}
+        </span>
+        <span className="art-body">
+          <span className="art-meta">
+            <span className="art-cat">{a.category}</span>
+            <span className="art-date">{formatDate(a.date, locale)}</span>
+          </span>
+          <span className="art-title">{a.title}</span>
+          <span className="art-excerpt">{a.excerpt}</span>
+          <span className="art-foot">
+            <span className="art-author">{t.articleBy} {a.author}</span>
+            <span className="art-more arrow">{t.readArticle}</span>
+          </span>
+        </span>
+      </a>
+    </article>
+  );
+}
+
 /**
- * Rail des cartes « Articles & Réflexions ».
+ * Carrousel « Articles & Réflexions ».
  *
- * Trois cartes visibles en grand écran, deux en tablette, une en téléphone.
- * Le défilement est celui du navigateur : le rail reste parcourable au doigt,
- * à la molette et au clavier même sans JavaScript. Les flèches ne sont qu'un
- * confort — elles n'apparaissent que lorsqu'il y a effectivement de quoi
- * défiler, plutôt que de rester là, grisées et inutiles.
+ * Un article occupe toute la largeur et on passe au suivant par les flèches,
+ * les points ou les touches directionnelles — même mécanique que la section
+ * « Recherche appliquée », pour que les deux sections se manipulent pareil.
+ *
+ * Les touches ne sont écoutées que lorsque le focus se trouve dans le
+ * carrousel : la section 05 pose un écouteur sur `window`, et deux écouteurs
+ * globaux feraient avancer les deux carrousels d'un même appui.
  */
 export default function ArticleCards({
   articles,
@@ -34,102 +77,98 @@ export default function ArticleCards({
   locale: Locale;
   t: Dict;
 }) {
-  const rail = useRef<HTMLDivElement>(null);
-  const [peutDefiler, setPeutDefiler] = useState(false);
-  const [auDebut, setAuDebut] = useState(true);
-  const [aLaFin, setALaFin] = useState(false);
+  const [active, setActive] = useState(0);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const count = articles.length;
+  const multiple = count > 1;
 
-  const jauger = useCallback(() => {
-    const el = rail.current;
-    if (!el) return;
-    const debord = el.scrollWidth - el.clientWidth;
-    setPeutDefiler(debord > 4);
-    setAuDebut(el.scrollLeft <= 4);
-    setALaFin(el.scrollLeft >= debord - 4);
-  }, []);
+  const go = useCallback(
+    (d: number) => setActive((i) => (i + d + count) % count),
+    [count],
+  );
 
+  // La fenêtre prend la hauteur de la diapositive active : une carte plus
+  // courte ne laisse donc pas de blanc sous elle.
   useEffect(() => {
-    jauger();
-    const el = rail.current;
-    if (!el) return;
-    const ro = new ResizeObserver(jauger);
-    ro.observe(el);
-    el.addEventListener("scroll", jauger, { passive: true });
+    if (!multiple) return;
+    const viewport = viewportRef.current;
+    const mesurer = () => {
+      const slide = slideRefs.current[active];
+      if (viewport && slide) viewport.style.height = `${slide.offsetHeight}px`;
+    };
+    mesurer();
+    const ro = new ResizeObserver(mesurer);
+    slideRefs.current.forEach((s: HTMLDivElement | null) => s && ro.observe(s));
+    window.addEventListener("resize", mesurer);
     return () => {
       ro.disconnect();
-      el.removeEventListener("scroll", jauger);
+      window.removeEventListener("resize", mesurer);
     };
-  }, [jauger]);
+  }, [active, multiple]);
 
-  /**
-   * Avance d'une carte, gouttière comprise.
-   *
-   * La cible est calculée et bornée explicitement plutôt que confiée à
-   * `scrollBy` : combiné à l'accrochage, un déplacement relatif se faisait
-   * ramener à son point de départ en cours de route.
-   */
-  const pousser = (sens: 1 | -1) => {
-    const el = rail.current;
-    if (!el) return;
-    const carte = el.querySelector<HTMLElement>(".art-card");
-    const pas = carte ? carte.getBoundingClientRect().width + 20 : el.clientWidth * 0.8;
-    const max = el.scrollWidth - el.clientWidth;
-    const cible = Math.max(0, Math.min(max, el.scrollLeft + sens * pas));
-    el.scrollTo({ left: cible, behavior: "smooth" });
+  const auClavier = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") go(1);
+    if (e.key === "ArrowLeft") go(-1);
   };
 
+  if (count === 0) return null;
+  if (!multiple) {
+    return (
+      <div className="art-wrap reveal">
+        <Carte a={articles[0]} i={0} locale={locale} t={t} />
+      </div>
+    );
+  }
+
   return (
-    <div className="art-wrap">
-      <div className="art-rail" ref={rail}>
-        {articles.map((a, i) => (
-          <article className="art-card reveal" key={a.id ?? a.slug}>
-            <a className="art-link" href={articleHref(locale, a.slug)}>
-              <span className="art-cover">
-                {a.cover ? (
-                  a.cover.vector ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img className="art-cover-svg" src={a.cover.src} alt={a.cover.alt} loading={i === 0 ? "eager" : "lazy"} />
-                  ) : (
-                    <Image
-                      src={a.cover.src}
-                      alt={a.cover.alt}
-                      fill
-                      sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
-                      priority={i === 0}
-                      style={{ objectFit: "cover" }}
-                    />
-                  )
-                ) : (
-                  <span className="art-cover-empty" aria-hidden="true" />
-                )}
-              </span>
-              <span className="art-body">
-                <span className="art-meta">
-                  <span className="art-cat">{a.category}</span>
-                  <span className="art-date">{formatDate(a.date, locale)}</span>
-                </span>
-                <span className="art-title">{a.title}</span>
-                <span className="art-excerpt">{a.excerpt}</span>
-                <span className="art-foot">
-                  <span className="art-author">{t.articleBy} {a.author}</span>
-                  <span className="art-more arrow">{t.readArticle}</span>
-                </span>
-              </span>
-            </a>
-          </article>
-        ))}
+    <div
+      className="art-wrap reveal"
+      role="group"
+      aria-roledescription="carrousel"
+      aria-label={t.articles}
+      onKeyDown={auClavier}
+    >
+      <div className="art-viewport" ref={viewportRef}>
+        <div className="art-track" style={{ transform: `translateX(-${active * 100}%)` }}>
+          {articles.map((a, i) => (
+            <div
+              className="art-slide"
+              key={a.id ?? a.slug}
+              ref={(el) => { slideRefs.current[i] = el; }}
+              aria-hidden={i !== active}
+              inert={i !== active ? true : undefined}
+            >
+              <Carte a={a} i={i} locale={locale} t={t} />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {peutDefiler && (
-        <div className="art-nav">
-          <button type="button" className="art-arrow" aria-label={t.previousArticles} onClick={() => pousser(-1)} disabled={auDebut}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
-          </button>
-          <button type="button" className="art-arrow" aria-label={t.nextArticles} onClick={() => pousser(1)} disabled={aLaFin}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
-          </button>
+      <div className="art-nav">
+        <button type="button" className="art-arrow" aria-label={t.previousArticles} onClick={() => go(-1)}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
+        </button>
+        <div className="art-dots" role="tablist" aria-label={t.articles}>
+          {articles.map((a, i) => (
+            <button
+              type="button"
+              key={a.id ?? a.slug}
+              className={"art-dot" + (i === active ? " active" : "")}
+              role="tab"
+              aria-selected={i === active}
+              aria-label={`${t.articles} ${i + 1} : ${a.title}`}
+              onClick={() => setActive(i)}
+            />
+          ))}
         </div>
-      )}
+        <span className="art-count" aria-live="polite">
+          {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+        </span>
+        <button type="button" className="art-arrow" aria-label={t.nextArticles} onClick={() => go(1)}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
+        </button>
+      </div>
     </div>
   );
 }

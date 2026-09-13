@@ -49,8 +49,6 @@ const fr = {
   brandHome: "accueil",
   mainNav: "Navigation principale",
   openMenu: "Ouvrir le menu",
-  closeMenu: "Fermer le menu",
-  fullscreenMenu: "Menu plein écran",
   menu: "Menu",
 
   downloadCv: "Télécharger le CV",
@@ -113,8 +111,6 @@ const en: typeof fr = {
   brandHome: "home",
   mainNav: "Main navigation",
   openMenu: "Open menu",
-  closeMenu: "Close menu",
-  fullscreenMenu: "Fullscreen menu",
   menu: "Menu",
 
   downloadCv: "Download CV",

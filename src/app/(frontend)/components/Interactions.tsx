@@ -64,39 +64,43 @@ export default function Interactions() {
       });
     }
 
-    /* overlay menu */
+    /* Menu déroulant de l'en-tête.
+       Ce n'est plus une fenêtre modale mais un simple panneau : la page reste
+       lisible et défilable derrière, on ne piège donc pas le focus et on ne
+       bloque pas le défilement du corps. Il se referme à l'Échap, au clic à
+       côté, et en suivant l'un de ses liens. */
     const menu = document.getElementById("overlay-menu");
     const openBtn = document.getElementById("menu-open");
-    const closeBtn = document.getElementById("menu-close");
-    const FOCUSABLE = "a[href],button:not([disabled])";
+    const estOuvert = () => !!menu?.classList.contains("open");
     const openMenu = () => {
       menu?.classList.add("open");
       menu?.removeAttribute("inert");
-      document.body.style.overflow = "hidden";
-      (closeBtn as HTMLElement | null)?.focus();
+      openBtn?.setAttribute("aria-expanded", "true");
+      menu?.querySelector<HTMLElement>("a[href]")?.focus();
     };
-    const closeMenu = () => {
+    const closeMenu = (rendreLeFocus = true) => {
       menu?.classList.remove("open");
       menu?.setAttribute("inert", "");
-      document.body.style.overflow = "";
-      (openBtn as HTMLElement | null)?.focus();
+      openBtn?.setAttribute("aria-expanded", "false");
+      if (rendreLeFocus) (openBtn as HTMLElement | null)?.focus();
     };
+    const toggleMenu = () => (estOuvert() ? closeMenu() : openMenu());
+    const fermerDepuisLien = () => closeMenu(false);
     const onKeydown = (e: KeyboardEvent) => {
-      if (!menu || !menu.classList.contains("open")) return;
-      if (e.key === "Escape") { closeMenu(); return; }
-      if (e.key === "Tab") {
-        const nodes = Array.from(menu.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((n) => n.offsetParent !== null);
-        if (!nodes.length) return;
-        const first = nodes[0], last = nodes[nodes.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
+      if (e.key === "Escape" && estOuvert()) closeMenu();
+    };
+    // Clic en dehors : ni dans le panneau, ni sur le bouton qui l'a ouvert.
+    const onClicAilleurs = (e: MouseEvent) => {
+      if (!estOuvert()) return;
+      const cible = e.target as Node;
+      if (menu?.contains(cible) || openBtn?.contains(cible)) return;
+      closeMenu(false);
     };
     const menuLinks = menu ? Array.from(menu.querySelectorAll("a")) : [];
-    openBtn?.addEventListener("click", openMenu);
-    closeBtn?.addEventListener("click", closeMenu);
-    menuLinks.forEach((a) => a.addEventListener("click", closeMenu));
+    openBtn?.addEventListener("click", toggleMenu);
+    menuLinks.forEach((a) => a.addEventListener("click", fermerDepuisLien));
     window.addEventListener("keydown", onKeydown);
+    document.addEventListener("click", onClicAilleurs);
 
     return () => {
       timers.forEach(clearTimeout);
@@ -104,9 +108,9 @@ export default function Interactions() {
       spyObserver?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", onKeydown);
-      openBtn?.removeEventListener("click", openMenu);
-      closeBtn?.removeEventListener("click", closeMenu);
-      menuLinks.forEach((a) => a.removeEventListener("click", closeMenu));
+      openBtn?.removeEventListener("click", toggleMenu);
+      menuLinks.forEach((a) => a.removeEventListener("click", fermerDepuisLien));
+      document.removeEventListener("click", onClicAilleurs);
     };
   }, []);
 

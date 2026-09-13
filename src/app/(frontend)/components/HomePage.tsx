@@ -102,32 +102,29 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </nav>
           <LangSwitch locale={locale} label={t.localeSwitchLabel} />
           <a className="nav-cta" href={site.cvUrl} target="_blank" rel="noopener">CV</a>
-          <button className="menu-toggle" id="menu-open" aria-label={t.openMenu} aria-controls="overlay-menu">
+          <button className="menu-toggle" id="menu-open" aria-label={t.openMenu} aria-controls="overlay-menu" aria-expanded={false}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18 M3 12h18 M3 17h18" stroke="currentColor" strokeWidth="1.6" fill="none" /></svg>
           </button>
         </div>
-      </header>
 
-      <div className="overlay-menu" id="overlay-menu" aria-label={t.fullscreenMenu} inert>
-        <div className="overlay-menu-top">
-          <span className="brand">{site.brand}<span className="brand-mark" style={{ color: "var(--accent)" }}>.</span></span>
-          <button className="overlay-close" id="menu-close" aria-label={t.closeMenu}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" stroke="currentColor" strokeWidth="1.6" fill="none" /></svg>
-          </button>
+        {/* Panneau déroulant, et non calque plein écran : placé dans l'en-tête,
+            il s'ancre sous la barre sans qu'on ait à coder sa hauteur en dur, et
+            reste un simple bandeau. Le CV et le sélecteur de langue n'y sont plus
+            repris — ils tiennent désormais dans la barre elle-même. */}
+        <div className="overlay-menu" id="overlay-menu" aria-label={t.menu} inert>
+          <div className="wrap overlay-inner">
+            <nav className="overlay-nav" aria-label={t.menu}>
+              {NAV.map(([id, label], i) => (
+                <a key={id} href={`#${id}`}><span className="on">{String(i + 1).padStart(2, "0")}</span>{label}</a>
+              ))}
+            </nav>
+            <div className="overlay-foot">
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              <span>{contact.location}</span>
+            </div>
+          </div>
         </div>
-        <nav className="overlay-nav" aria-label={t.menu}>
-          {NAV.map(([id, label], i) => (
-            <a key={id} href={`#${id}`}><span className="on">{String(i + 1).padStart(2, "0")}</span>{label}</a>
-          ))}
-        </nav>
-        <div className="overlay-foot">
-          {/* La barre du haut est masquée sous 860 px : le sélecteur est repris ici. */}
-          <LangSwitch locale={locale} label={t.localeSwitchLabel} variant="overlay" />
-          <a href={site.cvUrl} target="_blank" rel="noopener">{t.downloadCv}</a>
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          <span>{contact.location}</span>
-        </div>
-      </div>
+      </header>
 
       <main id="content">
         {/* HERO */}

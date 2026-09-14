@@ -16,6 +16,7 @@ import * as migration_20260914_032513_competences_accroche from './20260914_0325
 import * as migration_20260914_125406_formulaire_contact_et_blog from './20260914_125406_formulaire_contact_et_blog';
 import * as migration_20260914_143140_contact_accroche_facultative from './20260914_143140_contact_accroche_facultative';
 import * as migration_20260914_165043_note_pied_de_page_facultative from './20260914_165043_note_pied_de_page_facultative';
+import * as migration_20260914_202558_statistiques_telechargement_cv from './20260914_202558_statistiques_telechargement_cv';
 
 export const migrations = [
   {
@@ -106,6 +107,11 @@ export const migrations = [
   {
     up: migration_20260914_165043_note_pied_de_page_facultative.up,
     down: migration_20260914_165043_note_pied_de_page_facultative.down,
-    name: '20260914_165043_note_pied_de_page_facultative'
+    name: '20260914_165043_note_pied_de_page_facultative',
+  },
+  {
+    up: migration_20260914_202558_statistiques_telechargement_cv.up,
+    down: migration_20260914_202558_statistiques_telechargement_cv.down,
+    name: '20260914_202558_statistiques_telechargement_cv'
   },
 ];

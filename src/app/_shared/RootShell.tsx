@@ -1,4 +1,5 @@
 import { Archivo, Spectral, Geist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "../(frontend)/globals.css";
 
 /**
@@ -55,6 +56,13 @@ export default function RootShell({ lang, children }: { lang: "fr" | "en"; child
       <body className={`${display.variable} ${serif.variable} ${body.variable}`}>
         <div hidden aria-hidden="true" dangerouslySetInnerHTML={{ __html: DIRECTION_NOTE }} />
         {children}
+        {/* Mesure d'audience : visites, provenance, pays, appareil. Sans
+            cookie ni identifiant persistant — le site n'a donc pas à demander
+            de consentement. Le script ne part qu'une fois l'analytique
+            activée côté Vercel ; sans cela, rien n'est envoyé.
+            Les téléchargements du CV, eux, se comptent en base par la route
+            « /cv » : un fichier statique n'exécute aucun script. */}
+        <Analytics />
       </body>
     </html>
   );

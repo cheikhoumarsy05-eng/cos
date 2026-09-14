@@ -73,6 +73,7 @@ export interface Config {
     freelance: Freelance;
     education: Education;
     messages: Message;
+    'cv-downloads': CvDownload;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -88,6 +89,7 @@ export interface Config {
     freelance: FreelanceSelect<false> | FreelanceSelect<true>;
     education: EducationSelect<false> | EducationSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
+    'cv-downloads': CvDownloadsSelect<false> | CvDownloadsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -405,6 +407,25 @@ export interface Message {
   createdAt: string;
 }
 /**
+ * Un enregistrement par ouverture du CV. Le total est le nombre d'entrées.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cv-downloads".
+ */
+export interface CvDownload {
+  id: number;
+  /**
+   * Page d'où vient le clic. Vide si le lien a été ouvert directement.
+   */
+  referer?: string | null;
+  /**
+   * Déduit par Vercel du réseau d'arrivée. Vide en local.
+   */
+  country?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -477,6 +498,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'messages';
         value: number | Message;
+      } | null)
+    | ({
+        relationTo: 'cv-downloads';
+        value: number | CvDownload;
       } | null)
     | ({
         relationTo: 'media';
@@ -658,6 +683,16 @@ export interface MessagesSelect<T extends boolean = true> {
   email?: T;
   message?: T;
   locale?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cv-downloads_select".
+ */
+export interface CvDownloadsSelect<T extends boolean = true> {
+  referer?: T;
+  country?: T;
   updatedAt?: T;
   createdAt?: T;
 }

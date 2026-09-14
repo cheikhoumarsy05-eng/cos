@@ -48,7 +48,7 @@ const run = async () => {
   if ((await payload.find({ collection: "freelance", limit: 1 })).totalDocs === 0) {
     const fr = [
       { when: "2026 — en cours", title: "Concepteur freelance — Béton armé", body: "Production de plans d'exécution, vérification de conformité et rédaction de rapports techniques pour des projets en béton armé." },
-      { when: "2026 — en cours", title: "Formateur en logiciels de calcul de structures", body: "Formation en ligne à la prise en main des logiciels, à la modélisation et l'analyse de bâtiments en béton armé, au dimensionnement et à la production de plans d'exécution." },
+      { when: "2026 — en cours", title: "Formateur en logiciels de calcul des structures", body: "Formation en ligne à la prise en main des logiciels, à la modélisation et l'analyse de bâtiments en béton armé, au dimensionnement et à la production de plans d'exécution." },
     ];
     await Promise.all(fr.map((f, order) => payload.create({ collection: "freelance", data: { order, ...f } })));
     payload.logger.info("Seeded freelance");
@@ -166,7 +166,7 @@ const run = async () => {
   await payload.updateGlobal({ slug: "expertise", data: {
     title: "Expertise",
     items: [
-      { title: "Calcul structural", description: "Dimensionnement et vérification des structures en béton armé et charpente métallique.", tools: "Eurocodes · BAEL" },
+      { title: "Calcul des structures", description: "Dimensionnement et vérification des structures en béton armé et charpente métallique.", tools: "Eurocodes · BAEL" },
       { title: "Modélisation numérique", description: "Modélisation et analyse des structures sous logiciels de calcul.", tools: "Robot Structural Analysis · CYPECAD · Revit" },
       { title: "Contrôle technique", description: "Vérification des plans, notes de calcul, ferraillages et conformité des ouvrages.", tools: "Plans d'exécution · Notes de calcul" },
       { title: "Recherche appliquée", description: "Dynamique des structures, analyse modale et développement d'outils numériques.", tools: "EN 1991-2 · EN 1990 · Python" },
@@ -178,7 +178,7 @@ const run = async () => {
     items: [
       { value: "20+", label: "projets de conception archi et béton armé" },
       { value: "20+", label: "examens de plans" },
-      { value: "20+", label: "étudiants et professionnels formés en calcul de structures" },
+      { value: "20+", label: "étudiants et professionnels formés en calcul des structures" },
     ],
   } });
 
@@ -191,7 +191,7 @@ const run = async () => {
   } });
 
   await payload.updateGlobal({ slug: "site", data: {
-    brand: "Cheikh Oumar Sy", cvUrl: "/cv-cheikh-oumar-sy.pdf", footerNote: "Conçu à Dakar.",
+    brand: "Cheikh Oumar Sy", cvUrl: "/cv-cheikh-oumar-sy.pdf",
     sectionTitles: {
       about: "Chiffres & preuves", expertise: "Expertise",
       experience: "Expérience", experienceLead: "Bureau de contrôle, conduite de travaux, chantier.",

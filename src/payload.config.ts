@@ -4,6 +4,7 @@ import { buildConfig } from "payload";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+import { resendAdapter } from "@payloadcms/email-resend";
 import sharp from "sharp";
 
 import { Users } from "./collections/Users";
@@ -13,6 +14,7 @@ import { Articles } from "./collections/Articles";
 import { Experience } from "./collections/Experience";
 import { Freelance } from "./collections/Freelance";
 import { Education } from "./collections/Education";
+import { Messages } from "./collections/Messages";
 import { Hero } from "./globals/Hero";
 import { About } from "./globals/About";
 import { Publication } from "./globals/Publication";
@@ -24,13 +26,30 @@ import { Site } from "./globals/Site";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
+/**
+ * Envoi des e-mails.
+ *
+ * Sert uniquement à te prévenir quand le formulaire de contact reçoit un
+ * message. Tant que `RESEND_API_KEY` n'est pas renseignée — en local, par
+ * exemple — aucun adaptateur n'est monté : Payload écrit alors les e-mails
+ * dans la console au lieu de les envoyer, et rien ne casse.
+ */
+const email = process.env.RESEND_API_KEY
+  ? resendAdapter({
+      apiKey: process.env.RESEND_API_KEY,
+      defaultFromName: "Portfolio Cheikh Oumar Sy",
+      defaultFromAddress: process.env.MAIL_FROM ?? "onboarding@resend.dev",
+    })
+  : undefined;
+
 export default buildConfig({
+  email,
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     meta: { titleSuffix: "· Cheikh Oumar Sy" },
   },
-  collections: [Projects, Articles, Experience, Freelance, Education, Media, Users],
+  collections: [Projects, Articles, Experience, Freelance, Education, Messages, Media, Users],
   globals: [Hero, About, Expertise, Publication, Skills, Stats, Contact, Site],
   // Site bilingue : le français reste la langue par défaut, servie sur « / ».
   // `fallback` affiche le texte français tant qu'une traduction anglaise est vide,

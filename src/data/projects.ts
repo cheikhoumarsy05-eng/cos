@@ -18,7 +18,7 @@ export type Project = {
   images: ProjectImage[];
   /** Optional dimension label shown on the media field corner */
   fieldLabel: string;
-  /** Mis en avant depuis le CMS : projet de calcul structural */
+  /** Mis en avant depuis le CMS : projet de calcul des structures */
   featured?: boolean;
   /** Les visuels sont des planches techniques et non des rendus. */
   drawings?: boolean;

@@ -1,20 +1,16 @@
-"use client";
-
-import { useEffect, useRef } from "react";
 import { LOCALES, LOCALE_NAMES, localeHref, articleHref, type Locale } from "../lib/i18n";
 
 /**
- * Sélecteur de langue : un bouton unique qui déroule la liste des langues.
+ * Bascule de langue : un seul geste.
  *
- * Bâti sur <details>, dont l'ouverture est native : sans JavaScript, le menu
- * s'ouvre et les liens restent atteignables — le reste du site étant lui aussi
- * servi sans dépendre du script, le sélecteur ne devait pas faire exception.
- * Le JavaScript n'ajoute que le confort : fermeture à l'Échap et au clic
- * en dehors.
+ * Le site n'a que deux langues ; un menu déroulant demandait trois actions
+ * — ouvrir, viser, cliquer — pour un choix binaire. Le bouton affiche la
+ * langue courante et mène à l'autre : une pression suffit, et le code
+ * affiché change pour refléter la nouvelle langue.
  *
- * Les liens sont de vraies ancres vers « / » et « /en » : chaque langue a sa
- * propre mise en page racine (pour `<html lang>`), la navigation se fait donc
- * par chargement complet.
+ * Plus d'état ni d'écouteur : le composant est rendu sur le serveur, et la
+ * bascule fonctionne sans JavaScript. Les liens restent de vraies ancres vers
+ * « / » et « /en », chaque langue ayant sa propre mise en page racine.
  */
 export default function LangSwitch({
   locale,
@@ -28,52 +24,19 @@ export default function LangSwitch({
   /** Sur une page d'article, bascule vers le même article dans l'autre langue. */
   slug?: string;
 }) {
-  const ref = useRef<HTMLDetailsElement>(null);
-
-  useEffect(() => {
-    const close = () => {
-      if (ref.current?.open) ref.current.open = false;
-    };
-    const onPointer = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) close();
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || !ref.current?.open) return;
-      close();
-      ref.current.querySelector<HTMLElement>("summary")?.focus();
-    };
-    document.addEventListener("mousedown", onPointer);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onPointer);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, []);
+  const autre = LOCALES.find((l) => l !== locale) ?? locale;
+  const href = slug ? articleHref(autre, slug) : localeHref(autre);
 
   return (
-    <details className={"lang-switch" + (variant === "overlay" ? " lang-switch-overlay" : "")} ref={ref}>
-      <summary className="lang-button" aria-label={label}>
-        <span className="lang-code">{locale.toUpperCase()}</span>
-        <svg className="lang-caret" viewBox="0 0 12 12" aria-hidden="true">
-          <path d="M2.5 4.5 L6 8 L9.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
-        </svg>
-      </summary>
-      <ul className="lang-menu">
-        {LOCALES.map((l) => (
-          <li key={l}>
-            <a
-              className={"lang-option" + (l === locale ? " is-on" : "")}
-              href={slug ? articleHref(l, slug) : localeHref(l)}
-              hrefLang={l}
-              lang={l}
-              aria-current={l === locale ? "true" : undefined}
-            >
-              <span className="lang-option-code">{l.toUpperCase()}</span>
-              {LOCALE_NAMES[l]}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </details>
+    <a
+      className={"lang-toggle" + (variant === "overlay" ? " lang-toggle-overlay" : "")}
+      href={href}
+      hrefLang={autre}
+      lang={autre}
+      aria-label={`${label} — ${LOCALE_NAMES[autre]}`}
+      title={LOCALE_NAMES[autre]}
+    >
+      <span className="lang-code" aria-hidden="true">{locale.toUpperCase()}</span>
+    </a>
   );
 }

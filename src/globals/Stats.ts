@@ -20,7 +20,7 @@ export const Stats: GlobalConfig = {
       defaultValue: [
         { value: "20+", label: "projets de conception archi et béton armé" },
         { value: "20+", label: "examens de plans" },
-        { value: "20+", label: "étudiants et professionnels formés en calcul de structures" },
+        { value: "20+", label: "étudiants et professionnels formés en calcul des structures" },
       ],
     },
   ],

@@ -12,7 +12,7 @@ export const Publication: GlobalConfig = {
       type: "array",
       label: "Articles / Publications",
       minRows: 1,
-      admin: { description: "Ajoutez plusieurs publications : la section devient un carrousel qui glisse entre elles." },
+      admin: { description: "Chaque publication forme un bloc numéroté ; elles sont toutes affichées, empilées." },
       fields: [
         { name: "title", type: "text", required: true, localized: true },
         { name: "sub", type: "text", required: true, localized: true, label: "Sous-titre" },

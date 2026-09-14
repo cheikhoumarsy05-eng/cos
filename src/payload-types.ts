@@ -72,6 +72,7 @@ export interface Config {
     experience: Experience;
     freelance: Freelance;
     education: Education;
+    messages: Message;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -86,6 +87,7 @@ export interface Config {
     experience: ExperienceSelect<false> | ExperienceSelect<true>;
     freelance: FreelanceSelect<false> | FreelanceSelect<true>;
     education: EducationSelect<false> | EducationSelect<true>;
+    messages: MessagesSelect<false> | MessagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -161,7 +163,7 @@ export interface Project {
   order: number;
   type: string;
   /**
-   * Donne plus de poids visuel au projet (calcul structural).
+   * Donne plus de poids visuel au projet (calcul des structures).
    */
   featured?: boolean | null;
   /**
@@ -352,6 +354,22 @@ export interface Freelance {
   when: string;
   title: string;
   body: string;
+  points?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Référentiels, outils et compétences mobilisés.
+   */
+  keyPoints?:
+    | {
+        value: string;
+        strong?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -365,6 +383,24 @@ export interface Education {
   when: string;
   title: string;
   org: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Reçus par le formulaire de la section Contact.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages".
+ */
+export interface Message {
+  id: number;
+  name: string;
+  email: string;
+  message: string;
+  /**
+   * Langue depuis laquelle le message a été envoyé.
+   */
+  locale?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -437,6 +473,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'education';
         value: number | Education;
+      } | null)
+    | ({
+        relationTo: 'messages';
+        value: number | Message;
       } | null)
     | ({
         relationTo: 'media';
@@ -581,6 +621,19 @@ export interface FreelanceSelect<T extends boolean = true> {
   when?: T;
   title?: T;
   body?: T;
+  points?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  keyPoints?:
+    | T
+    | {
+        value?: T;
+        strong?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -593,6 +646,18 @@ export interface EducationSelect<T extends boolean = true> {
   when?: T;
   title?: T;
   org?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages_select".
+ */
+export interface MessagesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  message?: T;
+  locale?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -716,7 +781,7 @@ export interface Hero {
    */
   role?: string | null;
   /**
-   * Ex. « Calcul structural · Modélisation numérique · Contrôle technique »
+   * Ex. « Calcul des structures · Modélisation numérique · Contrôle technique »
    */
   disciplines?: string | null;
   sub: string;
@@ -803,7 +868,7 @@ export interface Expertise {
 export interface Publication {
   id: number;
   /**
-   * Ajoutez plusieurs publications : la section devient un carrousel qui glisse entre elles.
+   * Chaque publication forme un bloc numéroté ; elles sont toutes affichées, empilées.
    */
   items?:
     | {
@@ -924,7 +989,7 @@ export interface Stat {
 export interface Contact {
   id: number;
   title: string;
-  lead: string;
+  lead?: string | null;
   email: string;
   phone: string;
   phoneHref: string;
@@ -942,7 +1007,10 @@ export interface Site {
   id: number;
   brand: string;
   cvUrl: string;
-  footerNote: string;
+  /**
+   * Facultative. Laissée vide, rien ne s'affiche après les liens.
+   */
+  footerNote?: string | null;
   sectionTitles?: {
     home?: string | null;
     about?: string | null;
@@ -957,8 +1025,16 @@ export interface Site {
     projectsLead?: string | null;
     projectsNav?: string | null;
     contactNav?: string | null;
+    /**
+     * Pointe vers la section Articles & Réflexions.
+     */
+    blogNav?: string | null;
     freelance?: string | null;
     skills?: string | null;
+    /**
+     * Deux lignes sous le titre, comme pour Expérience et Projets.
+     */
+    skillsLead?: string | null;
     education?: string | null;
     contact?: string | null;
   };
@@ -1180,8 +1256,10 @@ export interface SiteSelect<T extends boolean = true> {
         projectsLead?: T;
         projectsNav?: T;
         contactNav?: T;
+        blogNav?: T;
         freelance?: T;
         skills?: T;
+        skillsLead?: T;
         education?: T;
         contact?: T;
       };

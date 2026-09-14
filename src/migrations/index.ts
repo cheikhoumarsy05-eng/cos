@@ -11,6 +11,11 @@ import * as migration_20260912_062648_nav_about_label from './20260912_062648_na
 import * as migration_20260912_085057_localisation_fr_en from './20260912_085057_localisation_fr_en';
 import * as migration_20260912_152608_projet_planches from './20260912_152608_projet_planches';
 import * as migration_20260912_160025_articles from './20260912_160025_articles';
+import * as migration_20260914_025140_freelance_missions_points_cles from './20260914_025140_freelance_missions_points_cles';
+import * as migration_20260914_032513_competences_accroche from './20260914_032513_competences_accroche';
+import * as migration_20260914_125406_formulaire_contact_et_blog from './20260914_125406_formulaire_contact_et_blog';
+import * as migration_20260914_143140_contact_accroche_facultative from './20260914_143140_contact_accroche_facultative';
+import * as migration_20260914_165043_note_pied_de_page_facultative from './20260914_165043_note_pied_de_page_facultative';
 
 export const migrations = [
   {
@@ -76,6 +81,31 @@ export const migrations = [
   {
     up: migration_20260912_160025_articles.up,
     down: migration_20260912_160025_articles.down,
-    name: '20260912_160025_articles'
+    name: '20260912_160025_articles',
+  },
+  {
+    up: migration_20260914_025140_freelance_missions_points_cles.up,
+    down: migration_20260914_025140_freelance_missions_points_cles.down,
+    name: '20260914_025140_freelance_missions_points_cles',
+  },
+  {
+    up: migration_20260914_032513_competences_accroche.up,
+    down: migration_20260914_032513_competences_accroche.down,
+    name: '20260914_032513_competences_accroche',
+  },
+  {
+    up: migration_20260914_125406_formulaire_contact_et_blog.up,
+    down: migration_20260914_125406_formulaire_contact_et_blog.down,
+    name: '20260914_125406_formulaire_contact_et_blog',
+  },
+  {
+    up: migration_20260914_143140_contact_accroche_facultative.up,
+    down: migration_20260914_143140_contact_accroche_facultative.down,
+    name: '20260914_143140_contact_accroche_facultative',
+  },
+  {
+    up: migration_20260914_165043_note_pied_de_page_facultative.up,
+    down: migration_20260914_165043_note_pied_de_page_facultative.down,
+    name: '20260914_165043_note_pied_de_page_facultative'
   },
 ];

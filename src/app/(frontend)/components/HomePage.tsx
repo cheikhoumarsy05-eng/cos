@@ -1,10 +1,11 @@
 import Interactions from "./Interactions";
 import Projects from "./Projects";
-import PublicationCarousel from "./PublicationCarousel";
+import PublicationList from "./PublicationList";
 import Image from "next/image";
 import { getContent, getArticles, mediaUrl, mediaAlt, toProject, toArticleCard } from "../lib/content";
 import LangSwitch from "./LangSwitch";
 import ArticleCards from "./ArticleCards";
+import ContactForm from "./ContactForm";
 import { dict, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
 import type { Project } from "@/data/projects";
@@ -83,7 +84,8 @@ export default async function HomePage({ locale }: { locale: Locale }) {
      (sections 01 à 08), puis le contact. Le scrollspy n'observe que ces trois ancres, donc
      « À propos » reste actif sur toute la traversée des sections intermédiaires. */
   const NAV: [string, string][] = [
-    ["top", st.home], ["a-propos", st.aboutNav ?? st.about], ["contact", st.contactNav ?? st.contact],
+    ["top", st.home], ["a-propos", st.aboutNav ?? st.about],
+    ["articles", st.blogNav ?? "Blog"], ["contact", st.contactNav ?? st.contact],
   ];
 
   return (
@@ -134,7 +136,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
               <div>
                 <p className="hero-folio">{hero.folioLabel}</p>
                 <h1 className="hero-name">
-                  {hero.nameLine1}<br />{hero.nameLine2} <span className="accent">{hero.nameAccent}</span>
+                  {hero.nameLine1}<br />{hero.nameLine2}<br /><span className="accent">{hero.nameAccent}</span>
                 </h1>
                 {hero.role && <p className="hero-role">{hero.role}</p>}
                 {hero.disciplines && <p className="hero-disciplines">{hero.disciplines}</p>}
@@ -208,32 +210,35 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* EXPERTISE */}
-        {(expertise?.items ?? []).length > 0 && (
-          <section className="section" id="expertise">
-            <div className="wrap">
-              <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.expertise ?? expertise.title}</h2></div></div>
-              <div className="expertise-grid">
-                {(expertise.items as any[]).map((it: any, i: number) => (
-                  <article className="expertise-card reveal" key={it.id ?? it.title}>
-                    <p className="expertise-head">
-                      <span className="expertise-n">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="expertise-title">{it.title}</span>
-                    </p>
-                    <p className="expertise-desc">{it.description}</p>
-                    {it.tools && <p className="expertise-tools">{it.tools}</p>}
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* EXPÉRIENCE */}
         <section className="section" id="experience">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2><p className="ed-lead">{st.experienceLead}</p></div></div>
             <div className="xp">
+              <p className="xp-group reveal">{t.independentWork}</p>
+              {(c.freelance as any[]).map((f) => (
+                <div className="xp-row reveal" key={`fl-${f.id}`}>
+                  <div className="xp-when">{f.when}</div>
+                  <div>
+                    <h3 className="xp-role">{f.title}</h3>
+                    {/* La description résume ce que disent les missions : on ne
+                        l'affiche qu'en l'absence de celles-ci. */}
+                    {(f.points ?? []).length === 0 && f.body && <p className="xp-summary">{f.body}</p>}
+                    <ul className="xp-points">{(f.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
+                    {(f.keyPoints ?? []).length > 0 && (
+                      <div className="xp-keys">
+                        <span className="xp-keys-label">{t.keyPoints}</span>
+                        <div className="tag-list">
+                          {(f.keyPoints as any[]).map((k) => (
+                            <span className={"tag" + (k.strong ? " tag-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <p className="xp-group reveal">{t.internships}</p>
               {(c.experience as any[]).map((e) => (
                 <div className="xp-row reveal" key={e.id}>
                   <div className="xp-when">{e.when}</div>
@@ -259,74 +264,24 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* PROJETS */}
-        <section className="section" id="projets">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
-            <Projects projects={projects} t={t} />
-          </div>
-        </section>
-
-        {/* RECHERCHE */}
-        <section className="section band-ink" id="recherche">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
-            <PublicationCarousel items={pubItems} t={t} />
-          </div>
-        </section>
-
-        {/* ARTICLES & RÉFLEXIONS */}
-        {articles.length > 0 && (
-          <section className="section" id="articles">
-            <div className="wrap">
-              <div className="ed-head reveal">
-                <p className="ed-index">{n()}</p>
-                <div className="ed-head-text">
-                  <h2 className="ed-title">{st.articles}</h2>
-                  {st.articlesLead && <p className="ed-lead">{st.articlesLead}</p>}
-                </div>
-              </div>
-              <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
-            </div>
-          </section>
-        )}
-
-        {/* FREELANCE */}
-        <section className="section band-paper2" id="freelance">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.freelance}</h2></div></div>
-            <div className="free">
-              {(c.freelance as any[]).map((f) => (
-                <div className="free-item reveal" key={f.id}>
-                  <div className="free-when">{f.when}</div>
-                  <h3>{f.title}</h3>
-                  <p>{f.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* COMPÉTENCES */}
         <section className="section" id="competences">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2></div></div>
-            <table className="skills-table reveal">
-              <thead>
-                <tr>
-                  <th scope="col">{t.skillsDomain}</th>
-                  <th scope="col">{t.skillsItems}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(skills.domains ?? []).map((d: any) => (
-                  <tr key={d.id ?? d.title}>
-                    <th scope="row" className="skills-domain">{d.title}</th>
-                    <td className="skills-items">{d.items}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2>{st.skillsLead && <p className="ed-lead">{st.skillsLead}</p>}</div></div>
+            <div className="expertise-grid reveal">
+              {(skills.domains ?? []).map((d: any) => (
+                <div className="expertise-card" key={d.id ?? d.title}>
+                  <div className="expertise-head"><h3 className="expertise-title">{d.title}</h3></div>
+                  {/* Les compétences sont saisies en une ligne séparée par des
+                      points médians : on les redécoupe en pastilles. */}
+                  <div className="tag-list skills-tags">
+                    {String(d.items ?? "").split("·").map((s: string) => s.trim()).filter(Boolean).map((s: string) => (
+                      <span className="tag" key={s}>{s}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
             {(skills.tools ?? []).length > 0 && (
               <div className="skills-tools reveal">
                 <h3 className="subhead">{skills.toolsLabel}</h3>
@@ -348,6 +303,21 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             )}
           </div>
         </section>
+        {/* PROJETS */}
+        <section className="section" id="projets">
+          <div className="wrap">
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
+            <Projects projects={projects} t={t} />
+          </div>
+        </section>
+
+        {/* RECHERCHE */}
+        <section className="section band-ink" id="recherche">
+          <div className="wrap">
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
+            <PublicationList items={pubItems} t={t} />
+          </div>
+        </section>
 
         {/* FORMATION */}
         <section className="section band-paper2" id="formation">
@@ -364,14 +334,30 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
+        {/* ARTICLES & RÉFLEXIONS */}
+        {articles.length > 0 && (
+          <section className="section" id="articles">
+            <div className="wrap">
+              <div className="ed-head reveal">
+                <p className="ed-index">{n()}</p>
+                <div className="ed-head-text">
+                  <h2 className="ed-title">{st.articles}</h2>
+                  {st.articlesLead && <p className="ed-lead">{st.articlesLead}</p>}
+                </div>
+              </div>
+              <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
+            </div>
+          </section>
+        )}
+
         {/* CONTACT */}
         <section className="section" id="contact">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.contact}</h2></div></div>
             <div className="contact">
-              <div className="reveal">
+              <div className="contact-intro reveal">
                 <h3 className="contact-title">{contact.title}</h3>
-                <p className="contact-lead">{contact.lead}</p>
+                {contact.lead && <p className="contact-lead">{contact.lead}</p>}
                 <div className="hero-actions" style={{ marginTop: 28 }}>
                   <a className="btn btn-ink arrow" href={`mailto:${contact.email}?subject=${encodeURIComponent(t.emailSubject)}`}>{t.writeEmail}</a>
                   <a className="btn btn-outline" href={site.cvUrl} target="_blank" rel="noopener">{t.downloadCv}</a>
@@ -383,6 +369,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 <div className="row"><div className="k">{t.socials}</div><div className="v cc-links"><a className="link" href={contact.linkedin} target="_blank" rel="noopener">LinkedIn</a><a className="link" href={contact.github} target="_blank" rel="noopener">GitHub</a></div></div>
                 <div className="row"><div className="k">{t.location}</div><div className="v">{contact.location}</div></div>
               </div>
+              <ContactForm locale={locale} t={t} />
             </div>
           </div>
         </section>
@@ -395,7 +382,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             <a className="link" href={firstPub.doiUrl} target="_blank" rel="noopener">{t.zenodoPublication}</a>
             <a className="link" href={contact.linkedin} target="_blank" rel="noopener">LinkedIn</a>
             <a className="link" href={contact.github} target="_blank" rel="noopener">GitHub</a>
-            <span>{site.footerNote}</span>
+            {site.footerNote && <span>{site.footerNote}</span>}
           </div>
         </div>
       </footer>

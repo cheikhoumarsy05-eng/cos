@@ -9,7 +9,13 @@ export const Site: GlobalConfig = {
   fields: [
     { name: "brand", type: "text", required: true, defaultValue: "Cheikh Oumar Sy" },
     { name: "cvUrl", type: "text", required: true, defaultValue: "/cv-cheikh-oumar-sy.pdf" },
-    { name: "footerNote", type: "text", required: true, localized: true, defaultValue: "Conçu à Dakar." },
+    {
+      name: "footerNote",
+      type: "text",
+      localized: true,
+      label: "Note de pied de page",
+      admin: { description: "Facultative. Laissée vide, rien ne s'affiche après les liens." },
+    },
     {
       name: "sectionTitles",
       type: "group",
@@ -28,8 +34,10 @@ export const Site: GlobalConfig = {
         { name: "projectsLead", type: "text", localized: true, defaultValue: "Conception, modélisation et calcul de bâtiments résidentiels — du volume à l'élément." },
         { name: "projectsNav", type: "text", localized: true, defaultValue: "Projets", label: "Projets — libellé court (navigation)" },
         { name: "contactNav", type: "text", localized: true, defaultValue: "Contact", label: "Contact — libellé court (navigation)" },
+        { name: "blogNav", type: "text", localized: true, defaultValue: "Blog", label: "Blog — libellé de navigation", admin: { description: "Pointe vers la section Articles & Réflexions." } },
         { name: "freelance", type: "text", localized: true, defaultValue: "Freelance" },
         { name: "skills", type: "text", localized: true, defaultValue: "Compétences" },
+        { name: "skillsLead", type: "text", localized: true, label: "Compétences — accroche", admin: { description: "Deux lignes sous le titre, comme pour Expérience et Projets." } },
         { name: "education", type: "text", localized: true, defaultValue: "Formation" },
         { name: "contact", type: "text", localized: true, defaultValue: "Contact" },
       ],

@@ -12,7 +12,7 @@ export const Hero: GlobalConfig = {
     { name: "nameLine2", type: "text", required: true, defaultValue: "Oumar" },
     { name: "nameAccent", type: "text", required: true, defaultValue: "Sy", label: "Nom (accent)" },
     { name: "role", type: "text", localized: true, label: "Fonction", admin: { description: "Ex. « Ingénieur Génie Civil · Structures »" } },
-    { name: "disciplines", type: "text", localized: true, label: "Disciplines", admin: { description: "Ex. « Calcul structural · Modélisation numérique · Contrôle technique »" } },
+    { name: "disciplines", type: "text", localized: true, label: "Disciplines", admin: { description: "Ex. « Calcul des structures · Modélisation numérique · Contrôle technique »" } },
     { name: "sub", type: "textarea", localized: true, required: true, label: "Sous-titre" },
     { name: "image", type: "upload", relationTo: "media", label: "Rendu (téléversé)", admin: { description: "Recommandé. Sinon, renseignez le chemin ci-dessous." } },
     { name: "imageSrc", type: "text", label: "Rendu (chemin /public)", defaultValue: "/projects/nafi-1.webp" },

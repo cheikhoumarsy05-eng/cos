@@ -22,7 +22,7 @@ export const SITE_DESCRIPTION_EN =
 export const SITE_KEYWORDS = {
   fr: [
     "ingénieur génie civil",
-    "calcul de structures",
+    "calcul des structures",
     "béton armé",
     "charpente métallique",
     "Eurocodes",

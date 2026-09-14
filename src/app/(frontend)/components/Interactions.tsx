@@ -9,32 +9,94 @@ export default function Interactions() {
     const timers: number[] = [];
     let revealObserver: IntersectionObserver | null = null;
     let spyObserver: IntersectionObserver | null = null;
+    let sectionObserver: IntersectionObserver | null = null;
 
-    /* reveals */
+    /* Sens de défilement : un bloc entre par le bord d'où il arrive. Le faire
+       toujours monter donnerait un mouvement à contresens du geste quand on
+       remonte la page. */
+    let dernierY = window.scrollY;
+    let versLeBas = true;
+
+    /* Apparition des blocs.
+       Deux seuils, et non un seul : on révèle à 14 % de visibilité, mais on ne
+       réarme qu'une fois le bloc entièrement sorti. Avec un seuil unique, un
+       arrêt pile sur la limite ferait clignoter le bloc indéfiniment. */
+    const SEUIL_ENTREE = 0.14;
     const reveals = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+    const attentes = new Map<HTMLElement, number>();
+
+    /* Un saut instantané — un lien d'ancre, la restauration de position au
+       rechargement — fait arriver les notifications de l'observateur après
+       coup, décrivant un état déjà dépassé. S'y fier aveuglément masquerait
+       une section pourtant à l'écran, titre découpé compris. On revérifie
+       donc la position réelle avant d'agir. */
+    const estAEcran = (el: HTMLElement) => {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    };
+
     if (reduce || !hasIO) {
       reveals.forEach((el) => el.classList.add("in"));
     } else {
       revealObserver = new IntersectionObserver(
-        (entries, obs) => {
+        (entries) => {
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
             const el = entry.target as HTMLElement;
-            const sibs = Array.from(el.parentElement!.querySelectorAll<HTMLElement>(":scope > .reveal"));
-            const idx = sibs.indexOf(el);
-            const delay = idx > 0 ? Math.min(idx, 5) * 90 : 0;
-            timers.push(window.setTimeout(() => el.classList.add("in"), delay));
-            obs.unobserve(el);
+
+            if (entry.intersectionRatio >= SEUIL_ENTREE) {
+              if (el.classList.contains("in") || attentes.has(el)) return;
+              el.style.setProperty("--dy", versLeBas ? "24px" : "-24px");
+              const voisins = Array.from(el.parentElement!.querySelectorAll<HTMLElement>(":scope > .reveal"));
+              const rang = voisins.indexOf(el);
+              const retard = rang > 0 ? Math.min(rang, 4) * 60 : 0;
+              const t = window.setTimeout(() => {
+                attentes.delete(el);
+                if (estAEcran(el)) el.classList.add("in");
+              }, retard);
+              attentes.set(el, t);
+              timers.push(t);
+              return;
+            }
+
+            // Sorti de l'écran : on remet le bloc à son état d'attente pour que
+            // le passage suivant rejoue l'animation.
+            if (!entry.isIntersecting && !estAEcran(el)) {
+              const t = attentes.get(el);
+              if (t !== undefined) {
+                clearTimeout(t);
+                attentes.delete(el);
+              }
+              el.classList.remove("in");
+            }
           });
         },
-        { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+        { threshold: [0, SEUIL_ENTREE], rootMargin: "0px 0px -8% 0px" }
       );
       reveals.forEach((el) => revealObserver!.observe(el));
+
+      /* Section traversée : son numéro s'allume. La marge resserre la zone au
+         centre de l'écran, là où se porte la lecture. */
+      sectionObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("section-active", entry.isIntersecting);
+          });
+        },
+        { rootMargin: "-25% 0px -25% 0px" }
+      );
+      document.querySelectorAll<HTMLElement>("section[id]").forEach((s) => sectionObserver!.observe(s));
     }
 
     /* sticky nav */
     const nav = document.getElementById("topnav");
-    const onScroll = () => { if (nav) nav.classList.toggle("scrolled", window.scrollY > 16); };
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y !== dernierY) {
+        versLeBas = y > dernierY;
+        dernierY = y;
+      }
+      if (nav) nav.classList.toggle("scrolled", y > 16);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
@@ -106,6 +168,7 @@ export default function Interactions() {
       timers.forEach(clearTimeout);
       revealObserver?.disconnect();
       spyObserver?.disconnect();
+      sectionObserver?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", onKeydown);
       openBtn?.removeEventListener("click", toggleMenu);

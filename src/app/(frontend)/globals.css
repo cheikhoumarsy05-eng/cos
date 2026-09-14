@@ -56,9 +56,39 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .band-ink { background: var(--ink); color: var(--on-ink); }
 
 /* section head: loud numeral + condensed caps title */
-.ed-head { display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 3vw, 44px); align-items: center; margin-bottom: clamp(36px, 5vw, 72px); border-top: 3px solid var(--ink); padding-top: 20px; }
+.ed-head { display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 3vw, 44px); align-items: center; margin-bottom: clamp(36px, 5vw, 72px); border-top: 3px solid var(--ink); padding-top: 20px; position: relative; }
+
+/* ── Entrée des en-têtes de section ──────────────────────────────────────
+   Le filet se trace de gauche à droite, puis le titre se lève derrière lui :
+   le geste du dessin technique, plutôt qu'un fondu de plus. L'en-tête est
+   donc dispensé du mouvement commun, qui ferait double emploi.
+   Le trait est doublé par un pseudo-élément parce qu'une bordure ne se met
+   pas à l'échelle ; la bordure d'origine reste en place, transparente, pour
+   ne pas décaler d'un pixel la mise en page. */
+.ed-head.reveal { opacity: 1; transform: none; }
+.ed-head { border-top-color: transparent; }
+.ed-head::before {
+  content: ""; position: absolute; top: -3px; left: 0; right: 0; height: 3px;
+  background: var(--ink); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.5s var(--e-out);
+}
+.ed-head.in::before { transform: scaleX(1); }
+.band-ink .ed-head::before { background: var(--on-ink); }
+
+/* Le titre se découvre du haut vers le bas. L'état final déborde sa boîte :
+   sans cette marge, la découpe rognerait les jambages des lettres. */
+.ed-head .ed-title { clip-path: inset(0 0 100% 0); transform: translateY(0.1em); transition: clip-path 0.55s var(--e-out), transform 0.55s var(--e-out); transition-delay: 0.1s; }
+.ed-head.in .ed-title { clip-path: inset(-30% -6% -30% -6%); transform: none; }
+
+.ed-head .ed-index, .ed-head .ed-lead { opacity: 0; transition: opacity 0.5s var(--e-out) 0.18s, color 0.4s var(--e-out); }
+.ed-head.in .ed-index, .ed-head.in .ed-lead { opacity: 1; }
 .band-ink .ed-head { border-top-color: var(--on-ink); }
-.ed-index { font-family: var(--font-display); font-weight: 800; font-variant-numeric: tabular-nums; font-size: clamp(40px, 7vw, 96px); line-height: 0.8; letter-spacing: -0.03em; color: var(--accent); margin: 0; }
+.ed-index { font-family: var(--font-display); font-weight: 800; font-variant-numeric: tabular-nums; font-size: clamp(40px, 7vw, 96px); line-height: 0.8; letter-spacing: -0.03em; color: var(--stone-2); margin: 0; transition: color 0.4s var(--e-out); }
+/* Le numéro prend l'accent tant que sa section occupe le centre de l'écran :
+   un fil conducteur pour la descente, sans rien ajouter à l'écran. */
+.section-active .ed-index { color: var(--accent); }
+.band-ink .ed-index { color: var(--on-ink-mut); }
+.band-ink.section-active .ed-index { color: var(--accent); }
 .ed-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 5vw, 64px); line-height: 0.94; letter-spacing: -0.02em; text-transform: uppercase; }
 .ed-lead { font-family: var(--font-body); font-size: clamp(16px, 1.8vw, 20px); line-height: 1.5; color: var(--ink-2); max-width: 48ch; margin-top: 12px; }
 .band-ink .ed-lead { color: var(--on-ink-mut); }
@@ -312,10 +342,73 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--stone-2); font-size: 13px; font-family: var(--font-display); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 .foot-links { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
 
+/* ── Entrée du hero ──────────────────────────────────────────────────────
+   Le premier écran se pose en cascade au chargement : le folio, le nom, puis
+   ce qui l'entoure. Il ne rejoue jamais — c'est la première lecture, elle
+   doit rester stable quand on revient en haut.
+   Animation et non transition : aucune classe à poser, donc rien à attendre
+   d'un script. Si le JavaScript ne s'exécute pas, le hero s'affiche quand
+   même. `both` retient l'état final, l'écran ne peut pas rester vide. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-top > div > *, .hero-media, .hero-strip .item { animation: hero-entree 0.6s var(--e-out) both; }
+  .hero-top > div > *:nth-child(1) { animation-delay: 0.04s; }
+  .hero-top > div > *:nth-child(2) { animation-delay: 0.10s; }
+  .hero-top > div > *:nth-child(3) { animation-delay: 0.16s; }
+  .hero-top > div > *:nth-child(4) { animation-delay: 0.22s; }
+  .hero-top > div > *:nth-child(5) { animation-delay: 0.28s; }
+  .hero-top > div > *:nth-child(6) { animation-delay: 0.34s; }
+  .hero-media { animation-delay: 0.16s; }
+  .hero-strip .item:nth-child(1) { animation-delay: 0.40s; }
+  .hero-strip .item:nth-child(2) { animation-delay: 0.46s; }
+  .hero-strip .item:nth-child(3) { animation-delay: 0.52s; }
+}
+@keyframes hero-entree { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ── Survol des lignes d'expérience, de formation et de compétences ──────
+   Un filet d'accent se remplit dans la gouttière et la ligne avance de trois
+   pixels : assez pour dire « celle-ci », trop peu pour déranger la lecture.
+   Le filet se pose à -12 px, à l'intérieur de la gouttière, qui ne descend
+   jamais sous 20 px — il ne peut donc pas provoquer de débordement.
+   Sous garde `hover` : au doigt, l'état resterait collé après l'appui. */
+@media (hover: hover) {
+  .xp-row, .edu-row { position: relative; }
+  .xp-row::before, .edu-row::before {
+    content: ""; position: absolute; left: -12px; top: 0; bottom: 0; width: 3px;
+    background: var(--accent); transform: scaleY(0); transform-origin: top;
+    transition: transform 0.3s var(--e-out);
+  }
+  .xp-row:hover::before, .edu-row:hover::before { transform: scaleY(1); }
+  /* Le décalage porte sur le contenu, pas sur la ligne : celle-ci est aussi un
+     bloc « reveal », dont le `transform: none` d'arrivée écraserait le nôtre.
+     Deux animations sur une même propriété se disputeraient l'élément. */
+  .xp-row > *, .edu-row > * { transition: transform 0.25s var(--e-out); }
+  .xp-row:hover > *, .edu-row:hover > * { transform: translateX(3px); }
+
+  .skills-table tbody tr { transition: background 0.25s var(--e-out); }
+  .skills-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+  .skills-table tbody tr:hover .skills-domain { color: var(--accent); }
+}
+.skills-domain { transition: color 0.25s var(--e-out); }
+
 /* reveal */
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s var(--e-out), transform 0.6s var(--e-out); }
+/* `--dy` est posé par le script au moment de révéler : positif quand on
+   descend, négatif quand on remonte. Le bloc entre ainsi par le bord d'où il
+   arrive, au lieu de toujours monter. La valeur de repli sert au premier
+   rendu, avant tout défilement. */
+.reveal { opacity: 0; transform: translateY(var(--dy, 24px)); transition: opacity 0.5s var(--e-out), transform 0.5s var(--e-out); }
 .reveal.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; transition: none; } html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  html { scroll-behavior: auto; }
+  /* Les gestes d'en-tête sont posés d'emblée dans leur état final : le filet
+     entier, le titre découvert, le texte visible. Sans cela, un réglage
+     système « moins d'animations » laisserait les titres masqués par leur
+     découpe — l'inverse du service rendu. */
+  .ed-head::before { transform: scaleX(1) !important; transition: none; }
+  .ed-head .ed-title { clip-path: none !important; transform: none !important; transition: none; }
+  .ed-head .ed-index, .ed-head .ed-lead { opacity: 1 !important; transition: none; }
+  .xp-row > *, .edu-row > *, .xp-row::before, .edu-row::before, .skills-table tbody tr { transition: none; }
+}
 
 /* ═══ PROJECTS — loud index ═══ */
 .proj-index { border-top: 3px solid var(--ink); }

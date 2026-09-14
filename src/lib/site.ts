@@ -6,7 +6,7 @@
  * sous-domaine Vercel par un nom de domaine ne demande qu'un réglage dans le
  * projet Vercel (Settings → Environment Variables), sans toucher au code.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cos-6kaz.vercel.app";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cosinus28.vercel.app";
 
 export const SITE_TITLE = "Cheikh Oumar Sy · Ingénieur Génie Civil — Structures";
 

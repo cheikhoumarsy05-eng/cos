@@ -71,7 +71,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .topnav { position: sticky; top: 0; z-index: 60; background: var(--paper); border-bottom: 2px solid var(--ink); }
 .topnav.scrolled { box-shadow: 0 1px 0 var(--ink); }
 .topnav-inner { display: flex; align-items: center; justify-content: space-between; gap: clamp(20px, 4vw, 56px); height: 64px; }
-.brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; text-transform: uppercase; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; text-transform: uppercase; white-space: nowrap; }
 .brand .brand-mark { color: var(--accent); }
 .nav-links { display: flex; gap: 26px; align-items: center; }
 .nav-links a { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); position: relative; padding-block: 6px; transition: color 0.2s var(--e-out), transform 0.08s var(--e-out); }
@@ -88,11 +88,14 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
    Posé juste avant le bouton CV, il se colle à droite avec les autres commandes. */
 .topnav-inner .lang-toggle { margin-left: auto; }
 
-/* Le menu : filet fin, fond papier, aucun arrondi ni ombre — on reste sur le registre technique. */
+/* Sous 860 px, les liens quittent la barre pour le panneau déroulant : il ne
+   reste que la marque, le sélecteur de langue, le CV et le bouton du menu.
+   À cinq de front, la barre débordait — la marque se brisait sur trois lignes
+   et le CV sortait de l'écran.
 
-/* Repris dans le menu plein écran, sur fond orange : les rôles de couleur s'inversent. */
-/* Le menu garde son fond papier même dans le menu plein écran : il faut reprendre
-
+   Cette règle était auparavant avalée par un commentaire resté ouvert juste
+   au-dessus, qui courait jusqu'à la fermeture du bloc suivant : les liens
+   restaient affichés sur téléphone, et le bouton du menu ne sortait jamais. */
 @media (max-width: 860px) { .nav-links { display: none; } .menu-toggle { display: inline-flex; } }
 /* Sous 560 px, le CV et le sélecteur de langue restent dans la barre plutôt que
    d'être relégués au menu : ce sont les deux commandes qu'on vient chercher en

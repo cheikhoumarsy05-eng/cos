@@ -17,6 +17,7 @@ import * as migration_20260914_125406_formulaire_contact_et_blog from './2026091
 import * as migration_20260914_143140_contact_accroche_facultative from './20260914_143140_contact_accroche_facultative';
 import * as migration_20260914_165043_note_pied_de_page_facultative from './20260914_165043_note_pied_de_page_facultative';
 import * as migration_20260914_202558_statistiques_telechargement_cv from './20260914_202558_statistiques_telechargement_cv';
+import * as migration_20260915_231836_brouillons_articles from './20260915_231836_brouillons_articles';
 
 export const migrations = [
   {
@@ -112,6 +113,11 @@ export const migrations = [
   {
     up: migration_20260914_202558_statistiques_telechargement_cv.up,
     down: migration_20260914_202558_statistiques_telechargement_cv.down,
-    name: '20260914_202558_statistiques_telechargement_cv'
+    name: '20260914_202558_statistiques_telechargement_cv',
+  },
+  {
+    up: migration_20260915_231836_brouillons_articles.up,
+    down: migration_20260915_231836_brouillons_articles.down,
+    name: '20260915_231836_brouillons_articles'
   },
 ];

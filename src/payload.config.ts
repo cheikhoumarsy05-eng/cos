@@ -49,6 +49,12 @@ export default buildConfig({
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     meta: { titleSuffix: "· Cheikh Oumar Sy" },
+    components: {
+      // Ajoute le bouton « Plein écran » au champ de rédaction. Monté comme
+      // fournisseur plutôt qu'en remplacement du champ : réécrire un champ
+      // `richText` obligerait à réimplémenter l'éditeur en entier.
+      providers: ["@/admin/EditeurPleinEcran"],
+    },
   },
   collections: [Projects, Articles, Experience, Freelance, Education, Messages, CvDownloads, Media, Users],
   globals: [Hero, About, Expertise, Publication, Skills, Stats, Contact, Site],

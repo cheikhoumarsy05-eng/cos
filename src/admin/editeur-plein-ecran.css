@@ -1,0 +1,56 @@
+/* ============================================================
+   Rédaction en pleine page
+   ============================================================
+   Le champ sort de la colonne de l'admin et occupe l'écran, sur une largeur
+   de lecture d'environ 80 signes. Les couleurs viennent des variables de
+   l'admin : le thème clair comme le thème sombre suivent sans réglage.
+   ------------------------------------------------------------ */
+
+.bouton-plein-ecran {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--theme-elevation-800);
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.bouton-plein-ecran:hover {
+  background: var(--theme-elevation-100);
+}
+
+.champ-plein-ecran {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  margin: 0;
+  padding: 24px clamp(16px, 6vw, 80px) 40px;
+  background: var(--theme-bg);
+  overflow-y: auto;
+}
+
+/* La zone de saisie occupe la hauteur restante, et le texte reste sur une
+   largeur lisible : au-delà, l'œil perd la ligne en revenant à la marge. */
+.champ-plein-ecran > * {
+  max-width: 80ch;
+  margin-inline: auto;
+}
+
+.champ-plein-ecran .rich-text__editor,
+.champ-plein-ecran [contenteditable="true"] {
+  min-height: calc(100dvh - 190px);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* Le corps de l'admin ne défile plus derrière la page de rédaction. */
+body.a-un-champ-plein-ecran {
+  overflow: hidden;
+}

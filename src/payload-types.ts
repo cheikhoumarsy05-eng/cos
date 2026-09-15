@@ -257,32 +257,19 @@ export interface Media {
  */
 export interface Article {
   id: number;
-  title: string;
   /**
-   * En minuscules, sans accent ni espace. Ex. « surelever-un-batiment ». Évitez de le changer une fois l'article partagé.
+   * Rempli depuis le titre si on le laisse vide. Évitez de le changer une fois l'article partagé.
    */
   slug: string;
   date: string;
   author: string;
-  /**
-   * Ex. « Structures », « Réglementation », « Terrain ».
-   */
-  category: string;
+  title: string;
   /**
    * Deux à trois lignes, affichées sur la carte.
    */
   excerpt: string;
   /**
-   * Recommandé. Sinon, renseignez le chemin ci-dessous.
-   */
-  cover?: (number | null) | Media;
-  /**
-   * Alternative au téléversement, ex. /articles/surelevation.webp
-   */
-  coverSrc?: string | null;
-  coverAlt?: string | null;
-  /**
-   * Titres, listes, citations, liens, gras et images sont pris en charge.
+   * Tapez « / » dans le texte pour un titre, une liste, une citation ou une formule.
    */
   content: {
     root: {
@@ -300,11 +287,25 @@ export interface Article {
     [k: string]: unknown;
   };
   /**
+   * Recommandé. Sinon, renseignez le chemin ci-dessous.
+   */
+  cover?: (number | null) | Media;
+  /**
+   * Alternative au téléversement, ex. /articles/surelevation.webp
+   */
+  coverSrc?: string | null;
+  coverAlt?: string | null;
+  /**
+   * Ex. « Structures », « Réglementation », « Terrain ».
+   */
+  category: string;
+  /**
    * Si l'article a d'abord paru ailleurs, le lien apparaît en fin de page. Laisser vide sinon.
    */
   linkedinUrl?: string | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -596,19 +597,20 @@ export interface ProjectsSelect<T extends boolean = true> {
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
-  title?: T;
   slug?: T;
   date?: T;
   author?: T;
-  category?: T;
+  title?: T;
   excerpt?: T;
+  content?: T;
   cover?: T;
   coverSrc?: T;
   coverAlt?: T;
-  content?: T;
+  category?: T;
   linkedinUrl?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

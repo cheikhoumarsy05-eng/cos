@@ -72,10 +72,21 @@ export async function getContent(locale: Locale = "fr") {
  * `depth: 1` résout la relation vers Media pour disposer de l'URL de couverture
  * sans requête supplémentaire.
  */
+/**
+ * Les articles en brouillon ne doivent jamais atteindre le site.
+ *
+ * Payload renvoie par défaut les documents quel que soit leur statut : un
+ * article commencé mais non publié apparaîtrait donc en ligne, ce qui viderait
+ * les brouillons de leur intérêt. Toutes les lectures publiques passent par ce
+ * filtre — la liste, la page d'un article, et les adresses du sitemap.
+ */
+const SEULEMENT_PUBLIES = { _status: { equals: "published" } } as const;
+
 export async function getArticles(locale: Locale = "fr") {
   const payload = await payloadClient();
   const res = await payload.find({
     collection: "articles",
+    where: SEULEMENT_PUBLIES,
     limit: 200,
     sort: "-date",
     locale,
@@ -89,7 +100,7 @@ export async function getArticle(slug: string, locale: Locale = "fr") {
   const payload = await payloadClient();
   const res = await payload.find({
     collection: "articles",
-    where: { slug: { equals: slug } },
+    where: { and: [{ slug: { equals: slug } }, SEULEMENT_PUBLIES] },
     limit: 1,
     locale,
     depth: 1,
@@ -100,7 +111,13 @@ export async function getArticle(slug: string, locale: Locale = "fr") {
 /** Tous les identifiants d'URL, pour le prérendu statique et le sitemap. */
 export async function getArticleSlugs(): Promise<string[]> {
   const payload = await payloadClient();
-  const res = await payload.find({ collection: "articles", limit: 500, depth: 0, pagination: false });
+  const res = await payload.find({
+    collection: "articles",
+    where: SEULEMENT_PUBLIES,
+    limit: 500,
+    depth: 0,
+    pagination: false,
+  });
   return res.docs.map((d: any) => d.slug).filter(Boolean);
 }
 

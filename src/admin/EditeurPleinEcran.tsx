@@ -24,9 +24,14 @@ export default function EditeurPleinEcran({ children }: { children?: ReactNode }
     const ID_BOUTON = "bouton-plein-ecran";
     const CLASSE = "champ-plein-ecran";
 
-    /** Le conteneur du champ « Contenu », quand il est monté. */
+    /**
+     * Le conteneur du champ « Contenu », quand il est monté.
+     *
+     * La classe est `rich-text-lexical`, pas `rich-text` : viser la seconde ne
+     * trouvait rien et le bouton ne s'affichait jamais.
+     */
     const trouverChamp = () =>
-      document.querySelector<HTMLElement>('.field-type.rich-text, [id$="field-content"]');
+      document.querySelector<HTMLElement>('.rich-text-lexical, [id$="field-content"]');
 
     const quitter = () => {
       document.querySelector("." + CLASSE)?.classList.remove(CLASSE);

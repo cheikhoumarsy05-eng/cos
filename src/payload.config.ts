@@ -2,7 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { buildConfig } from "payload";
 import { postgresAdapter } from "@payloadcms/db-postgres";
-import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { lexicalEditor, EXPERIMENTAL_TableFeature } from "@payloadcms/richtext-lexical";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { resendAdapter } from "@payloadcms/email-resend";
 import sharp from "sharp";
@@ -69,7 +69,22 @@ export default buildConfig({
     defaultLocale: "fr",
     fallback: true,
   },
-  editor: lexicalEditor(),
+  /**
+   * Éditeur de texte riche.
+   *
+   * Les outils fournis d'office couvrent déjà la rédaction technique : titres,
+   * gras et italique, exposant et indice — indispensables pour m², σ ou HA12 —,
+   * listes et cases à cocher, citation, lien, trait de séparation, code en
+   * ligne et téléversement d'images.
+   *
+   * S'y ajoute le tableau, qui n'est pas fourni par défaut et que Payload
+   * qualifie encore d'expérimental : c'est le seul moyen de présenter une
+   * nomenclature d'aciers ou un récapitulatif de charges dans le corps d'un
+   * article.
+   */
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [...defaultFeatures, EXPERIMENTAL_TableFeature()],
+  }),
   // Sharp powers upload image resizing (thumb/wide, webp conversion).
   sharp,
   // Persist media uploads on Vercel Blob (Vercel's filesystem is ephemeral).

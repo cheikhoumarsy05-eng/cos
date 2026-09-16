@@ -761,6 +761,12 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .article-body table { width: 100%; border-collapse: collapse; font-size: 15px; }
 .article-body th, .article-body td { text-align: left; padding: 10px 14px 10px 0; border-top: 1px solid var(--line); vertical-align: top; }
 .article-body th { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone); }
+/* Sur téléphone, une nomenclature d'aciers ou un récapitulatif de charges ne
+   tient pas dans la largeur : le tableau défile seul plutôt que de pousser
+   toute la page de côté. */
+@media (max-width: 560px) {
+  .article-body table { display: block; overflow-x: auto; max-width: 100%; }
+}
 
 .article-source { margin: clamp(30px, 4vw, 44px) 0 0; padding-top: clamp(18px, 2.4vw, 24px); border-top: 1px solid var(--line); font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; }
 

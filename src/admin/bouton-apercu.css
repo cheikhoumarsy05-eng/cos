@@ -1,0 +1,29 @@
+/* Bouton « Aperçu » aligné sur les contrôles de document de l'admin :
+   même hauteur, même rayon, registre discret pour ne pas concurrencer
+   « Publier ». */
+.bouton-apercu {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  margin-right: 8px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--theme-elevation-800);
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.bouton-apercu:hover {
+  background: var(--theme-elevation-100);
+  text-decoration: none;
+}
+
+/* Sans identifiant, l'adresse ne mène nulle part : le bouton le montre. */
+.bouton-apercu--inerte {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

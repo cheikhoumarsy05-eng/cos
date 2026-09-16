@@ -44,6 +44,14 @@ export const Articles: CollectionConfig = {
       const prefixe = locale === "en" ? "/en" : "";
       return `${SITE_URL}${prefixe}/articles/${doc.slug}`;
     },
+    components: {
+      edit: {
+        // Un second bouton d'aperçu, placé cette fois contre les boutons
+        // d'enregistrement : celui de Payload vit dans la colonne de droite,
+        // loin du geste qu'on vient de faire.
+        beforeDocumentControls: ["@/admin/BoutonApercu"],
+      },
+    },
   },
   access: { read: () => true },
   /**

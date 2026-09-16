@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Interactions from "./Interactions";
 import LangSwitch from "./LangSwitch";
-import { getArticle, getContent, articleCover } from "../lib/content";
+import ArticleActions from "./ArticleActions";
+import AideLecture from "./AideLecture";
+import { getArticle, getContent, articleCover, tempsDeLecture, getArticleVoisins } from "../lib/content";
 import { dict, articleHref, localeHref, formatDate, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
 
@@ -17,7 +19,11 @@ import { SITE_URL } from "@/lib/site";
  * langue pointant vers le même article dans l'autre langue.
  */
 export default async function ArticleView({ slug, locale }: { slug: string; locale: Locale }) {
-  const [article, c] = await Promise.all([getArticle(slug, locale), getContent(locale)]);
+  const [article, c, voisins] = await Promise.all([
+    getArticle(slug, locale),
+    getContent(locale),
+    getArticleVoisins(slug, locale),
+  ]);
   if (!article) notFound();
 
   const t = dict(locale);
@@ -25,6 +31,8 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
   const st = site.sectionTitles ?? {};
   const cover = articleCover(article);
   const published = formatDate((article as any).date, locale);
+  const minutes = tempsDeLecture((article as any).content);
+  const adresse = `${SITE_URL}${articleHref(locale, slug)}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -73,6 +81,14 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
               <p className="article-byline">{t.articleBy} {(article as any).author}</p>
             </div>
 
+            <ArticleActions
+              slug={slug}
+              titre={(article as any).title}
+              url={adresse}
+              minutes={minutes}
+              t={t}
+            />
+
             {cover && (
               <div className="article-cover reveal">
                 {cover.vector ? (
@@ -106,6 +122,25 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
               </p>
             )}
 
+            {(voisins.precedent || voisins.suivant) && (
+              <nav className="article-voisins reveal" aria-label={t.allArticles}>
+                {[
+                  { doc: voisins.precedent, libelle: t.previousArticle, sens: "avant" },
+                  { doc: voisins.suivant, libelle: t.nextArticle, sens: "apres" },
+                ]
+                  .filter((v) => v.doc)
+                  .map((v) => {
+                    const d = v.doc as any;
+                    return (
+                      <a key={d.slug} className={`article-voisin voisin-${v.sens}`} href={articleHref(locale, d.slug)}>
+                        <span className="voisin-sens">{v.libelle}</span>
+                        <span className="voisin-titre">{d.title}</span>
+                      </a>
+                    );
+                  })}
+              </nav>
+            )}
+
             <p className="article-back article-back-end">
               <a className="link arrow-back" href={`${localeHref(locale)}#articles`}>{t.allArticles}</a>
             </p>
@@ -113,6 +148,7 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
         </article>
       </main>
 
+      <AideLecture titre={(article as any).title} auteur={(article as any).author} url={adresse} t={t} />
       <Interactions />
     </>
   );

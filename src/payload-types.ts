@@ -74,6 +74,7 @@ export interface Config {
     education: Education;
     messages: Message;
     'cv-downloads': CvDownload;
+    'article-stats': ArticleStat;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -90,6 +91,7 @@ export interface Config {
     education: EducationSelect<false> | EducationSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     'cv-downloads': CvDownloadsSelect<false> | CvDownloadsSelect<true>;
+    'article-stats': ArticleStatsSelect<false> | ArticleStatsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -427,6 +429,20 @@ export interface CvDownload {
   createdAt: string;
 }
 /**
+ * Vues et « j'aime » comptés sur le site. Mis à jour automatiquement.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "article-stats".
+ */
+export interface ArticleStat {
+  id: number;
+  slug: string;
+  views: number;
+  likes: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -503,6 +519,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'cv-downloads';
         value: number | CvDownload;
+      } | null)
+    | ({
+        relationTo: 'article-stats';
+        value: number | ArticleStat;
       } | null)
     | ({
         relationTo: 'media';
@@ -695,6 +715,17 @@ export interface MessagesSelect<T extends boolean = true> {
 export interface CvDownloadsSelect<T extends boolean = true> {
   referer?: T;
   country?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "article-stats_select".
+ */
+export interface ArticleStatsSelect<T extends boolean = true> {
+  slug?: T;
+  views?: T;
+  likes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

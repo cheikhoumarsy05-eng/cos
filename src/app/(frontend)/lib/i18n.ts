@@ -110,6 +110,20 @@ const fr = {
   requestDrawings: "Demander les plans",
   requestSubject: "Demande de plans — {title}",
   onRequest: "Plans, notes de calcul et modèles disponibles sur demande.",
+
+  // Lecture d'un article : mesures, actions, partage et navigation.
+  readingTime: "Temps de lecture",
+  minRead: "min de lecture",
+  like: "J'aime cet article",
+  liked: "Article aimé",
+  save: "Mettre de côté",
+  saved: "Mis de côté",
+  copyLink: "Copier le lien",
+  linkCopied: "Lien copié",
+  shareQuote: "Partager cette citation",
+  quoteCopied: "Citation copiée",
+  previousArticle: "Article précédent",
+  nextArticle: "Article suivant",
 };
 
 const en: typeof fr = {
@@ -180,6 +194,19 @@ const en: typeof fr = {
   requestDrawings: "Request drawings",
   requestSubject: "Drawing request — {title}",
   onRequest: "Drawings, design notes and models available on request.",
+
+  readingTime: "Reading time",
+  minRead: "min read",
+  like: "Like this article",
+  liked: "Article liked",
+  save: "Save for later",
+  saved: "Saved",
+  copyLink: "Copy link",
+  linkCopied: "Link copied",
+  shareQuote: "Share this quote",
+  quoteCopied: "Quote copied",
+  previousArticle: "Previous article",
+  nextArticle: "Next article",
 };
 
 export type Dict = typeof fr;

@@ -173,3 +173,64 @@ export function toProject(p: any) {
     }),
   };
 }
+
+/**
+ * Nombre de mots d'un contenu Lexical.
+ *
+ * Le texte se trouve dans les nœuds `text` disséminés dans l'arbre : titres,
+ * paragraphes, listes, cellules de tableau. On parcourt donc l'arbre entier
+ * plutôt que les seuls paragraphes, sans quoi un article très structuré
+ * paraîtrait deux fois plus court qu'il ne l'est.
+ */
+function compterMots(noeud: any): number {
+  if (!noeud || typeof noeud !== "object") return 0;
+  let total = 0;
+  if (typeof noeud.text === "string" && noeud.text.trim()) {
+    total += noeud.text.trim().split(/\s+/).length;
+  }
+  const enfants = noeud.children ?? noeud.root?.children;
+  if (Array.isArray(enfants)) {
+    for (const enfant of enfants) total += compterMots(enfant);
+  }
+  return total;
+}
+
+/**
+ * Temps de lecture estimé, en minutes, jamais inférieur à une.
+ *
+ * 200 mots par minute : la fourchette courante pour un texte suivi. Un article
+ * technique se lit plus lentement, mais annoncer une durée plus longue
+ * découragerait sans rien apprendre — l'estimation sert à situer, pas à
+ * chronométrer.
+ */
+export function tempsDeLecture(contenu: unknown): number {
+  const mots = compterMots(contenu);
+  return Math.max(1, Math.round(mots / 200));
+}
+
+/**
+ * Article précédent et suivant, dans l'ordre de lecture du site.
+ *
+ * Le site range du plus récent au plus ancien : « précédent » désigne donc
+ * l'article publié juste avant celui qu'on lit, et « suivant » le plus récent
+ * des deux. Les brouillons sont écartés comme partout ailleurs.
+ */
+export async function getArticleVoisins(slug: string, locale: Locale = "fr") {
+  const payload = await payloadClient();
+  const res = await payload.find({
+    collection: "articles",
+    where: SEULEMENT_PUBLIES,
+    sort: "-date",
+    limit: 200,
+    locale,
+    depth: 1,
+  });
+  const docs = res.docs as any[];
+  const i = docs.findIndex((d) => d.slug === slug);
+  if (i === -1) return { precedent: null, suivant: null };
+  return {
+    // Plus récent que celui qu'on lit — il le précède dans la liste.
+    suivant: i > 0 ? docs[i - 1] : null,
+    precedent: i < docs.length - 1 ? docs[i + 1] : null,
+  };
+}

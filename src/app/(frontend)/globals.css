@@ -798,6 +798,147 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
   .article-body table { display: block; overflow-x: auto; max-width: 100%; }
 }
 
+/* ============================================================
+   LECTURE D'UN ARTICLE — mesures, actions, progression, voisins
+   ============================================================
+   Le registre reste celui du portfolio : filets d'encre, capitales étroites
+   en police d'affichage, accent réservé au geste actif. Aucune pastille
+   colorée, aucun compteur en évidence — on lit un article, on ne consulte
+   pas un fil d'actualité. */
+
+/* Barre de mesures et d'actions, sous le chapô. */
+.art-actions {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  margin-top: clamp(20px, 2.6vw, 28px);
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.art-actions-mesures { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.art-mesure {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-display); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--stone-2);
+}
+.art-mesure svg { width: 15px; height: 15px; flex: none; }
+
+.art-actions-boutons { display: flex; align-items: center; gap: 2px; }
+.art-actions-separateur { width: 1px; height: 18px; margin: 0 8px; background: var(--line); }
+
+/* Un bouton d'action : une icône, parfois un nombre. Pas de fond au repos —
+   c'est ce qui le distingue d'un bouton de réseau social. */
+.art-action {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 38px; padding: 0 9px;
+  border: 0; background: none; cursor: pointer;
+  color: var(--stone-2);
+  font-family: var(--font-display); font-size: 12px; font-weight: 700;
+  border-radius: 2px;
+  transition: color 0.2s var(--e-out), background 0.2s var(--e-out);
+}
+.art-action svg { width: 18px; height: 18px; flex: none; }
+.art-action-nombre { font-variant-numeric: tabular-nums; min-width: 1ch; }
+@media (hover: hover) { .art-action:hover { color: var(--ink); background: var(--paper-2); } }
+.art-action:active { transform: translateY(1px); }
+
+/* L'état actif — aimé, mis de côté — se lit à l'accent et au remplissage de
+   l'icône, jamais à un fond coloré. */
+.art-action.est-actif { color: var(--accent); }
+
+/* Battement bref au moment du clic : l'icône se gonfle puis revient. */
+.art-action.bat svg { animation: coeur-bat 0.42s var(--e-out); }
+@keyframes coeur-bat {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.32); }
+  70% { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .art-action.bat svg { animation: none; } }
+
+/* Confirmation de copie : elle apparaît et s'efface sans déplacer le texte. */
+.art-copie {
+  position: absolute; right: 0; bottom: -26px;
+  font-family: var(--font-display); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+  opacity: 0; transition: opacity 0.3s var(--e-out); pointer-events: none;
+}
+.art-copie.vu { opacity: 1; }
+.art-copie-flottant { position: fixed; right: auto; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 90; background: var(--ink); color: var(--paper); padding: 9px 16px; border-radius: 2px; }
+
+/* Progression de lecture : un filet de deux pixels sous la barre collante.
+   On anime une échelle horizontale, jamais une largeur — la seconde
+   provoquerait un recalcul de mise en page à chaque image. */
+.lecture-progres {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  z-index: 70; pointer-events: none; background: transparent;
+}
+.lecture-progres span {
+  display: block; height: 100%; width: 100%;
+  background: var(--accent); transform-origin: left; transform: scaleX(0);
+  transition: transform 0.12s linear;
+}
+
+/* Bouton de partage d'une citation : il suit la sélection, au-dessus d'elle. */
+.citation-partage {
+  position: fixed; z-index: 95; transform: translate(-50%, calc(-100% - 10px));
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px; border: 0; border-radius: 2px; cursor: pointer;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--font-display); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
+  box-shadow: 0 10px 22px -14px rgba(20, 20, 20, 0.8);
+  animation: citation-entree 0.18s var(--e-out);
+}
+.citation-partage svg { width: 14px; height: 14px; }
+@keyframes citation-entree { from { opacity: 0; transform: translate(-50%, calc(-100% - 4px)); } }
+@media (prefers-reduced-motion: reduce) { .citation-partage { animation: none; } }
+
+/* Article précédent et suivant. Deux colonnes quand les deux existent, une
+   seule sinon — sans case vide ni faux équilibre. */
+.article-voisins {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+  margin-top: clamp(36px, 5vw, 56px);
+  padding-top: clamp(22px, 3vw, 30px);
+  border-top: 2px solid var(--ink);
+}
+.article-voisin {
+  display: block; padding: clamp(16px, 2vw, 20px);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  transition: border-color 0.2s var(--e-out), background 0.2s var(--e-out);
+}
+@media (hover: hover) { .article-voisin:hover { border-color: var(--ink); background: var(--paper-2); } }
+.voisin-sens {
+  display: block; margin-bottom: 8px;
+  font-family: var(--font-display); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.voisin-titre {
+  display: block; font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(16px, 1.8vw, 19px); line-height: 1.2; color: var(--ink);
+}
+/* Le suivant s'aligne à droite quand les deux sont là : le regard suit le
+   sens de lecture. Seul, il reste à gauche. */
+.article-voisins > .voisin-apres:not(:first-child) { text-align: right; }
+
+@media (max-width: 560px) {
+  .art-actions { gap: 10px; }
+  .art-actions-mesures { gap: 14px; }
+  .art-action { padding: 0 7px; }
+  .art-actions-separateur { margin: 0 4px; }
+  .article-voisins > .voisin-apres:not(:first-child) { text-align: left; }
+}
+
+/* Libellé réservé aux lecteurs d'écran : chaque bouton dit ce qu'il fait,
+   même quand il n'affiche qu'une icône. */
+.visuellement-cache {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
 .article-source { margin: clamp(30px, 4vw, 44px) 0 0; padding-top: clamp(18px, 2.4vw, 24px); border-top: 1px solid var(--line); font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; }
 
 /* ============================================================

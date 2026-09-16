@@ -16,6 +16,7 @@ import { Freelance } from "./collections/Freelance";
 import { Education } from "./collections/Education";
 import { Messages } from "./collections/Messages";
 import { CvDownloads } from "./collections/CvDownloads";
+import { ArticleStats } from "./collections/ArticleStats";
 import { Hero } from "./globals/Hero";
 import { About } from "./globals/About";
 import { Publication } from "./globals/Publication";
@@ -56,7 +57,7 @@ export default buildConfig({
       providers: ["@/admin/EditeurPleinEcran"],
     },
   },
-  collections: [Projects, Articles, Experience, Freelance, Education, Messages, CvDownloads, Media, Users],
+  collections: [Projects, Articles, Experience, Freelance, Education, Messages, CvDownloads, ArticleStats, Media, Users],
   globals: [Hero, About, Expertise, Publication, Skills, Stats, Contact, Site],
   // Site bilingue : le français reste la langue par défaut, servie sur « / ».
   // `fallback` affiche le texte français tant qu'une traduction anglaise est vide,

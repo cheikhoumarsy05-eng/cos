@@ -80,12 +80,18 @@ export default async function HomePage({ locale }: { locale: Locale }) {
   let compteur = 0;
   const n = () => String(++compteur).padStart(2, "0");
 
-  /* Navigation en trois temps : l'accueil, tout le corps du site regroupé sous « À propos »
-     (sections 01 à 08), puis le contact. Le scrollspy n'observe que ces trois ancres, donc
-     « À propos » reste actif sur toute la traversée des sections intermédiaires. */
+  /* Cinq entrées seulement : l'accueil, le profil, les deux corps de preuve —
+     les projets livrés et les textes — puis le contact. Recherche, expérience,
+     compétences et formation restent des sections de la page, traversées au
+     défilement : les nommer toutes rendrait le menu aussi long que le site.
+     Le scrollspy n'observe que ces ancres, chacune restant active sur les
+     sections qui la suivent. */
   const NAV: [string, string][] = [
-    ["top", st.home], ["a-propos", st.aboutNav ?? st.about],
-    ["articles", st.blogNav ?? "Blog"], ["contact", st.contactNav ?? st.contact],
+    ["top", st.home],
+    ["a-propos", st.aboutNav ?? st.about],
+    ["projets", st.projectsNav ?? st.projects],
+    ["articles", st.blogNav ?? "Blog"],
+    ["contact", st.contactNav ?? st.contact],
   ];
 
   return (
@@ -213,6 +219,38 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
+        {/* PROJETS */}
+        <section className="section" id="projets">
+          <div className="wrap">
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
+            <Projects projects={projects} t={t} />
+          </div>
+        </section>
+
+        {/* ARTICLES & RÉFLEXIONS */}
+        {articles.length > 0 && (
+          <section className="section" id="articles">
+            <div className="wrap">
+              <div className="ed-head reveal">
+                <p className="ed-index">{n()}</p>
+                <div className="ed-head-text">
+                  <h2 className="ed-title">{st.articles}</h2>
+                  {st.articlesLead && <p className="ed-lead">{st.articlesLead}</p>}
+                </div>
+              </div>
+              <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
+            </div>
+          </section>
+        )}
+
+        {/* RECHERCHE */}
+        <section className="section band-ink" id="recherche">
+          <div className="wrap">
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
+            <PublicationList items={pubItems} t={t} />
+          </div>
+        </section>
+
         {/* EXPÉRIENCE */}
         <section className="section" id="experience">
           <div className="wrap">
@@ -306,22 +344,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             )}
           </div>
         </section>
-        {/* PROJETS */}
-        <section className="section" id="projets">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
-            <Projects projects={projects} t={t} />
-          </div>
-        </section>
-
-        {/* RECHERCHE */}
-        <section className="section band-ink" id="recherche">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
-            <PublicationList items={pubItems} t={t} />
-          </div>
-        </section>
-
         {/* FORMATION */}
         <section className="section band-paper2" id="formation">
           <div className="wrap">
@@ -336,22 +358,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             </div>
           </div>
         </section>
-
-        {/* ARTICLES & RÉFLEXIONS */}
-        {articles.length > 0 && (
-          <section className="section" id="articles">
-            <div className="wrap">
-              <div className="ed-head reveal">
-                <p className="ed-index">{n()}</p>
-                <div className="ed-head-text">
-                  <h2 className="ed-title">{st.articles}</h2>
-                  {st.articlesLead && <p className="ed-lead">{st.articlesLead}</p>}
-                </div>
-              </div>
-              <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
-            </div>
-          </section>
-        )}
 
         {/* CONTACT */}
         <section className="section" id="contact">

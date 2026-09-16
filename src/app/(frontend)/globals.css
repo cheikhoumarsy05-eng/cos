@@ -110,8 +110,6 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 @media (hover: hover) { .nav-links a:hover { color: var(--accent); } }
 .nav-links a.active::after { transform: scaleX(1); }
 @media (hover: hover) { .nav-links a:hover::after { transform: scaleX(1); } }
-.nav-cta { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; padding: 9px 18px; background: var(--accent); color: var(--on-ink); border-radius: 2px; transition: background 0.2s var(--e-out), transform 0.08s var(--e-out); }
-@media (hover: hover) { .nav-cta:hover { background: var(--accent-2); } }
 .menu-toggle { display: none; width: 46px; height: 46px; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 2px; }
 /* ── Bouton du menu : trois barres qui deviennent une croix ──────────────
    Le geste accompagne le déroulé du panneau et dure autant que lui : la
@@ -151,7 +149,6 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 @media (max-width: 560px) {
   .topnav-inner { gap: 10px; height: 58px; }
   .brand { font-size: 14px; }
-  .topnav .nav-cta { padding: 8px 12px; font-size: 12px; }
   .menu-toggle { width: 40px; height: 40px; }
   .menu-barres { width: 18px; height: 13px; }
   .menu-barres span:nth-child(2) { top: 5.5px; }
@@ -162,7 +159,6 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 @media (max-width: 380px) {
   .topnav-inner { gap: 8px; }
   .brand { font-size: 12px; }
-  .topnav .nav-cta { padding: 8px 10px; }
 }
 
 /* overlay menu — hazard field */
@@ -748,7 +744,6 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
    restent masqués — le retour se fait par « Tous les articles » dans la page. */
 @media (max-width: 860px) {
   .topnav-article .lang-toggle { display: inline-flex; }
-  .topnav-article .nav-cta { display: inline-block; }
   .topnav-article .topnav-inner { gap: 14px; }
 }
 
@@ -973,7 +968,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
    N'y figurent que les éléments réellement actionnables. Les pastilles
    d'outils, de compétences et de points clés sont des `span` décoratifs :
    leur donner un retour au toucher promettrait une action inexistante. */
-.btn, .nav-cta, .nav-links a, .overlay-nav a, .menu-toggle,
+.btn, .nav-links a, .overlay-nav a, .menu-toggle,
 .art-link, .proj-title-btn, .proj-media-btn {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -986,7 +981,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 }
 
 /* Petits contrôles : l'enfoncement d'un pixel, déjà le geste de `.btn`. */
-.btn:active, .nav-cta:active, .nav-links a:active, .menu-toggle:active,
+.btn:active, .nav-links a:active, .menu-toggle:active,
 .foot-links a:active, .proj-title-btn:active {
   transform: translateY(1px);
 }
@@ -1005,7 +1000,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .btn:active, .nav-cta:active, .nav-links a:active, .menu-toggle:active,
+  .btn:active, .nav-links a:active, .menu-toggle:active,
   .foot-links a:active, .proj-title-btn:active,
   .art-link:active, .proj-media-btn:active, .overlay-nav a:active {
     transform: none;

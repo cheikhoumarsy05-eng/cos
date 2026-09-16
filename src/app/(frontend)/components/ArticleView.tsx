@@ -63,7 +63,6 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
             <a href={`${localeHref(locale)}#articles`}>{st.articles ?? t.articles}</a>
           </nav>
           <LangSwitch locale={locale} label={t.localeSwitchLabel} slug={slug} />
-          <a className="nav-cta" href={site.cvUrl} target="_blank" rel="noopener">CV</a>
         </div>
       </header>
 

@@ -103,7 +103,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             {NAV.map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
           </nav>
           <LangSwitch locale={locale} label={t.localeSwitchLabel} />
-          <a className="nav-cta" href={site.cvUrl} target="_blank" rel="noopener">CV</a>
           {/* Trois barres plutôt qu'un dessin d'un seul trait : séparées, elles
               peuvent pivoter en croix pendant que le panneau se déroule. */}
           <button className="menu-toggle" id="menu-open" aria-label={t.openMenu} aria-controls="overlay-menu" aria-expanded={false}>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Interactions from "./Interactions";
 import LangSwitch from "./LangSwitch";
@@ -27,6 +28,14 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
   if (!article) notFound();
 
   const t = dict(locale);
+  /* Un bandeau signale qu'on lit un brouillon : sans lui, on peut croire
+     regarder le site public et s'étonner que personne ne voie l'article. */
+  let enApercu = false;
+  try {
+    enApercu = (await draftMode()).isEnabled;
+  } catch {
+    // Prérendu : jamais en aperçu.
+  }
   const site = (c.site as any) ?? {};
   const st = site.sectionTitles ?? {};
   const cover = articleCover(article);
@@ -67,6 +76,13 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
       </header>
 
       <main id="content">
+        {enApercu && (
+          <p className="bandeau-apercu">
+            <span>Aperçu — cet article n'est pas publié.</span>
+            <a href={`/apercu/sortie?retour=${encodeURIComponent(articleHref(locale, slug))}`}>Quitter l'aperçu</a>
+          </p>
+        )}
+
         <article className="section article-page">
           <div className="wrap">
             <p className="article-back">

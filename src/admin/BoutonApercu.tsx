@@ -18,7 +18,10 @@ export default function BoutonApercu() {
   const slug = useFormFields(([fields]) => fields?.slug?.value as string | undefined);
 
   const pret = Boolean(slug && String(slug).trim());
-  const adresse = pret ? `/articles/${slug}` : undefined;
+  // On passe par « /apercu » et non directement par l'article : un brouillon
+  // n'existe pas sur le site public, et le lien direct tombait sur une page
+  // introuvable. Cette route ouvre le mode brouillon, puis redirige.
+  const adresse = pret ? `/apercu?slug=${encodeURIComponent(String(slug))}` : undefined;
 
   return (
     <a
@@ -27,7 +30,7 @@ export default function BoutonApercu() {
       target="_blank"
       rel="noopener"
       aria-disabled={!pret}
-      title={pret ? "Ouvrir l'article dans un nouvel onglet" : "Renseignez d'abord un titre ou un identifiant d'URL"}
+      title={pret ? "Ouvrir l'article dans un nouvel onglet, brouillon compris" : "Renseignez d'abord un titre ou un identifiant d'URL"}
       onClick={(e) => {
         if (!pret) e.preventDefault();
       }}

@@ -53,7 +53,20 @@ export const Articles: CollectionConfig = {
       },
     },
   },
-  access: { read: () => true },
+  access: {
+    /**
+     * Le public ne lit que les articles publiés.
+     *
+     * `read: () => true` laissait l'API REST renvoyer les brouillons à qui
+     * les demandait : ils n'apparaissaient pas sur le site, mais un appel à
+     * « /api/articles » en livrait le texte entier. Filtrer ici ferme la
+     * porte pour de bon, quelle que soit la façon dont on interroge.
+     *
+     * L'admin connecté voit tout, et l'aperçu passe par l'API locale de
+     * Payload, qui n'est pas soumise à ce contrôle.
+     */
+    read: ({ req }) => (req.user ? true : { _status: { equals: "published" } }),
+  },
   /**
    * Brouillons : un article s'écrit en plusieurs fois et ne paraît qu'au clic
    * sur « Publier ». Sans cela, tout enregistrement partait aussitôt en base —

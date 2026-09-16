@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import type { Locale } from "./i18n";
@@ -95,12 +96,30 @@ export async function getArticles(locale: Locale = "fr") {
   return res.docs;
 }
 
-/** Un article par son identifiant d'URL, ou null s'il n'existe pas. */
+/**
+ * Un article par son identifiant d'URL, ou null s'il n'existe pas.
+ *
+ * En mode brouillon — activé par « /apercu » depuis l'admin — le filtre de
+ * publication tombe et Payload renvoie la dernière version, publiée ou non.
+ * C'est tout l'objet de l'aperçu : relire un texte avant de le publier.
+ *
+ * L'appel à `draftMode()` est gardé : il n'a de sens que dans une requête, et
+ * lève au prérendu des pages. Hors requête, on reste donc sur le site public.
+ */
 export async function getArticle(slug: string, locale: Locale = "fr") {
   const payload = await payloadClient();
+
+  let brouillon = false;
+  try {
+    brouillon = (await draftMode()).isEnabled;
+  } catch {
+    // Prérendu ou génération statique : pas de requête, donc pas d'aperçu.
+  }
+
   const res = await payload.find({
     collection: "articles",
-    where: { and: [{ slug: { equals: slug } }, SEULEMENT_PUBLIES] },
+    where: brouillon ? { slug: { equals: slug } } : { and: [{ slug: { equals: slug } }, SEULEMENT_PUBLIES] },
+    draft: brouillon,
     limit: 1,
     locale,
     depth: 1,

@@ -72,7 +72,33 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_articles_v_latest_idx" ON "_articles_v" USING btree ("latest");
   CREATE UNIQUE INDEX "_articles_v_locales_locale_parent_id_unique" ON "_articles_v_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "articles__status_idx" ON "articles" USING btree ("_status");
-  UPDATE "articles" SET "_status" = 'published';`)
+  UPDATE "articles" SET "_status" = 'published';
+
+  -- Les articles écrits avant les brouillons n'ont aucune version, et Payload
+  -- en attend une par document : sans elle, l'admin ne sait plus quoi afficher
+  -- et la liste des articles paraît vide. On leur en donne une, publiée,
+  -- recopiée depuis le contenu déjà en base. Les gardes « NOT EXISTS » rendent
+  -- l'opération rejouable sans doublon.
+  INSERT INTO "_articles_v" (
+    parent_id, version_slug, version_date, version_author, version_cover_id,
+    version_cover_src, version_linkedin_url, version_updated_at, version_created_at,
+    version__status, created_at, updated_at, latest
+  )
+  SELECT a.id, a.slug, a.date, a.author, a.cover_id,
+         a.cover_src, a.linkedin_url, a.updated_at, a.created_at,
+         'published'::enum__articles_v_version_status, now(), now(), true
+  FROM "articles" a
+  WHERE NOT EXISTS (SELECT 1 FROM "_articles_v" v WHERE v.parent_id = a.id);
+
+  INSERT INTO "_articles_v_locales" (
+    version_title, version_excerpt, version_content, version_cover_alt, version_category, _locale, _parent_id
+  )
+  SELECT l.title, l.excerpt, l.content, l.cover_alt, l.category, l._locale, v.id
+  FROM "articles_locales" l
+  JOIN "_articles_v" v ON v.parent_id = l._parent_id
+  WHERE NOT EXISTS (
+    SELECT 1 FROM "_articles_v_locales" vl WHERE vl._parent_id = v.id AND vl._locale = l._locale
+  );`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {

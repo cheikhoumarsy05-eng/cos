@@ -896,40 +896,53 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 @keyframes citation-entree { from { opacity: 0; transform: translate(-50%, calc(-100% - 4px)); } }
 @media (prefers-reduced-motion: reduce) { .citation-partage { animation: none; } }
 
-/* Article précédent et suivant. Deux colonnes quand les deux existent, une
-   seule sinon — sans case vide ni faux équilibre. */
-.article-voisins {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: clamp(14px, 2vw, 22px);
-  margin-top: clamp(36px, 5vw, 56px);
-  padding-top: clamp(22px, 3vw, 30px);
+/* « À lire aussi » : les mêmes cartes que sur la page d'accueil, posées en
+   hauteur. Côte à côte, leur format horizontal — image sur 46 % de la largeur —
+   serait écrasé ; l'image passe donc au-dessus du texte. Deux colonnes quand
+   deux articles restent à lire, une seule sinon, sans case vide. */
+.article-suite {
+  margin-top: clamp(40px, 5vw, 60px);
+  padding-top: clamp(24px, 3vw, 32px);
   border-top: 2px solid var(--ink);
 }
-.article-voisin {
-  display: block; padding: clamp(16px, 2vw, 20px);
-  border: 1px solid var(--line); border-radius: var(--radius);
-  transition: border-color 0.2s var(--e-out), background 0.2s var(--e-out);
+.article-suite-titre {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(15px, 1.6vw, 17px); letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--stone-2);
+  margin: 0 0 clamp(18px, 2.4vw, 26px);
 }
-@media (hover: hover) { .article-voisin:hover { border-color: var(--ink); background: var(--paper-2); } }
-.voisin-sens {
-  display: block; margin-bottom: 8px;
-  font-family: var(--font-display); font-size: 11px; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+.article-suite-grille {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: clamp(16px, 2.2vw, 26px);
 }
-.voisin-titre {
-  display: block; font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(16px, 1.8vw, 19px); line-height: 1.2; color: var(--ink);
+/* Remise en hauteur : la règle d'origine pose l'image en colonne de gauche et
+   lui impose une hauteur minimale de bandeau. */
+.article-suite .art-link { grid-template-columns: 1fr; }
+.article-suite .art-cover {
+  aspect-ratio: 16 / 10; height: auto; min-height: 0;
+  border-right: 0; border-bottom: 1px solid var(--line);
 }
-/* Le suivant s'aligne à droite quand les deux sont là : le regard suit le
-   sens de lecture. Seul, il reste à gauche. */
-.article-voisins > .voisin-apres:not(:first-child) { text-align: right; }
+
+/* Un seul article à lire ensuite : la carte reprend le format couché de la
+   page d'accueil. Seule et en hauteur, elle occuperait toute la largeur avec
+   une image de près de cinq cents pixels — une fin de page plus imposante que
+   l'article qu'on vient de terminer. Sous 820 px, la règle générale du site
+   la remet d'elle-même en colonne. */
+@media (min-width: 821px) {
+  .article-suite .art-card:only-child .art-link {
+    grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+  }
+  .article-suite .art-card:only-child .art-cover {
+    aspect-ratio: auto; height: 100%; min-height: clamp(200px, 22vw, 250px);
+    border-right: 1px solid var(--line); border-bottom: 0;
+  }
+}
 
 @media (max-width: 560px) {
   .art-actions { gap: 10px; }
   .art-actions-mesures { gap: 14px; }
   .art-action { padding: 0 7px; }
   .art-actions-separateur { margin: 0 4px; }
-  .article-voisins > .voisin-apres:not(:first-child) { text-align: left; }
 }
 
 /* Libellé réservé aux lecteurs d'écran : chaque bouton dit ce qu'il fait,

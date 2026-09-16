@@ -5,7 +5,7 @@ import Interactions from "./Interactions";
 import LangSwitch from "./LangSwitch";
 import ArticleActions from "./ArticleActions";
 import AideLecture from "./AideLecture";
-import { getArticle, getContent, articleCover, tempsDeLecture, getArticleVoisins } from "../lib/content";
+import { getArticle, getContent, articleCover, tempsDeLecture, getArticleVoisins, toArticleCard } from "../lib/content";
 import { dict, articleHref, localeHref, formatDate, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
 
@@ -32,6 +32,9 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
   const cover = articleCover(article);
   const published = formatDate((article as any).date, locale);
   const minutes = tempsDeLecture((article as any).content);
+  /* Le plus récent d'abord : c'est l'ordre du site, et celui qu'on suit quand
+     on continue à lire. */
+  const suite = [voisins.suivant, voisins.precedent].filter(Boolean).map((d) => toArticleCard(d));
   const adresse = `${SITE_URL}${articleHref(locale, slug)}`;
 
   const jsonLd = {
@@ -122,23 +125,44 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
               </p>
             )}
 
-            {(voisins.precedent || voisins.suivant) && (
-              <nav className="article-voisins reveal" aria-label={t.allArticles}>
-                {[
-                  { doc: voisins.precedent, libelle: t.previousArticle, sens: "avant" },
-                  { doc: voisins.suivant, libelle: t.nextArticle, sens: "apres" },
-                ]
-                  .filter((v) => v.doc)
-                  .map((v) => {
-                    const d = v.doc as any;
-                    return (
-                      <a key={d.slug} className={`article-voisin voisin-${v.sens}`} href={articleHref(locale, d.slug)}>
-                        <span className="voisin-sens">{v.libelle}</span>
-                        <span className="voisin-titre">{d.title}</span>
+            {suite.length > 0 && (
+              <section className="article-suite reveal" aria-label={t.keepReading}>
+                <h2 className="article-suite-titre">{t.keepReading}</h2>
+                <div className="article-suite-grille">
+                  {suite.map((a) => (
+                    /* Même carte que sur la page d'accueil — couverture, rubrique,
+                       date, titre et accroche — simplement posée en hauteur : côte
+                       à côte, le format horizontal de l'accueil serait écrasé. */
+                    <article className="art-card" key={a.slug}>
+                      <a className="art-link" href={articleHref(locale, a.slug)}>
+                        <span className="art-cover">
+                          {a.cover ? (
+                            a.cover.vector ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img className="art-cover-svg" src={a.cover.src} alt={a.cover.alt} loading="lazy" />
+                            ) : (
+                              <Image src={a.cover.src} alt={a.cover.alt} fill sizes="(max-width: 820px) 100vw, 46vw" style={{ objectFit: "cover" }} />
+                            )
+                          ) : (
+                            <span className="art-cover-empty" aria-hidden="true" />
+                          )}
+                        </span>
+                        <span className="art-body">
+                          <span className="art-meta">
+                            <span className="art-cat">{a.category}</span>
+                            <span className="art-date">{formatDate(a.date, locale)}</span>
+                          </span>
+                          <span className="art-title">{a.title}</span>
+                          <span className="art-excerpt">{a.excerpt}</span>
+                          <span className="art-foot">
+                            <span className="art-more arrow">{t.readArticle}</span>
+                          </span>
+                        </span>
                       </a>
-                    );
-                  })}
-              </nav>
+                    </article>
+                  ))}
+                </div>
+              </section>
             )}
 
             <p className="article-back article-back-end">

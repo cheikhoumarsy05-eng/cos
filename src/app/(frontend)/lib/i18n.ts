@@ -122,8 +122,7 @@ const fr = {
   linkCopied: "Lien copié",
   shareQuote: "Partager cette citation",
   quoteCopied: "Citation copiée",
-  previousArticle: "Article précédent",
-  nextArticle: "Article suivant",
+  keepReading: "À lire aussi",
 };
 
 const en: typeof fr = {
@@ -205,8 +204,7 @@ const en: typeof fr = {
   linkCopied: "Link copied",
   shareQuote: "Share this quote",
   quoteCopied: "Quote copied",
-  previousArticle: "Previous article",
-  nextArticle: "Next article",
+  keepReading: "More reading",
 };
 
 export type Dict = typeof fr;

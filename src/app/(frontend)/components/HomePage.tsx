@@ -104,8 +104,12 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </nav>
           <LangSwitch locale={locale} label={t.localeSwitchLabel} />
           <a className="nav-cta" href={site.cvUrl} target="_blank" rel="noopener">CV</a>
+          {/* Trois barres plutôt qu'un dessin d'un seul trait : séparées, elles
+              peuvent pivoter en croix pendant que le panneau se déroule. */}
           <button className="menu-toggle" id="menu-open" aria-label={t.openMenu} aria-controls="overlay-menu" aria-expanded={false}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18 M3 12h18 M3 17h18" stroke="currentColor" strokeWidth="1.6" fill="none" /></svg>
+            <span className="menu-barres" aria-hidden="true">
+              <span /><span /><span />
+            </span>
           </button>
         </div>
 

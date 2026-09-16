@@ -20,8 +20,16 @@ export default function Interactions() {
     /* Apparition des blocs.
        Deux seuils, et non un seul : on révèle à 14 % de visibilité, mais on ne
        réarme qu'une fois le bloc entièrement sorti. Avec un seuil unique, un
-       arrêt pile sur la limite ferait clignoter le bloc indéfiniment. */
+       arrêt pile sur la limite ferait clignoter le bloc indéfiniment.
+
+       Le pourcentage ne suffit pas : un bloc plus haut que l'écran ne peut
+       jamais en montrer 14 %. Le corps d'un article fait près de 5 000 px, soit
+       un ratio plafonné à 0,15 sur téléphone — et 0,14 une fois la marge basse
+       appliquée. Il restait donc invisible, titre et image affichés, texte
+       absent. Un bloc qui occupe un quart de l'écran est révélé quelle que
+       soit sa hauteur. */
     const SEUIL_ENTREE = 0.14;
+    const PART_ECRAN = 0.25;
     const reveals = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     const attentes = new Map<HTMLElement, number>();
 
@@ -43,7 +51,11 @@ export default function Interactions() {
           entries.forEach((entry) => {
             const el = entry.target as HTMLElement;
 
-            if (entry.intersectionRatio >= SEUIL_ENTREE) {
+            const assezVisible =
+              entry.intersectionRatio >= SEUIL_ENTREE ||
+              entry.intersectionRect.height >= window.innerHeight * PART_ECRAN;
+
+            if (entry.isIntersecting && assezVisible) {
               if (el.classList.contains("in") || attentes.has(el)) return;
               el.style.setProperty("--dy", versLeBas ? "24px" : "-24px");
               const voisins = Array.from(el.parentElement!.querySelectorAll<HTMLElement>(":scope > .reveal"));
@@ -70,7 +82,10 @@ export default function Interactions() {
             }
           });
         },
-        { threshold: [0, SEUIL_ENTREE], rootMargin: "0px 0px -8% 0px" }
+        // Plusieurs seuils : sans eux, un bloc dont le ratio n'atteint jamais
+        // 0,14 ne déclencherait aucune notification, et la règle de repli en
+        // pixels ne serait jamais évaluée.
+        { threshold: [0, 0.05, 0.1, SEUIL_ENTREE, 0.3], rootMargin: "0px 0px -8% 0px" }
       );
       reveals.forEach((el) => revealObserver!.observe(el));
 

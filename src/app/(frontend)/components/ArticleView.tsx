@@ -99,13 +99,16 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
               <p className="article-byline">{t.articleBy} {(article as any).author}</p>
             </div>
 
-            <ArticleActions
-              slug={slug}
-              titre={(article as any).title}
-              url={adresse}
-              minutes={minutes}
-              t={t}
-            />
+            {/* Seule mesure utile avant d'ouvrir le texte : savoir combien de
+                temps il demande. Le reste — vues, j'aime, partage — attend la
+                fin de lecture, là où le geste a un sens. */}
+            <p className="article-duree">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M12 7.5V12l3 1.8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              {minutes} {t.minRead}
+            </p>
 
             {cover && (
               <div className="article-cover reveal">
@@ -131,6 +134,13 @@ export default async function ArticleView({ slug, locale }: { slug: string; loca
                   entre blocs ne s'applique à rien — les paragraphes se touchent. */}
               <RichText data={(article as any).content} disableContainer />
             </div>
+
+            <ArticleActions
+              slug={slug}
+              titre={(article as any).title}
+              url={adresse}
+              t={t}
+            />
 
             {(article as any).linkedinUrl && (
               <p className="article-source reveal">

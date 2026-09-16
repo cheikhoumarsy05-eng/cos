@@ -4,12 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 import type { Dict } from "../lib/i18n";
 
 /**
- * Barre d'actions d'un article : vues, « j'aime », mise de côté, partage.
+ * Bande d'actions, placée à la fin de l'article : vues, « j'aime », mise de
+ * côté, partage.
+ *
+ * Elle vient après le texte parce que c'est là que le geste a un sens — on
+ * n'aime pas un article qu'on n'a pas lu, on ne le partage pas non plus. Seul
+ * le temps de lecture reste en tête, qui renseigne avant d'ouvrir.
  *
  * Tout est rendu côté navigateur. Les pages d'articles sont prégénérées et
  * gardées une heure : un compteur rendu avec la page afficherait un chiffre
- * figé, parfois faux d'une heure. Le texte arrive donc en statique, immédiat,
- * et les nombres le rejoignent une fois la page affichée.
+ * figé, parfois faux d'une heure.
  *
  * Deux gardes vivent dans le navigateur du lecteur plutôt que sur le serveur,
  * faute de quoi il faudrait l'identifier pour les tenir :
@@ -53,13 +57,11 @@ export default function ArticleActions({
   slug,
   titre,
   url,
-  minutes,
   t,
 }: {
   slug: string;
   titre: string;
   url: string;
-  minutes: number;
   t: Dict;
 }) {
   const [stats, setStats] = useState<Stats | null>(null);
@@ -68,8 +70,6 @@ export default function ArticleActions({
   const [copie, setCopie] = useState(false);
   const [bat, setBat] = useState(false);
 
-  // Premier passage : on relève les états locaux, on compte la vue si elle
-  // n'a pas déjà été comptée dans cette session, puis on lit les totaux.
   useEffect(() => {
     setJaime(lireDrapeau("local", clefJaime(slug)));
     setFavori(lireDrapeau("local", clefFavori(slug)));
@@ -90,7 +90,7 @@ export default function ArticleActions({
         const donnees = (await reponse.json()) as Stats;
         if (vivant && typeof donnees.views === "number") setStats(donnees);
       } catch {
-        // Compteurs indisponibles : la barre s'affiche sans les nombres.
+        // Compteurs indisponibles : la bande s'affiche sans les nombres.
       }
     };
     charger();
@@ -105,7 +105,7 @@ export default function ArticleActions({
     ecrireDrapeau("local", clefJaime(slug), nouvel);
     if (nouvel) {
       setBat(true);
-      window.setTimeout(() => setBat(false), 420);
+      window.setTimeout(() => setBat(false), 700);
     }
     // Le compteur avance tout de suite à l'écran : attendre le serveur pour
     // un simple « j'aime » donnerait l'impression d'un bouton qui colle.
@@ -143,68 +143,68 @@ export default function ArticleActions({
   const partageWhatsApp = `https://wa.me/?text=${encodeURIComponent(`${titre} — ${url}`)}`;
 
   return (
-    <div className="art-actions">
-      <div className="art-actions-mesures">
-        <span className="art-mesure" title={t.readingTime}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M12 7.5V12l3 1.8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          {minutes} {t.minRead}
-        </span>
+    <section className="art-fin" aria-label={t.like}>
+      <div className="art-fin-gestes">
+        <button
+          type="button"
+          className={"art-geste art-geste-jaime" + (jaime ? " est-actif" : "") + (bat ? " bat" : "")}
+          onClick={basculerJaime}
+          aria-pressed={jaime}
+        >
+          <span className="art-geste-icone">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 20s-7.5-4.6-7.5-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"
+                fill={jaime ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {/* Onde qui s'échappe du cœur au moment du clic. */}
+            <span className="art-onde" aria-hidden="true" />
+          </span>
+          <span className="art-geste-texte">{jaime ? t.liked : t.like}</span>
+          {stats && (
+            <span className="art-geste-nombre" key={stats.likes}>
+              {stats.likes}
+            </span>
+          )}
+        </button>
 
-        <span className="art-mesure" title={t.views}>
+        <button
+          type="button"
+          className={"art-geste" + (favori ? " est-actif" : "")}
+          onClick={basculerFavori}
+          aria-pressed={favori}
+        >
+          <span className="art-geste-icone">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6.5 4.5h11v15l-5.5-4-5.5 4v-15Z"
+                fill={favori ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span className="art-geste-texte">{favori ? t.saved : t.save}</span>
+        </button>
+      </div>
+
+      <div className="art-fin-partage">
+        <span className="art-fin-vues">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" fill="none" stroke="currentColor" strokeWidth="1.5" />
             <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
           </svg>
           {stats ? stats.views.toLocaleString("fr-FR") : "—"}
         </span>
-      </div>
 
-      <div className="art-actions-boutons">
-        <button
-          type="button"
-          className={"art-action" + (jaime ? " est-actif" : "") + (bat ? " bat" : "")}
-          onClick={basculerJaime}
-          aria-pressed={jaime}
-          title={jaime ? t.liked : t.like}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M12 20s-7.5-4.6-7.5-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"
-              fill={jaime ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span className="art-action-nombre">{stats ? stats.likes : ""}</span>
-          <span className="visuellement-cache">{jaime ? t.liked : t.like}</span>
-        </button>
+        <span className="art-fin-separateur" aria-hidden="true" />
 
-        <button
-          type="button"
-          className={"art-action" + (favori ? " est-actif" : "")}
-          onClick={basculerFavori}
-          aria-pressed={favori}
-          title={favori ? t.saved : t.save}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M6.5 4.5h11v15l-5.5-4-5.5 4v-15Z"
-              fill={favori ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span className="visuellement-cache">{favori ? t.saved : t.save}</span>
-        </button>
-
-        <span className="art-actions-separateur" aria-hidden="true" />
-
-        <button type="button" className="art-action" onClick={copierLien} title={t.copyLink}>
+        <button type="button" className="art-partage" onClick={copierLien} title={t.copyLink}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M10 13.5a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1.2 1.2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             <path d="M14 10.5a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1.2-1.2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -212,14 +212,14 @@ export default function ArticleActions({
           <span className="visuellement-cache">{t.copyLink}</span>
         </button>
 
-        <a className="art-action" href={partageX} target="_blank" rel="noopener" title="X">
+        <a className="art-partage" href={partageX} target="_blank" rel="noopener" title="X">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 4l7.2 9.2L4.4 20H7l5.3-5.6L16.5 20H20l-7.5-9.6L19.6 4H17l-4.9 5.2L8.1 4H4Z" fill="currentColor" />
           </svg>
           <span className="visuellement-cache">X</span>
         </a>
 
-        <a className="art-action" href={partageWhatsApp} target="_blank" rel="noopener" title="WhatsApp">
+        <a className="art-partage" href={partageWhatsApp} target="_blank" rel="noopener" title="WhatsApp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M12 3.8a8.2 8.2 0 0 0-7 12.4L4 20.2l4.1-1a8.2 8.2 0 1 0 3.9-15.4Z"
@@ -234,10 +234,9 @@ export default function ArticleActions({
         </a>
       </div>
 
-      {/* Confirmation annoncée aux lecteurs d'écran comme à l'œil. */}
       <span className={"art-copie" + (copie ? " vu" : "")} role="status" aria-live="polite">
         {copie ? t.linkCopied : ""}
       </span>
-    </div>
+    </section>
   );
 }

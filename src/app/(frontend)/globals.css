@@ -823,57 +823,117 @@ a.lang-code:active { transform: translateY(1px); }
    colorée, aucun compteur en évidence — on lit un article, on ne consulte
    pas un fil d'actualité. */
 
-/* Barre de mesures et d'actions, sous le chapô. */
-.art-actions {
-  position: relative;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap;
-  margin-top: clamp(20px, 2.6vw, 28px);
-  padding: 12px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.art-actions-mesures { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-.art-mesure {
+/* Temps de lecture, en tête d'article : une seule ligne, discrète. */
+.article-duree {
   display: inline-flex; align-items: center; gap: 7px;
+  margin: clamp(14px, 1.8vw, 20px) 0 0;
   font-family: var(--font-display); font-size: 12px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase; color: var(--stone-2);
 }
-.art-mesure svg { width: 15px; height: 15px; flex: none; }
+.article-duree svg { width: 15px; height: 15px; flex: none; }
 
-.art-actions-boutons { display: flex; align-items: center; gap: 2px; }
-.art-actions-separateur { width: 1px; height: 18px; margin: 0 8px; background: var(--line); }
-
-/* Un bouton d'action : une icône, parfois un nombre. Pas de fond au repos —
-   c'est ce qui le distingue d'un bouton de réseau social. */
-.art-action {
-  display: inline-flex; align-items: center; gap: 6px;
-  min-height: 38px; padding: 0 9px;
-  border: 0; background: none; cursor: pointer;
-  color: var(--stone-2);
-  font-family: var(--font-display); font-size: 12px; font-weight: 700;
-  border-radius: 2px;
-  transition: color 0.2s var(--e-out), background 0.2s var(--e-out);
+/* ── Bande de fin de lecture ─────────────────────────────────────────────
+   Elle doit se remarquer sans crier : un encadré posé sur le papier sourd du
+   site, un filet d'encre au-dessus pour marquer la fin du texte, et des
+   gestes nommés — « J'aime », « Mettre de côté » — plutôt que des icônes
+   seules. C'est le moment où l'on décide de réagir : autant que l'action
+   soit lisible. */
+.art-fin {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 18px; flex-wrap: wrap;
+  margin-top: clamp(34px, 4.5vw, 52px);
+  padding: clamp(16px, 2.2vw, 22px) clamp(16px, 2.4vw, 26px);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--ink);
+  border-radius: var(--radius);
 }
-.art-action svg { width: 18px; height: 18px; flex: none; }
-.art-action-nombre { font-variant-numeric: tabular-nums; min-width: 1ch; }
-@media (hover: hover) { .art-action:hover { color: var(--ink); background: var(--paper-2); } }
-.art-action:active { transform: translateY(1px); }
 
-/* L'état actif — aimé, mis de côté — se lit à l'accent et au remplissage de
-   l'icône, jamais à un fond coloré. */
-.art-action.est-actif { color: var(--accent); }
+.art-fin-gestes { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-/* Battement bref au moment du clic : l'icône se gonfle puis revient. */
-.art-action.bat svg { animation: coeur-bat 0.42s var(--e-out); }
+/* Un geste : icône, libellé, et le compte pour « j'aime ». Fond blanc sur le
+   papier sourd, pour qu'il se détache sans aplat de couleur. */
+.art-geste {
+  display: inline-flex; align-items: center; gap: 9px;
+  min-height: 42px; padding: 0 16px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 2px;
+  cursor: pointer; color: var(--ink-2);
+  font-family: var(--font-display); font-size: 12.5px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  transition: color 0.2s var(--e-out), border-color 0.2s var(--e-out), transform 0.08s var(--e-out);
+}
+@media (hover: hover) { .art-geste:hover { border-color: var(--ink); color: var(--ink); } }
+.art-geste:active { transform: translateY(1px); }
+.art-geste.est-actif { color: var(--accent); border-color: var(--accent); }
+
+.art-geste-icone { position: relative; display: inline-flex; }
+.art-geste-icone svg { width: 18px; height: 18px; }
+.art-geste-nombre {
+  font-variant-numeric: tabular-nums; min-width: 1ch;
+  padding-left: 9px; margin-left: 2px; border-left: 1px solid var(--line);
+  /* Le nombre change : il monte à sa nouvelle valeur au lieu de sauter. */
+  animation: nombre-monte 0.34s var(--e-out);
+}
+@keyframes nombre-monte {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Le cœur bat une fois, et une onde s'en échappe. Deux gestes courts plutôt
+   qu'une animation appuyée : on confirme le clic, on ne le célèbre pas. */
+.art-geste-jaime.bat .art-geste-icone svg { animation: coeur-bat 0.55s var(--e-out); }
 @keyframes coeur-bat {
   0% { transform: scale(1); }
-  35% { transform: scale(1.32); }
-  70% { transform: scale(0.94); }
+  30% { transform: scale(1.35); }
+  55% { transform: scale(0.92); }
+  75% { transform: scale(1.08); }
   100% { transform: scale(1); }
 }
-@media (prefers-reduced-motion: reduce) { .art-action.bat svg { animation: none; } }
+
+.art-onde {
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid var(--accent); opacity: 0; transform: scale(0.4);
+  pointer-events: none;
+}
+.art-geste-jaime.bat .art-onde { animation: onde-jaime 0.7s var(--e-out); }
+@keyframes onde-jaime {
+  0% { opacity: 0.75; transform: scale(0.4); }
+  100% { opacity: 0; transform: scale(2.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art-geste-jaime.bat .art-geste-icone svg,
+  .art-geste-jaime.bat .art-onde,
+  .art-geste-nombre { animation: none; }
+}
+
+/* Vues et partage : le versant informatif de la bande, en retrait. */
+.art-fin-partage { display: flex; align-items: center; gap: 4px; }
+.art-fin-vues {
+  display: inline-flex; align-items: center; gap: 7px; margin-right: 6px;
+  font-family: var(--font-display); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.06em; color: var(--stone-2); font-variant-numeric: tabular-nums;
+}
+.art-fin-vues svg { width: 15px; height: 15px; }
+.art-fin-separateur { width: 1px; height: 18px; margin: 0 6px; background: var(--line); }
+
+.art-partage {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border: 0; background: none; cursor: pointer;
+  color: var(--stone-2); border-radius: 2px;
+  transition: color 0.2s var(--e-out), background 0.2s var(--e-out);
+}
+.art-partage svg { width: 18px; height: 18px; }
+@media (hover: hover) { .art-partage:hover { color: var(--ink); background: var(--paper); } }
+.art-partage:active { transform: translateY(1px); }
+
+@media (max-width: 560px) {
+  .art-fin { gap: 14px; padding: 16px; }
+  .art-fin-gestes { width: 100%; }
+  .art-geste { flex: 1; justify-content: center; padding: 0 12px; }
+  .art-fin-partage { width: 100%; justify-content: flex-end; }
+}
 
 /* Confirmation de copie : elle apparaît et s'efface sans déplacer le texte. */
 .art-copie {
@@ -955,12 +1015,6 @@ a.lang-code:active { transform: translateY(1px); }
   }
 }
 
-@media (max-width: 560px) {
-  .art-actions { gap: 10px; }
-  .art-actions-mesures { gap: 14px; }
-  .art-action { padding: 0 7px; }
-  .art-actions-separateur { margin: 0 4px; }
-}
 
 /* Libellé réservé aux lecteurs d'écran : chaque bouton dit ce qu'il fait,
    même quand il n'affiche qu'une icône. */

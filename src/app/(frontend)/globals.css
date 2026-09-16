@@ -326,12 +326,21 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
    Cliquer mène à l'autre langue, et le code affiché suit. Contour plutôt que
    aplat : le bouton CV voisin est déjà un aplat d'accent, deux pavés pleins
    côte à côte se confondraient. */
-.lang-toggle { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 34px; padding: 0 12px; border: 2px solid var(--accent); border-radius: 2px; font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; color: var(--accent); transition: background 0.2s var(--e-out), color 0.2s var(--e-out), transform 0.08s var(--e-out); }
-@media (hover: hover) { .lang-toggle:hover { background: var(--accent); color: var(--on-ink); } }
-.lang-toggle:active { background: var(--accent); color: var(--on-ink); transform: translateY(1px); }
-.lang-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+/* Les deux langues dans un même cadre : la courante en pleine graisse et
+   pleine couleur, l'autre en retrait. Le cadre ne réagit plus au survol —
+   ce sont les codes qui sont cliquables, pas la boîte. */
+.lang-toggle { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 10px; border: 2px solid var(--accent); border-radius: 2px; font-family: var(--font-display); font-size: 12px; letter-spacing: 0.08em; }
+.lang-part { display: inline-flex; align-items: center; }
+.lang-sep { padding: 0 5px; color: color-mix(in srgb, var(--accent) 45%, transparent); font-weight: 500; }
+.lang-code { display: inline-block; padding: 2px 1px; font-weight: 500; color: color-mix(in srgb, var(--accent) 62%, transparent); transition: color 0.2s var(--e-out), transform 0.08s var(--e-out); }
+/* La langue lue : plus grasse et pleinement contrastée — la différence se lit
+   sans avoir à comparer les deux. */
+.lang-code-actif { font-weight: 800; color: var(--accent); }
+@media (hover: hover) { a.lang-code:hover { color: var(--accent); } }
+a.lang-code:active { transform: translateY(1px); }
+.lang-toggle:focus-within { outline: 3px solid var(--accent); outline-offset: 3px; }
 /* Dans le panneau déroulant, sur fond d'encre. */
-.lang-toggle-overlay { border-color: var(--accent); color: var(--accent); }
+.lang-toggle-overlay { border-color: var(--accent); }
 
 /* CONTACT */
 .contact { display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(32px, 4.5vw, 64px); align-items: start; }

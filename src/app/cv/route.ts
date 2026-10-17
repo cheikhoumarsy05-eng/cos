@@ -20,8 +20,12 @@ import config from "@payload-config";
  * pas ouvrir coûterait bien plus cher qu'un compteur incomplet.
  */
 
-/** Le fichier servi. Les liens publics pointent sur « /cv », plus sur ce nom. */
+/**
+ * Les fichiers servis. Les liens publics pointent sur « /cv », plus sur ces
+ * noms ; la version anglaise du site ajoute « ?lang=en ».
+ */
 const FICHIER_CV = "/cv-cheikh-oumar-sy.pdf";
+const FICHIER_CV_EN = "/cv-cheikh-oumar-sy-en.pdf";
 
 /**
  * Robots connus, à ne pas compter. La liste est volontairement courte : elle
@@ -31,7 +35,8 @@ const FICHIER_CV = "/cv-cheikh-oumar-sy.pdf";
 const ROBOTS = /bot|crawler|spider|crawling|slurp|facebookexternalhit|preview|headless|monitor|curl|wget|python-requests/i;
 
 export async function GET(request: Request): Promise<Response> {
-  const destination = new URL(FICHIER_CV, request.url).toString();
+  const anglais = new URL(request.url).searchParams.get("lang") === "en";
+  const destination = new URL(anglais ? FICHIER_CV_EN : FICHIER_CV, request.url).toString();
   const redirection = new Response(null, {
     status: 307,
     headers: { Location: destination, "Cache-Control": "no-store" },

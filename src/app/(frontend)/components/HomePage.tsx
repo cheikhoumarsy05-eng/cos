@@ -33,9 +33,11 @@ export default async function HomePage({ locale }: { locale: Locale }) {
   // normalize CMS project docs into the component's shape
   const projects: Project[] = (c.projects as any[]).map(toProject);
   const shortCaption = (alt: string | undefined, fallback: string) => {
-    const head = (alt ?? "").split(":")[0].trim();
+    const head = (alt ?? "").split(/[:,]/)[0].trim();
     return head && head.length <= 34 ? head : fallback;
   };
+  // Le CV suit la langue du site : la route /cv sert la version anglaise sur « ?lang=en ».
+  const cvHref = locale === "en" ? `${site.cvUrl}${String(site.cvUrl).includes("?") ? "&" : "?"}lang=en` : site.cvUrl;
   const programs = c.programs as any[];
   // Les programmes empruntent la fiche des projets : même rangée, même ouverture
   // animée, mêmes bulles d'outils. Seules les figures changent : montrées
@@ -183,7 +185,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 <p className="hero-sub">{hero.sub}</p>
                 <div className="hero-actions">
                   <a className="btn btn-primary arrow" href="#projets">{t.seeProjects}</a>
-                  <a className="btn btn-outline" href={site.cvUrl} target="_blank" rel="noopener">{t.downloadMyCv}</a>
+                  <a className="btn btn-outline" href={cvHref} target="_blank" rel="noopener">{t.downloadMyCv}</a>
                 </div>
               </div>
               {heroImg && (
@@ -416,7 +418,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 {contact.lead && <p className="contact-lead">{contact.lead}</p>}
                 <div className="hero-actions" style={{ marginTop: 28 }}>
                   <a className="btn btn-ink arrow" href={`mailto:${contact.email}?subject=${encodeURIComponent(t.emailSubject)}`}>{t.writeEmail}</a>
-                  <a className="btn btn-outline" href={site.cvUrl} target="_blank" rel="noopener">{t.downloadCv}</a>
+                  <a className="btn btn-outline" href={cvHref} target="_blank" rel="noopener">{t.downloadCv}</a>
                 </div>
               </div>
               <div className="contact-coords reveal">

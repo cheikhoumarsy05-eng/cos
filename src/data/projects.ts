@@ -22,6 +22,12 @@ export type Project = {
   featured?: boolean;
   /** Les visuels sont des planches techniques et non des rendus. */
   drawings?: boolean;
+  /** Programme : figures de calcul et captures montrées entières, sans recadrage. */
+  program?: boolean;
+  /** Programme : ce qu'il fait, listé dans la fiche détaillée. */
+  features?: string[];
+  /** Programme : lien vers le dépôt ou la démonstration. */
+  url?: string;
 };
 
 export const projects: Project[] = [

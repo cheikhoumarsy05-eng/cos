@@ -32,7 +32,37 @@ export default async function HomePage({ locale }: { locale: Locale }) {
 
   // normalize CMS project docs into the component's shape
   const projects: Project[] = (c.projects as any[]).map(toProject);
+  const shortCaption = (alt: string | undefined, fallback: string) => {
+    const head = (alt ?? "").split(":")[0].trim();
+    return head && head.length <= 34 ? head : fallback;
+  };
   const programs = c.programs as any[];
+  // Les programmes empruntent la fiche des projets : même rangée, même ouverture
+  // animée, mêmes bulles d'outils. Seules les figures changent : montrées
+  // entières, un graphique ou une capture de téléphone ne se recadre pas.
+  const programProjects: Project[] = programs.map((p, i) => {
+    const images = ((p.images ?? []) as any[]).flatMap((im) => {
+      const src = mediaUrl(im.upload) ?? im.src;
+      return src ? [{ src, alt: mediaAlt(im.upload) ?? im.alt ?? "" }] : [];
+    });
+    return {
+      id: `programme-${p.id}`,
+      index: String(i + 1).padStart(2, "0"),
+      type: p.category,
+      title: p.name,
+      // Les outils sont déjà dans les bulles : pas de ligne de caractéristiques.
+      specs: [],
+      desc: p.summary,
+      tags: String(p.stack).split("·").map((s) => s.trim()).filter(Boolean),
+      images,
+      // Légende courte, comme celle des projets : « Écran Parcours », pas la
+      // description entière, qui couvrirait la figure sur téléphone.
+      fieldLabel: shortCaption(images[0]?.alt, p.category),
+      program: true,
+      features: ((p.features ?? []) as any[]).map((f) => f.value),
+      url: p.url ?? undefined,
+    };
+  });
 
   // Données structurées schema.org, construites depuis le CMS pour rester
   // synchronisées avec le contenu. Les DOI rendent les publications
@@ -239,42 +269,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                   {st.programsLead && <p className="ed-lead">{st.programsLead}</p>}
                 </div>
               </div>
-              <div className="prog-grid">
-                {programs.map((p) => {
-                  const figures = ((p.images ?? []) as any[]).flatMap((im) => {
-                    const src = mediaUrl(im.upload) ?? im.src;
-                    return src ? [{ src, alt: mediaAlt(im.upload) ?? im.alt ?? "" }] : [];
-                  });
-                  return (
-                    <article className="prog-card reveal" key={p.id}>
-                      <p className="prog-cat">{p.category}</p>
-                      <h3 className="prog-name">{p.name}</h3>
-                      <p className="prog-stack">{p.stack}</p>
-                      <p className="prog-summary">{p.summary}</p>
-                      {(p.features ?? []).length > 0 && (
-                        <ul className="prog-features" aria-label={t.programFeatures}>
-                          {(p.features as any[]).map((f) => <li key={f.id ?? f.value}>{f.value}</li>)}
-                        </ul>
-                      )}
-                      {figures.length > 0 && (
-                        <div className="prog-figures">
-                          {/* Figures de calcul : des PNG déjà à la bonne taille, servis tels quels.
-                              Une par ligne pour rester lisibles ; un clic ouvre la pleine résolution. */}
-                          {figures.map((f) => (
-                            <a key={f.src} href={f.src} target="_blank" rel="noopener">
-                              <img src={f.src} alt={f.alt} loading="lazy" />
-                            </a>
-                          ))}
-                        </div>
-                      )}
-                      {p.note && <p className="prog-note">{p.note}</p>}
-                      {p.url && (
-                        <a className="prog-link" href={p.url} target="_blank" rel="noopener">{t.programLink} →</a>
-                      )}
-                    </article>
-                  );
-                })}
-              </div>
+              <Projects projects={programProjects} t={t} />
             </div>
           </section>
         )}

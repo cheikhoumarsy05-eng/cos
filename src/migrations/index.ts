@@ -19,6 +19,7 @@ import * as migration_20260914_165043_note_pied_de_page_facultative from './2026
 import * as migration_20260914_202558_statistiques_telechargement_cv from './20260914_202558_statistiques_telechargement_cv';
 import * as migration_20260915_231836_brouillons_articles from './20260915_231836_brouillons_articles';
 import * as migration_20260916_013928_statistiques_articles from './20260916_013928_statistiques_articles';
+import * as migration_20261017_151107_section_programmes from './20261017_151107_section_programmes';
 
 export const migrations = [
   {
@@ -124,6 +125,11 @@ export const migrations = [
   {
     up: migration_20260916_013928_statistiques_articles.up,
     down: migration_20260916_013928_statistiques_articles.down,
-    name: '20260916_013928_statistiques_articles'
+    name: '20260916_013928_statistiques_articles',
+  },
+  {
+    up: migration_20261017_151107_section_programmes.up,
+    down: migration_20261017_151107_section_programmes.down,
+    name: '20261017_151107_section_programmes'
   },
 ];

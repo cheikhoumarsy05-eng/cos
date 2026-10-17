@@ -32,6 +32,8 @@ export const Site: GlobalConfig = {
         { name: "articlesLead", type: "text", localized: true, defaultValue: "Analyses, retours d'expérience et réflexions autour de l'ingénierie civile, des structures et du secteur de la construction." },
         { name: "projects", type: "text", localized: true, defaultValue: "Projets" },
         { name: "projectsLead", type: "text", localized: true, defaultValue: "Conception, modélisation et calcul de bâtiments résidentiels — du volume à l'élément." },
+        { name: "programs", type: "text", localized: true, defaultValue: "Programmes" },
+        { name: "programsLead", type: "text", localized: true, defaultValue: "Les outils de calcul que j'ai écrits moi-même, du modèle dynamique à l'application." },
         { name: "projectsNav", type: "text", localized: true, defaultValue: "Projets", label: "Projets — libellé court (navigation)" },
         { name: "contactNav", type: "text", localized: true, defaultValue: "Contact", label: "Contact — libellé court (navigation)" },
         { name: "blogNav", type: "text", localized: true, defaultValue: "Blog", label: "Blog — libellé de navigation", admin: { description: "Pointe vers la section Articles & Réflexions." } },

@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     projects: Project;
+    programs: Program;
     articles: Article;
     experience: Experience;
     freelance: Freelance;
@@ -85,6 +86,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    programs: ProgramsSelect<false> | ProgramsSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     experience: ExperienceSelect<false> | ExperienceSelect<true>;
     freelance: FreelanceSelect<false> | FreelanceSelect<true>;
@@ -250,6 +252,51 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: number;
+  order: number;
+  name: string;
+  /**
+   * Ex. : Dynamique des ponts ferroviaires.
+   */
+  category: string;
+  /**
+   * Ex. : MATLAB · Python.
+   */
+  stack: string;
+  summary: string;
+  features?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Facultative. Ex. : résultats publiés après la soutenance.
+   */
+  note?: string | null;
+  images?:
+    | {
+        upload?: (number | null) | Media;
+        /**
+         * Utilisé si aucun fichier n'est téléversé.
+         */
+        src?: string | null;
+        alt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Facultatif : dépôt de code ou démonstration publique.
+   */
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Analyses et réflexions. Le plus récent s'affiche en premier.
@@ -497,6 +544,10 @@ export interface PayloadLockedDocument {
         value: number | Project;
       } | null)
     | ({
+        relationTo: 'programs';
+        value: number | Program;
+      } | null)
+    | ({
         relationTo: 'articles';
         value: number | Article;
       } | null)
@@ -609,6 +660,35 @@ export interface ProjectsSelect<T extends boolean = true> {
         alt?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs_select".
+ */
+export interface ProgramsSelect<T extends boolean = true> {
+  order?: T;
+  name?: T;
+  category?: T;
+  stack?: T;
+  summary?: T;
+  features?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  note?: T;
+  images?:
+    | T
+    | {
+        upload?: T;
+        src?: T;
+        alt?: T;
+        id?: T;
+      };
+  url?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1091,6 +1171,8 @@ export interface Site {
     articlesLead?: string | null;
     projects?: string | null;
     projectsLead?: string | null;
+    programs?: string | null;
+    programsLead?: string | null;
     projectsNav?: string | null;
     contactNav?: string | null;
     /**
@@ -1322,6 +1404,8 @@ export interface SiteSelect<T extends boolean = true> {
         articlesLead?: T;
         projects?: T;
         projectsLead?: T;
+        programs?: T;
+        programsLead?: T;
         projectsNav?: T;
         contactNav?: T;
         blogNav?: T;

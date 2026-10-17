@@ -32,6 +32,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
 
   // normalize CMS project docs into the component's shape
   const projects: Project[] = (c.projects as any[]).map(toProject);
+  const programs = c.programs as any[];
 
   // Données structurées schema.org, construites depuis le CMS pour rester
   // synchronisées avec le contenu. Les DOI rendent les publications
@@ -226,6 +227,57 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             <Projects projects={projects} t={t} />
           </div>
         </section>
+
+        {/* PROGRAMMES */}
+        {programs.length > 0 && (
+          <section className="section band-paper2" id="programmes">
+            <div className="wrap">
+              <div className="ed-head reveal">
+                <p className="ed-index">{n()}</p>
+                <div className="ed-head-text">
+                  <h2 className="ed-title">{st.programs ?? "Programmes"}</h2>
+                  {st.programsLead && <p className="ed-lead">{st.programsLead}</p>}
+                </div>
+              </div>
+              <div className="prog-grid">
+                {programs.map((p) => {
+                  const figures = ((p.images ?? []) as any[]).flatMap((im) => {
+                    const src = mediaUrl(im.upload) ?? im.src;
+                    return src ? [{ src, alt: mediaAlt(im.upload) ?? im.alt ?? "" }] : [];
+                  });
+                  return (
+                    <article className="prog-card reveal" key={p.id}>
+                      <p className="prog-cat">{p.category}</p>
+                      <h3 className="prog-name">{p.name}</h3>
+                      <p className="prog-stack">{p.stack}</p>
+                      <p className="prog-summary">{p.summary}</p>
+                      {(p.features ?? []).length > 0 && (
+                        <ul className="prog-features" aria-label={t.programFeatures}>
+                          {(p.features as any[]).map((f) => <li key={f.id ?? f.value}>{f.value}</li>)}
+                        </ul>
+                      )}
+                      {figures.length > 0 && (
+                        <div className="prog-figures">
+                          {/* Figures de calcul : des PNG déjà à la bonne taille, servis tels quels.
+                              Une par ligne pour rester lisibles ; un clic ouvre la pleine résolution. */}
+                          {figures.map((f) => (
+                            <a key={f.src} href={f.src} target="_blank" rel="noopener">
+                              <img src={f.src} alt={f.alt} loading="lazy" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                      {p.note && <p className="prog-note">{p.note}</p>}
+                      {p.url && (
+                        <a className="prog-link" href={p.url} target="_blank" rel="noopener">{t.programLink} →</a>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ARTICLES & RÉFLEXIONS */}
         {articles.length > 0 && (

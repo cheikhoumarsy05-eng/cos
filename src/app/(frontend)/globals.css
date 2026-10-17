@@ -1144,3 +1144,28 @@ a.lang-code:active { transform: translateY(1px); }
 /* Champ piège : hors écran et hors parcours clavier, jamais masqué par
    `display: none` — certains robots ignorent précisément ce qui l'est. */
 .cform-piege { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ============ PROGRAMMES ============
+   Une carte par outil : domaine, nom, langages, puis ce qu'il fait. Même
+   grammaire que les blocs éditoriaux du site — filet d'encre en tête, capitales
+   condensées pour les libellés — pour que la section se lise comme une suite
+   des projets et non comme un encart rapporté. */
+.prog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: clamp(18px, 2.4vw, 32px); }
+.prog-card { display: flex; flex-direction: column; background: var(--paper); border-top: 3px solid var(--ink); padding: clamp(20px, 2.4vw, 30px); min-width: 0; }
+.prog-cat { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-2); }
+.prog-name { font-family: var(--font-display); font-weight: 800; font-size: clamp(24px, 2.6vw, 32px); line-height: 1; letter-spacing: -0.01em; text-transform: uppercase; margin-top: 10px; }
+.prog-stack { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--stone-2); margin-top: 8px; }
+.prog-summary { font-size: 15.5px; line-height: 1.55; color: var(--ink-2); margin-top: 16px; }
+.prog-features { margin: 14px 0 0; padding-left: 18px; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+.prog-features li + li { margin-top: 4px; }
+.prog-figures { display: flex; gap: 12px; margin: 18px calc(-1 * clamp(20px, 2.4vw, 30px)) 0; padding: 0 clamp(20px, 2.4vw, 30px) 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: clamp(20px, 2.4vw, 30px); overscroll-behavior-x: contain; scrollbar-width: thin; }
+/* Une figure occupe presque toute la largeur : la suivante dépasse à droite,
+   ce qui suffit à signaler qu'on peut faire défiler. */
+.prog-figures a { flex: 0 0 auto; max-width: 88%; scroll-snap-align: start; display: block; }
+/* Hauteur plafonnée : une capture de téléphone, verticale, reste à l'échelle
+   des graphiques horizontaux au lieu d'allonger la carte. */
+.prog-figures img { display: block; width: auto; max-width: 100%; height: auto; max-height: 360px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
+.prog-figures a:only-child { max-width: 100%; }
+.prog-note { margin-top: 16px; padding-left: 12px; border-left: 3px solid var(--accent); font-size: 13.5px; line-height: 1.45; color: var(--stone-2); }
+.prog-link { margin-top: auto; padding-top: 18px; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); }
+@media (hover: hover) { .prog-link:hover { color: var(--accent-2); } }

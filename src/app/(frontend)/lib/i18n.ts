@@ -174,7 +174,7 @@ const en: typeof fr = {
   zenodoPublication: "Zenodo publication",
 
   keyPoints: "Key points",
-  independentWork: "Independent work",
+  independentWork: "Freelance work",
   professionalExperience: "Professional experience",
   internships: "Internships & site work",
   architectureGroup: "Architectural design",

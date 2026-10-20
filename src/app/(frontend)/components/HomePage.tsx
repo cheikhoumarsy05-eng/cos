@@ -8,6 +8,10 @@ import ArticleCards from "./ArticleCards";
 import ContactForm from "./ContactForm";
 import { dict, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
+
+/* Étiquettes « Points clés » affichées par poste : les premières saisies, qui
+   sont les référentiels mis en évidence. Le reste est dit dans les missions. */
+const MAX_POINTS_CLES = 4;
 import type { Project } from "@/data/projects";
 
 export default async function HomePage({ locale }: { locale: Locale }) {
@@ -256,7 +260,19 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         <section className="section" id="projets">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
-            <Projects projects={projects} t={t} />
+            {/* Les projets « mis en avant » sont les études de structure : ils
+                gardent la grande rangée. L'architecture suit, en grille serrée,
+                pour ne pas brouiller le profil d'ingénieur structures. */}
+            <Projects projects={projects.filter((p) => p.featured)} t={t} />
+            {projects.some((p) => !p.featured) && (
+              <div className="proj-group">
+                <div className="proj-group-head reveal">
+                  <h3 className="proj-group-title">{t.architectureGroup}</h3>
+                  <p className="proj-group-lead">{t.architectureLead}</p>
+                </div>
+                <Projects projects={projects.filter((p) => !p.featured)} t={t} compact />
+              </div>
+            )}
           </div>
         </section>
 
@@ -271,7 +287,13 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                   {st.programsLead && <p className="ed-lead">{st.programsLead}</p>}
                 </div>
               </div>
-              <Projects projects={programProjects} t={t} />
+              {/* CIRÉ garde la grande rangée ; les programmes suivants passent en cartes. */}
+              <Projects projects={programProjects.slice(0, 1)} t={t} />
+              {programProjects.length > 1 && (
+                <div className="proj-group proj-group-tight">
+                  <Projects projects={programProjects.slice(1)} t={t} compact />
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -304,7 +326,9 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         <section className="section" id="experience">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2><p className="ed-lead">{st.experienceLead}</p></div></div>
-            <div className="xp">
+            {/* Deux colonnes : l'activité indépendante à gauche, les stages à droite. */}
+            <div className="xp xp-cols">
+              <div className="xp-col">
               <p className="xp-group reveal">{t.independentWork}</p>
               {(c.freelance as any[]).map((f) => (
                 <div className="xp-row reveal" key={`fl-${f.id}`}>
@@ -319,7 +343,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                       <div className="xp-keys">
                         <span className="xp-keys-label">{t.keyPoints}</span>
                         <div className="tag-list">
-                          {(f.keyPoints as any[]).map((k) => (
+                          {(f.keyPoints as any[]).slice(0, MAX_POINTS_CLES).map((k) => (
                             <span className={"tag" + (k.strong ? " tag-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
                           ))}
                         </div>
@@ -328,6 +352,8 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                   </div>
                 </div>
               ))}
+              </div>
+              <div className="xp-col">
               <p className="xp-group reveal">{t.internships}</p>
               {(c.experience as any[]).map((e) => (
                 <div className="xp-row reveal" key={e.id}>
@@ -341,7 +367,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                       <div className="xp-keys">
                         <span className="xp-keys-label">{t.keyPoints}</span>
                         <div className="tag-list">
-                          {(e.keyPoints as any[]).map((k) => (
+                          {(e.keyPoints as any[]).slice(0, MAX_POINTS_CLES).map((k) => (
                             <span className={"tag" + (k.strong ? " tag-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
                           ))}
                         </div>
@@ -350,6 +376,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                   </div>
                 </div>
               ))}
+              </div>
             </div>
           </div>
         </section>

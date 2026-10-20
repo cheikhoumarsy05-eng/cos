@@ -44,7 +44,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 ::selection { background: var(--accent); color: var(--on-ink); }
 
 .wrap { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
-.section { padding-block: clamp(64px, 10vw, 148px); position: relative; }
+.section { padding-block: clamp(48px, 7.5vw, 110px); position: relative; }
 /* Deux sections de même fond qui se suivent cumulent leurs marges, sans
    changement de bande pour ponctuer l'écart : le creux se voit. On resserre les
    DEUX côtés — le bas de la première autant que le haut de la seconde, l'essentiel
@@ -491,8 +491,24 @@ a.lang-code:active { transform: translateY(1px); }
 .proj-frame .blueprint text { font-family: var(--font-body); font-size: 5.4px; letter-spacing: 0.05em; fill: var(--stone-2); text-transform: uppercase; }
 @media (prefers-reduced-motion: no-preference) {
   .proj-media-btn .proj-frame:has(img) { clip-path: inset(0 100% 0 0); transition: clip-path 0.75s var(--e-out); }
-  .proj-row.in .proj-media-btn .proj-frame:has(img) { clip-path: inset(0 0 0 0); }
+  .proj-row.in .proj-media-btn .proj-frame:has(img), .proj-card.in .proj-media-btn .proj-frame:has(img) { clip-path: inset(0 0 0 0); }
 }
+
+/* Projets secondaires (architecture) : intertitre, puis grille de cartes. */
+.proj-group { margin-top: clamp(48px, 7vw, 96px); }
+.proj-group-head { border-top: 3px solid var(--ink); padding-top: 18px; margin-bottom: clamp(20px, 3vw, 32px); }
+.proj-group-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(22px, 3vw, 34px); line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; }
+.proj-group-lead { color: var(--ink-2); font-size: 16px; line-height: 1.5; max-width: 52ch; margin-top: 8px; }
+.proj-group-tight { margin-top: clamp(28px, 4vw, 48px); }
+.proj-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); }
+.proj-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 900px) { .proj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .proj-grid { grid-template-columns: 1fr; } }
+.proj-card { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.proj-card .proj-media { width: 100%; margin-bottom: 4px; }
+.proj-card .proj-title-btn { margin: 0; }
+.proj-card .proj-title-btn h4 { font-family: var(--font-display); font-weight: 900; font-size: clamp(20px, 2.2vw, 26px); line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; transition: color 0.2s var(--e-out); }
+@media (hover: hover) { .proj-card .proj-title-btn:hover h4 { color: var(--accent); } }
 
 /* FLIP detail overlay */
 .proj-dialog { position: fixed; inset: 0; margin: auto; max-width: min(1160px, 100%); max-height: calc(100dvh - clamp(24px, 6vw, 88px)); width: 100%; border: 0; background: transparent; padding: 0; overflow: visible; }
@@ -570,12 +586,12 @@ a.lang-code:active { transform: translateY(1px); }
   text-wrap: pretty;
   max-width: 22ch;
 }
+/* Sur téléphone, les trois chiffres restent sur une ligne, en plus petit. */
 @media (max-width: 620px) {
-  .tally { grid-template-columns: 1fr; }
-  .tally-item { padding: clamp(16px, 5vw, 22px) 0 0; }
-  .tally-item + .tally-item { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
-  .tally-num { font-size: clamp(52px, 18vw, 76px); }
-  .tally-label { max-width: none; }
+  .tally-item { padding: 14px 10px 0 0; }
+  .tally-item + .tally-item { padding-left: 10px; }
+  .tally-num { font-size: clamp(32px, 10vw, 46px); }
+  .tally-label { margin-top: 8px; font-size: 12px; line-height: 1.35; }
 }
 
 /* PUBLICATIONS — les trois travaux empilés, séparés par un filet fin centré
@@ -1162,3 +1178,39 @@ a.lang-code:active { transform: translateY(1px); }
 .proj-git:active { background: var(--ink); color: var(--paper); }
 .proj-git:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .proj-git-detail { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ═══ Mise en page compacte ═══
+   Regroupée ici : chaque règle resserre une section sans rien en retirer. */
+
+/* Projets : rangées moins hautes. */
+.proj-row { padding: clamp(22px, 3vw, 40px) 0; }
+.proj-row .proj-frame { aspect-ratio: 16 / 9; }
+.proj-card .proj-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+/* Recherche : les travaux secondaires en cartes côte à côte. */
+.pub-rest { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); margin-top: clamp(36px, 4.5vw, 64px); padding-top: clamp(36px, 4.5vw, 64px); border-top: 1px solid rgba(255,255,255,0.18); }
+@media (max-width: 860px) { .pub-rest { grid-template-columns: 1fr; } }
+.pub-item.pub-card + .pub-item.pub-card { margin-top: 0; padding-top: 0; border-top: 0; }
+.pub-card .pub-title { font-size: clamp(22px, 2.4vw, 30px); line-height: 1.04; }
+.pub-card .pub-sub { font-size: 15px; margin-top: 10px; }
+.pub-card .pub-actions { margin-top: clamp(20px, 2.6vw, 28px); }
+
+/* Articles : une rangée de cartes, l'image au-dessus du texte. */
+.art-wrap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 2.6vw, 32px); }
+@media (max-width: 900px) { .art-wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .art-wrap { grid-template-columns: 1fr; } }
+.art-item { display: flex; flex-direction: column; }
+.art-item + .art-item { margin-top: 0; padding-top: 0; border-top: 0; }
+.art-item .art-card { flex: 1; }
+.art-wrap .art-link { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+.art-wrap .art-link .art-cover { aspect-ratio: 16 / 10; height: auto; min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
+
+/* Expérience : activité indépendante et stages sur deux colonnes. */
+.xp-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(28px, 4vw, 64px); }
+@media (max-width: 900px) { .xp-cols { grid-template-columns: 1fr; } }
+.xp-cols .xp-row { grid-template-columns: 1fr; gap: 8px; padding: clamp(20px, 2.6vw, 30px) 0; }
+.xp-cols .xp-role { font-size: clamp(19px, 1.9vw, 24px); }
+.xp-cols .xp-col > .xp-group:first-child { padding-top: clamp(16px, 2vw, 22px); }
+
+/* Compétences : trois domaines par ligne. */
+@media (min-width: 1000px) { .expertise-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

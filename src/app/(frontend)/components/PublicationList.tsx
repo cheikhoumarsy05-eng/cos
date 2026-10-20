@@ -15,13 +15,15 @@ export type PublicationItem = {
   sideFacts?: SideFact[] | null;
 };
 
-function Publication({ item, t }: { item: PublicationItem; t: Dict }) {
+/* `compact` : carte des travaux secondaires — titre, source, résultat clé et
+   DOI ; les chiffres et le détail de la démarche restent au travail principal. */
+function Publication({ item, t, compact }: { item: PublicationItem; t: Dict; compact?: boolean }) {
   return (
     <div className="pub">
       <div>
         <h3 className="pub-title">{item.title}</h3>
         <p className="pub-sub">{item.sub}</p>
-        {(item.metrics ?? []).length > 0 && (
+        {!compact && (item.metrics ?? []).length > 0 && (
           <dl className="pub-metrics">
             {(item.metrics ?? []).map((m) => (
               <div className="pub-metric" key={m.id ?? m.label}>
@@ -31,11 +33,13 @@ function Publication({ item, t }: { item: PublicationItem; t: Dict }) {
             ))}
           </dl>
         )}
-        <ul className="pub-points">
-          {(item.points ?? []).map((pt) => (
-            <li key={pt.id ?? pt.value}>{pt.value}</li>
-          ))}
-        </ul>
+        {!compact && (
+          <ul className="pub-points">
+            {(item.points ?? []).map((pt) => (
+              <li key={pt.id ?? pt.value}>{pt.value}</li>
+            ))}
+          </ul>
+        )}
         {item.keyResult && (
           <p className="pub-keyresult">
             <span className="pub-keyresult-k">{t.keyResult}</span>
@@ -64,27 +68,37 @@ function Publication({ item, t }: { item: PublicationItem; t: Dict }) {
 }
 
 /**
- * Les travaux publiés, empilés — un bloc par travail, tous visibles au scroll.
+ * Les travaux publiés, tous visibles au scroll : le premier en grand, les
+ * suivants en cartes côte à côte.
  *
  * Ils étaient auparavant derrière un carrousel : deux des trois publications
  * n'étaient alors atteintes que par un clic sur une flèche ou un point, donc
- * vues par une minorité de visiteurs. C'est le meilleur atout du profil, et
- * la seule preuve vérifiable par un tiers (DOI) : rien ne justifie de la
- * masquer pour économiser de la hauteur de page.
+ * vues par une minorité de visiteurs. Les cartes gardent l'essentiel — le
+ * résultat clé et le DOI, seule preuve vérifiable par un tiers — et laissent
+ * les chiffres et la démarche au travail principal.
  *
  * Sans état ni écouteur, le composant reste rendu sur le serveur.
  */
 export default function PublicationList({ items, t }: { items: PublicationItem[]; t: Dict }) {
   if (items.length === 0) return null;
+  const [first, ...rest] = items;
 
   return (
     <div className="pub-list">
-      {items.map((item, i) => (
-        <div className="pub-item reveal" key={item.id ?? item.title}>
-          <p className="pub-head"><span className="pub-num">{String(i + 1).padStart(2, "0")}</span></p>
-          <Publication item={item} t={t} />
+      <div className="pub-item reveal">
+        <p className="pub-head"><span className="pub-num">01</span></p>
+        <Publication item={first} t={t} />
+      </div>
+      {rest.length > 0 && (
+        <div className="pub-rest">
+          {rest.map((item, i) => (
+            <div className="pub-item pub-card reveal" key={item.id ?? item.title}>
+              <p className="pub-head"><span className="pub-num">{String(i + 2).padStart(2, "0")}</span></p>
+              <Publication item={item} t={t} compact />
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

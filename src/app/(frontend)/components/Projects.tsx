@@ -152,7 +152,35 @@ function ProjectDetail({ project, onClose, t }: { project: Project; onClose: () 
   );
 }
 
-export default function Projects({ projects, t }: { projects: Project[]; t: Dict }) {
+/* Carte serrée : l'image au-dessus, le type, le titre et le bouton. Sert aux
+   projets et programmes secondaires, rangés en grille sous les grandes rangées. */
+function CompactCard({ project, onOpen, rowRef, t }: { project: Project; onOpen: (id: string, trigger: HTMLElement) => void; rowRef: (el: HTMLElement | null) => void; t: Dict }) {
+  return (
+    <article className="proj-card reveal" ref={rowRef}>
+      <button className="proj-media proj-media-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-label={fmt(t.openProject, { title: project.title })}>
+        <MediaField project={project} t={t} />
+      </button>
+      <span className="proj-kind">{project.type}</span>
+      <button className="proj-title-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
+        <h4>{project.title}</h4>
+      </button>
+      <div className="proj-actions">
+        <button className="proj-open arrow" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
+          {project.images.length === 0 ? t.seeProject : project.program ? t.seeVisuals : project.drawings ? t.seeDrawings : t.seeRenders}
+        </button>
+        {project.url && (
+          <a className="proj-git" href={project.url} target="_blank" rel="noopener" aria-label={t.programLink}>
+            <GitHubMark />
+            GitHub
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
+
+export default function Projects({ projects, t, compact }: { projects: Project[]; t: Dict; compact?: boolean }) {
+  const cols = Math.min(projects.length, 3);
   const [openId, setOpenId] = useState<string | null>(null);
   const rowRefs = useRef<Record<string, HTMLElement | null>>({});
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -176,6 +204,19 @@ export default function Projects({ projects, t }: { projects: Project[]; t: Dict
       { duration: 480, easing: "cubic-bezier(0.16,1,0.3,1)" }
     );
   }, [open]);
+
+  if (compact) {
+    return (
+      <>
+        <div className={"proj-grid proj-grid-" + cols}>
+          {projects.map((project) => (
+            <CompactCard key={project.id} project={project} onOpen={handleOpen} rowRef={(el) => { rowRefs.current[project.id] = el; }} t={t} />
+          ))}
+        </div>
+        {open && <ProjectDetail project={open} onClose={handleClose} t={t} />}
+      </>
+    );
+  }
 
   return (
     <>

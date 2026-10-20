@@ -82,6 +82,10 @@ const fr = {
      l'activité indépendante. À remonter dans le CMS si la fusion est gardée. */
   independentWork: "Activité indépendante",
   internships: "Stages & chantier",
+  /* Intertitre des projets d'architecture, rangés sous les projets de
+     structure dans une grille plus serrée. */
+  architectureGroup: "Conception architecturale",
+  architectureLead: "Plans et volumes de logements, du programme au dossier de permis de construire.",
   keyResult: "Résultat clé",
   programFeatures: "Ce que fait le programme",
   programLink: "Voir le code sur GitHub",
@@ -169,6 +173,8 @@ const en: typeof fr = {
   keyPoints: "Key points",
   independentWork: "Independent work",
   internships: "Internships & site work",
+  architectureGroup: "Architectural design",
+  architectureLead: "Floor plans and massing for housing, from the brief to the building permit application.",
   keyResult: "Key result",
   programFeatures: "What it does",
   programLink: "View the code on GitHub",

@@ -11,12 +11,12 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cosinus28.v
 export const SITE_TITLE = "Cheikh Oumar Sy · Ingénieur Génie Civil — Structures";
 
 export const SITE_DESCRIPTION =
-  "Ingénieur en Génie Civil — spécialisation structures : béton armé, charpente métallique, dynamique des structures. En recherche d'un stage Ingénieur Structures (4–6 mois).";
+  "Ingénieur junior en génie civil, spécialisé en structures : béton armé, charpente métallique, dynamique des structures. Disponible pour un poste en bureau d'études ou en contrôle technique.";
 
 export const SITE_TITLE_EN = "Cheikh Oumar Sy · Civil Engineer — Structures";
 
 export const SITE_DESCRIPTION_EN =
-  "Civil engineer specialising in structures: reinforced concrete, steel framing, structural dynamics. Looking for a 4–6 month structural engineering internship.";
+  "Junior civil engineer specialising in structures: reinforced concrete, steel framing, structural dynamics. Available for a position in a design office or technical inspection office.";
 
 /** Mots-clés de référencement, par langue. */
 export const SITE_KEYWORDS = {
@@ -31,7 +31,7 @@ export const SITE_KEYWORDS = {
     "bureau de contrôle technique",
     "Dakar",
     "Sénégal",
-    "stage ingénieur structures",
+    "ingénieur structures junior",
   ],
   en: [
     "civil engineer",
@@ -44,6 +44,6 @@ export const SITE_KEYWORDS = {
     "technical inspection office",
     "Dakar",
     "Senegal",
-    "structural engineering internship",
+    "junior structural engineer",
   ],
 } as const;

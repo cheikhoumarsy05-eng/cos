@@ -1210,12 +1210,14 @@ a.lang-code:active { transform: translateY(1px); }
 .art-wrap .art-link { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
 .art-wrap .art-link .art-cover { aspect-ratio: 16 / 10; height: auto; min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
 
-/* Expérience : activité indépendante et stages sur deux colonnes. */
-.xp-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(28px, 4vw, 64px); }
-@media (max-width: 900px) { .xp-cols { grid-template-columns: 1fr; } }
-.xp-cols .xp-row { grid-template-columns: 1fr; gap: 8px; padding: clamp(20px, 2.6vw, 30px) 0; }
-.xp-cols .xp-role { font-size: clamp(19px, 1.9vw, 24px); }
-.xp-cols .xp-col > .xp-group:first-child { padding-top: clamp(16px, 2vw, 22px); }
+/* Expérience, comme dans le CV : un intertitre par bloc, la période à gauche,
+   le contenu derrière un filet vertical. */
+.xp-block + .xp-block { margin-top: clamp(40px, 5.5vw, 72px); }
+.xp-block-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(20px, 2.6vw, 30px); line-height: 1; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: clamp(14px, 2vw, 20px); }
+.xp-block .xp-row { grid-template-columns: 200px 1fr; gap: clamp(16px, 3vw, 40px); padding: clamp(20px, 2.8vw, 32px) 0; }
+@media (max-width: 720px) { .xp-block .xp-row { grid-template-columns: 1fr; gap: 10px; } }
+.xp-body { border-left: 2px solid var(--ink); padding-left: clamp(16px, 2vw, 24px); }
+.xp-block .xp-role { font-size: clamp(19px, 2vw, 25px); }
 
 /* Compétences : en-tête du tableau masqué à l'écran, gardé pour les lecteurs d'écran. */
 .skills-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

@@ -8,10 +8,6 @@ import ArticleCards from "./ArticleCards";
 import ContactForm from "./ContactForm";
 import { dict, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
-
-/* Étiquettes « Points clés » affichées par poste : les premières saisies, qui
-   sont les référentiels mis en évidence. Le reste est dit dans les missions. */
-const MAX_POINTS_CLES = 4;
 import type { Project } from "@/data/projects";
 
 export default async function HomePage({ locale }: { locale: Locale }) {
@@ -260,56 +256,40 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         <section className="section" id="experience">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2></div></div>
-            {/* Deux colonnes : l'activité indépendante à gauche, les stages à droite. */}
-            <div className="xp xp-cols">
-              <div className="xp-col">
-              <p className="xp-group reveal">{t.independentWork}</p>
-              {(c.freelance as any[]).map((f) => (
-                <div className="xp-row reveal" key={`fl-${f.id}`}>
-                  <div className="xp-when">{f.when}</div>
-                  <div>
-                    <h3 className="xp-role">{f.title}</h3>
-                    {/* La description résume ce que disent les missions : on ne
-                        l'affiche qu'en l'absence de celles-ci. */}
-                    {(f.points ?? []).length === 0 && f.body && <p className="xp-summary">{f.body}</p>}
-                    <ul className="xp-points">{(f.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
-                    {(f.keyPoints ?? []).length > 0 && (
-                      <div className="xp-keys">
-                        <span className="xp-keys-label">{t.keyPoints}</span>
-                        <div className="tag-list">
-                          {(f.keyPoints as any[]).slice(0, MAX_POINTS_CLES).map((k) => (
-                            <span className={"tag" + (k.strong ? " tag-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+            {/* Comme dans le CV : les expériences professionnelles d'abord, puis
+                les activités indépendantes. Période à gauche, puis le poste,
+                l'entreprise et les missions, derrière un filet vertical. */}
+            <div className="xp-block">
+              <h3 className="xp-block-title reveal">{t.professionalExperience}</h3>
+              <div className="xp">
+                {(c.experience as any[]).map((e) => (
+                  <div className="xp-row reveal" key={e.id}>
+                    <div className="xp-when">{e.when}</div>
+                    <div className="xp-body">
+                      <h4 className="xp-role">{e.role}</h4>
+                      <p className="xp-org">{e.org}{e.city ? <span className="xp-city"> · {e.city}</span> : null}</p>
+                      {e.summary && <p className="xp-summary">{e.summary}</p>}
+                      <ul className="xp-points">{(e.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
               </div>
-              <div className="xp-col">
-              <p className="xp-group reveal">{t.internships}</p>
-              {(c.experience as any[]).map((e) => (
-                <div className="xp-row reveal" key={e.id}>
-                  <div className="xp-when">{e.when}</div>
-                  <div>
-                    <h3 className="xp-role">{e.role}</h3>
-                    <p className="xp-org">{e.org}{e.city ? <span className="xp-city"> · {e.city}</span> : null}</p>
-                    {e.summary && <p className="xp-summary">{e.summary}</p>}
-                    <ul className="xp-points">{(e.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
-                    {(e.keyPoints ?? []).length > 0 && (
-                      <div className="xp-keys">
-                        <span className="xp-keys-label">{t.keyPoints}</span>
-                        <div className="tag-list">
-                          {(e.keyPoints as any[]).slice(0, MAX_POINTS_CLES).map((k) => (
-                            <span className={"tag" + (k.strong ? " tag-strong" : "")} key={k.id ?? k.value}>{k.value}</span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+            </div>
+            <div className="xp-block">
+              <h3 className="xp-block-title reveal">{t.independentWork}</h3>
+              <div className="xp">
+                {(c.freelance as any[]).map((f) => (
+                  <div className="xp-row reveal" key={`fl-${f.id}`}>
+                    <div className="xp-when">{f.when}</div>
+                    <div className="xp-body">
+                      <h4 className="xp-role">{f.title}</h4>
+                      {/* La description résume ce que disent les missions : on ne
+                          l'affiche qu'en l'absence de celles-ci. */}
+                      {(f.points ?? []).length === 0 && f.body && <p className="xp-summary">{f.body}</p>}
+                      <ul className="xp-points">{(f.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
               </div>
             </div>
           </div>

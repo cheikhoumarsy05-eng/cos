@@ -78,9 +78,10 @@ const fr = {
   zenodoPublication: "Publication Zenodo",
 
   keyPoints: "Points clés",
-  /* Intertitres de la section Expérience, qui réunit les stages et
-     l'activité indépendante. À remonter dans le CMS si la fusion est gardée. */
-  independentWork: "Activité indépendante",
+  /* Intertitres de la section Expérience, dans l'ordre du CV : expériences
+     professionnelles, puis activités indépendantes. */
+  independentWork: "Activités indépendantes",
+  professionalExperience: "Expériences professionnelles",
   internships: "Stages & chantier",
   /* Intertitre des projets d'architecture, rangés sous les projets de
      structure dans une grille plus serrée. */
@@ -174,6 +175,7 @@ const en: typeof fr = {
 
   keyPoints: "Key points",
   independentWork: "Independent work",
+  professionalExperience: "Professional experience",
   internships: "Internships & site work",
   architectureGroup: "Architectural design",
   researchAndTools: "Programs and research work",

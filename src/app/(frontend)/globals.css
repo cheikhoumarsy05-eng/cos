@@ -101,7 +101,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .topnav { position: sticky; top: 0; z-index: 60; background: var(--paper); border-bottom: 2px solid var(--ink); }
 .topnav.scrolled { box-shadow: 0 1px 0 var(--ink); }
 .topnav-inner { display: flex; align-items: center; justify-content: space-between; gap: clamp(20px, 4vw, 56px); height: 64px; }
-.brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; text-transform: uppercase; white-space: nowrap; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; text-transform: uppercase; white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; }
 .brand .brand-mark { color: var(--accent); }
 .nav-links { display: flex; gap: 26px; align-items: center; }
 .nav-links a { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); position: relative; padding-block: 6px; transition: color 0.2s var(--e-out), transform 0.08s var(--e-out); }
@@ -1188,6 +1188,10 @@ a.lang-code:active { transform: translateY(1px); }
 /* Programmes : le texte d'abord, l'image en dernier, comme la grande rangée.
    L'image se cale en bas pour que les deux cartes s'alignent. */
 .proj-card.is-program .proj-media { order: 1; margin: auto 0 0; padding-top: 6px; }
+/* … et les boutons sous la figure, sur les cartes comme sur la grande rangée. */
+.proj-card.is-program .proj-actions { order: 2; margin-top: 6px; }
+.proj-media-col { display: flex; flex-direction: column; gap: 16px; }
+.proj-media-col .proj-media-btn { display: block; width: 100%; text-align: left; }
 .proj-card-desc { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
 .proj-card .proj-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 
@@ -1243,3 +1247,102 @@ a.lang-code:active { transform: translateY(1px); }
 .pub-panel .btn-outline { border-color: var(--on-ink); color: var(--on-ink); }
 /* Sous un intertitre, la liste n'a pas besoin d'un second filet. */
 .proj-group-head + .proj-index { border-top: 0; }
+
+/* Compétences : icône au trait devant chaque domaine, tracée à l'apparition
+   du tableau, une ligne après l'autre. */
+.skills-domain-in { display: flex; align-items: center; gap: 12px; }
+.skills-ic { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--ink); background: var(--paper); }
+.skills-ic svg * { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 120; stroke-dashoffset: 120; transition: stroke-dashoffset 1.4s var(--e-out); }
+.skills-table.in .skills-ic svg * { stroke-dashoffset: 0; }
+.skills-table tbody tr:nth-child(2) .skills-ic svg * { transition-delay: 0.15s; }
+.skills-table tbody tr:nth-child(3) .skills-ic svg * { transition-delay: 0.3s; }
+.skills-table tbody tr:nth-child(4) .skills-ic svg * { transition-delay: 0.45s; }
+.skills-table tbody tr:nth-child(5) .skills-ic svg * { transition-delay: 0.6s; }
+.skills-table tbody tr:nth-child(6) .skills-ic svg * { transition-delay: 0.75s; }
+@media (prefers-reduced-motion: reduce) { .skills-ic svg * { stroke-dashoffset: 0; transition: none; } }
+
+/* Compétences sur téléphone : l'encadré des outils d'abord, chaque domaine
+   avec son titre en petites capitales orange sur toute la largeur. */
+@media (max-width: 900px) {
+  .skills-aside { order: -1; }
+  .skills-qualities { display: block; font-size: 14px; line-height: 1.55; }
+  .skills-qualities li { display: inline; }
+  .skills-qualities li::before { content: none; }
+  .skills-qualities li + li::before { content: " · "; color: var(--on-ink-mut); }
+  .skills-aside .tool-grid { gap: 6px; }
+  .skills-aside .tool { padding: 6px 10px; font-size: 12px; }
+}
+@media (max-width: 760px) {
+  .skills-split .skills-domain { width: auto; font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .skills-split .skills-table tr { padding: 12px 0; }
+  .skills-split .skills-items { color: var(--ink); font-size: 14.5px; line-height: 1.5; margin-top: 8px; padding-left: 46px; }
+}
+
+/* Monogramme de l'en-tête : il pivote légèrement au survol de la marque. */
+.monogram { flex: none; display: block; transition: transform 0.35s var(--e-out); }
+.monogram-bg { fill: var(--ink); }
+.monogram-bar { fill: var(--accent); }
+.monogram-txt { font-family: var(--font-display); font-size: 30px; font-weight: 900; letter-spacing: -1.5px; fill: var(--paper); }
+.monogram-s { fill: var(--accent); }
+@media (hover: hover) { .brand:hover .monogram { transform: rotate(-6deg) scale(1.06); } }
+
+/* Démo d'oscillation libre, sous les cartes des programmes. */
+.osc { }
+.osc-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(20px, 2.4vw, 28px); line-height: 1.05; text-transform: uppercase; letter-spacing: -0.01em; }
+.osc-lead { color: var(--ink-2); font-size: 15.5px; line-height: 1.55; max-width: 62ch; margin-top: 8px; }
+.osc-body { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: clamp(16px, 3vw, 36px); align-items: center; margin-top: clamp(16px, 2.4vw, 26px); }
+@media (max-width: 700px) { .osc-body { grid-template-columns: 1fr; } .osc-frame { max-width: 200px; margin: 0 auto; } }
+.osc-frame, .osc-plot { width: 100%; height: auto; display: block; }
+.osc-plot { background: var(--paper-2); border: 1px solid var(--line); }
+.osc-ground { stroke: var(--ink); stroke-width: 3; }
+.osc-col { stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.osc-beam { stroke: var(--ink); stroke-width: 5; stroke-linecap: round; }
+.osc-arrow { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+.osc-axis { stroke: var(--stone); stroke-width: 1; stroke-dasharray: 4 4; }
+.osc-env { fill: none; stroke: var(--stone); stroke-width: 1; stroke-dasharray: 3 3; }
+.osc-curve { fill: none; stroke: var(--accent); stroke-width: 2; }
+.osc-dot { fill: var(--ink); }
+.osc-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 28px; margin-top: clamp(16px, 2.4vw, 24px); }
+.osc-ctrl { display: flex; flex-direction: column; gap: 8px; min-width: 200px; flex: 1; font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--stone-2); }
+.osc-ctrl b { color: var(--accent); font-weight: 800; }
+.osc-sym { text-transform: none; font-style: italic; font-family: var(--font-body); font-size: 14px; }
+.osc-ctrl input[type="range"] { accent-color: var(--accent); width: 100%; }
+.osc-readout { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: var(--stone-2); }
+
+/* Bouton « Voir la démo », à côté de « Voir les visuels ». */
+.proj-demo { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 12px; border: 2px solid var(--accent); border-radius: 999px; color: var(--accent); font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.03em; text-transform: uppercase; transition: background 0.2s var(--e-out), color 0.2s var(--e-out); }
+@media (hover: hover) { .proj-demo:hover { background: var(--accent); color: var(--on-ink); } }
+.proj-demo:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* Démo CIRÉ : deux travées côte à côte, puis la trace des deux réponses. */
+.tmd-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2vw, 24px); margin-top: clamp(14px, 2vw, 22px); }
+@media (max-width: 640px) { .tmd-panels { grid-template-columns: 1fr; } }
+.tmd-panel { margin: 0; border: 1px solid var(--line); background: var(--paper-2); padding: 12px; }
+.tmd-panel svg { width: 100%; height: auto; display: block; }
+.tmd-label { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.tmd-panel.is-tmd .tmd-label { color: var(--ink); }
+.tmd-abut { fill: var(--line); }
+.tmd-deck { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; }
+.tmd-support { fill: var(--ink); }
+.tmd-car polygon { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
+.tmd-car circle { fill: var(--ink); }
+.tmd-ama polyline { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.tmd-ama rect { fill: var(--ink); }
+.tmd-ama text { fill: var(--paper); font-family: var(--font-display); font-size: 9px; font-weight: 800; }
+.tmd-meter { height: 6px; background: var(--paper); border: 1px solid var(--line); margin-top: 8px; }
+.tmd-meter span { display: block; height: 100%; background: var(--accent); }
+.tmd-panel.is-tmd .tmd-meter span { background: var(--ink); }
+.tmd-plot { width: 100%; height: auto; display: block; margin-top: clamp(14px, 2vw, 22px); background: var(--paper-2); border: 1px solid var(--line); }
+.tmd-trace-bare { fill: none; stroke: var(--accent); stroke-width: 2; }
+.tmd-trace-tmd { fill: none; stroke: var(--ink); stroke-width: 2; }
+.tmd-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 12px; font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.tmd-key::before { content: ""; display: inline-block; width: 18px; height: 3px; margin-right: 8px; vertical-align: middle; }
+.tmd-key-bare::before { background: var(--accent); }
+.tmd-key-tmd::before { background: var(--ink); }
+.tmd-legend .osc-replay { margin-left: auto; }
+
+/* Pied de page : LinkedIn et GitHub en icônes carrées. */
+.foot-icon { width: 40px; height: 40px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 2px; color: var(--ink); transition: background 0.2s var(--e-out), color 0.2s var(--e-out), border-color 0.2s var(--e-out); }
+@media (hover: hover) { .foot-icon:hover { background: var(--accent); border-color: var(--accent); color: var(--on-ink); } }
+.foot-icon:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.foot-links { gap: 10px; }

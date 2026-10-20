@@ -1,10 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { type Project } from "@/data/projects";
 import { fmt, type Dict } from "../lib/i18n";
 import { Blueprint } from "./Blueprints";
+import OscillationDemo from "./OscillationDemo";
+import TmdDemo from "./TmdDemo";
 
 /* Optimized render via next/image (fill + responsive sizes). */
 function Render({ src, alt, priority, sizes, contain }: { src: string; alt: string; priority?: boolean; sizes?: string; contain?: boolean }) {
@@ -154,7 +156,7 @@ function ProjectDetail({ project, onClose, t }: { project: Project; onClose: () 
 
 /* Carte serrée : l'image au-dessus, le type, le titre et le bouton. Sert aux
    projets et programmes secondaires, rangés en grille sous les grandes rangées. */
-function CompactCard({ project, onOpen, rowRef, t }: { project: Project; onOpen: (id: string, trigger: HTMLElement) => void; rowRef: (el: HTMLElement | null) => void; t: Dict }) {
+function CompactCard({ project, onOpen, rowRef, actions, t }: { project: Project; onOpen: (id: string, trigger: HTMLElement) => void; rowRef: (el: HTMLElement | null) => void; actions: ReactNode; t: Dict }) {
   return (
     <article className={"proj-card reveal" + (project.program ? " is-program" : "")} ref={rowRef}>
       <button className="proj-media proj-media-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-label={fmt(t.openProject, { title: project.title })}>
@@ -178,18 +180,39 @@ function CompactCard({ project, onOpen, rowRef, t }: { project: Project; onOpen:
           <div className="tag-list">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
         </>
       )}
-      <div className="proj-actions">
-        <button className="proj-open arrow" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
-          {project.images.length === 0 ? t.seeProject : project.program ? t.seeVisuals : project.drawings ? t.seeDrawings : t.seeRenders}
-        </button>
-        {project.url && (
-          <a className="proj-git" href={project.url} target="_blank" rel="noopener" aria-label={t.programLink}>
-            <GitHubMark />
-            GitHub
-          </a>
-        )}
-      </div>
+      {actions}
     </article>
+  );
+}
+
+/* Fenêtre de démonstration : même cadre que la fiche d'un projet. */
+function DemoDialog({ project, onClose, t }: { project: Project; onClose: () => void; t: Dict }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onClick = (e: MouseEvent) => { if (e.target === dialog) dialog?.close(); };
+    dialog?.addEventListener("click", onClick);
+    return () => { dialog?.removeEventListener("click", onClick); document.body.style.overflow = prev; };
+  }, []);
+  return (
+    <dialog className="proj-dialog" ref={dialogRef} aria-label={fmt(t.demoDialog, { title: project.title })} onClose={onClose}>
+      <div className="proj-detail">
+        <div className="detail-head">
+          <div>
+            <span className="detail-num">{project.index}</span>
+            <p className="detail-kind">{t.demoKind}</p>
+            <h3 className="detail-title">{project.demo === "cire" ? t.tmdTitle : t.demoTitle}</h3>
+          </div>
+          <button className="detail-close" onClick={() => dialogRef.current?.close()} aria-label={t.close}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
+          </button>
+        </div>
+        {project.demo === "cire" ? <TmdDemo t={t} /> : <OscillationDemo t={t} />}
+      </div>
+    </dialog>
   );
 }
 
@@ -201,7 +224,30 @@ export default function Projects({ projects, t, compact }: { projects: Project[]
   const open = openId ? projects.find((p) => p.id === openId) ?? null : null;
 
   const handleOpen = useCallback((id: string, trigger: HTMLElement) => { triggerRef.current = trigger; setOpenId(id); }, []);
+  const actions = (project: Project) => (
+    <div className="proj-actions">
+      <button className="proj-open arrow" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
+        {project.images.length === 0 ? t.seeProject : project.program ? t.seeVisuals : project.drawings ? t.seeDrawings : t.seeRenders}
+      </button>
+      {project.demo && (
+        <button className="proj-demo" onClick={(e) => openDemo(project.id, e.currentTarget)} aria-haspopup="dialog">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 2.5 L13 8 L4 13.5 Z" fill="currentColor" /></svg>
+          {t.seeDemo}
+        </button>
+      )}
+      {project.url && (
+        <a className="proj-git" href={project.url} target="_blank" rel="noopener" aria-label={t.programLink}>
+          <GitHubMark />
+          GitHub
+        </a>
+      )}
+    </div>
+  );
   const handleClose = useCallback(() => { setOpenId(null); triggerRef.current?.focus(); }, []);
+  const [demoId, setDemoId] = useState<string | null>(null);
+  const demo = demoId ? projects.find((p) => p.id === demoId) ?? null : null;
+  const openDemo = (id: string, trigger: HTMLElement) => { triggerRef.current = trigger; setDemoId(id); };
+  const closeDemo = () => { setDemoId(null); triggerRef.current?.focus(); };
 
   useEffect(() => {
     if (!open) return;
@@ -224,10 +270,11 @@ export default function Projects({ projects, t, compact }: { projects: Project[]
       <>
         <div className={"proj-grid proj-grid-" + cols}>
           {projects.map((project) => (
-            <CompactCard key={project.id} project={project} onOpen={handleOpen} rowRef={(el) => { rowRefs.current[project.id] = el; }} t={t} />
+            <CompactCard key={project.id} project={project} onOpen={handleOpen} rowRef={(el) => { rowRefs.current[project.id] = el; }} actions={actions(project)} t={t} />
           ))}
         </div>
         {open && <ProjectDetail project={open} onClose={handleClose} t={t} />}
+        {demo && <DemoDialog project={demo} onClose={closeDemo} t={t} />}
       </>
     );
   }
@@ -250,31 +297,27 @@ export default function Projects({ projects, t, compact }: { projects: Project[]
                   <span className="spec" key={s.k}><span className="sk">{s.k}</span><span className="sv">{s.v}</span></span>
                 ))}
               </div>
-              <p className="proj-desc">{project.desc}</p>
+              {/* Sur les projets, le type dit déjà le bâtiment (« · R+2 ») : la
+                  description ne reste qu'aux programmes. */}
+              {project.program && <p className="proj-desc">{project.desc}</p>}
               <div className="proj-foot">
                 {/* Les bulles ne restent qu'aux programmes, où elles disent les outils ;
                     sur les projets, le type et les caractéristiques suffisent. */}
                 {project.program && <div className="tag-list">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>}
-                <div className="proj-actions">
-                  <button className="proj-open arrow" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
-                    {project.images.length === 0 ? t.seeProject : project.program ? t.seeVisuals : project.drawings ? t.seeDrawings : t.seeRenders}
-                  </button>
-                  {project.url && (
-                    <a className="proj-git" href={project.url} target="_blank" rel="noopener" aria-label={t.programLink}>
-                      <GitHubMark />
-                      GitHub
-                    </a>
-                  )}
-                </div>
               </div>
             </div>
-            <button className="proj-media proj-media-btn" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-label={fmt(t.openProject, { title: project.title })}>
-              <MediaField project={project} priority={i === 0} t={t} />
-            </button>
+            {/* Les boutons se placent sous la figure. */}
+            <div className="proj-media proj-media-col">
+              <button className="proj-media-btn" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-label={fmt(t.openProject, { title: project.title })}>
+                <MediaField project={project} priority={i === 0} t={t} />
+              </button>
+              {actions(project)}
+            </div>
           </article>
         ))}
       </div>
       {open && <ProjectDetail project={open} onClose={handleClose} t={t} />}
+      {demo && <DemoDialog project={demo} onClose={closeDemo} t={t} />}
     </>
   );
 }

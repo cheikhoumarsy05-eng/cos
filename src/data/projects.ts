@@ -28,6 +28,8 @@ export type Project = {
   features?: string[];
   /** Programme : lien vers le dépôt ou la démonstration. */
   url?: string;
+  /** Programme : démonstration interactive ouverte par « Voir la démo ». */
+  demo?: "cire" | "oscillation";
 };
 
 export const projects: Project[] = [

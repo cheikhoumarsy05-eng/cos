@@ -156,11 +156,19 @@ function ProjectDetail({ project, onClose, t }: { project: Project; onClose: () 
    projets et programmes secondaires, rangés en grille sous les grandes rangées. */
 function CompactCard({ project, onOpen, rowRef, t }: { project: Project; onOpen: (id: string, trigger: HTMLElement) => void; rowRef: (el: HTMLElement | null) => void; t: Dict }) {
   return (
-    <article className="proj-card reveal" ref={rowRef}>
+    <article className={"proj-card reveal" + (project.program ? " is-program" : "")} ref={rowRef}>
       <button className="proj-media proj-media-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-label={fmt(t.openProject, { title: project.title })}>
         <MediaField project={project} t={t} />
       </button>
-      <span className="proj-kind">{project.type}</span>
+      {/* Les programmes gardent leur numéro, à la suite de la grande rangée. */}
+      {project.program ? (
+        <div className="proj-head">
+          <span className="proj-num">{project.index}</span>
+          <span className="proj-kind">{project.type}</span>
+        </div>
+      ) : (
+        <span className="proj-kind">{project.type}</span>
+      )}
       <button className="proj-title-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
         <h4>{project.title}</h4>
       </button>

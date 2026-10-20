@@ -1185,6 +1185,9 @@ a.lang-code:active { transform: translateY(1px); }
 /* Projets : rangées moins hautes. */
 .proj-row { padding: clamp(22px, 3vw, 40px) 0; }
 .proj-row .proj-frame { aspect-ratio: 16 / 9; }
+/* Programmes : le texte d'abord, l'image en dernier, comme la grande rangée.
+   L'image se cale en bas pour que les deux cartes s'alignent. */
+.proj-card.is-program .proj-media { order: 1; margin: auto 0 0; padding-top: 6px; }
 .proj-card-desc { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
 .proj-card .proj-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 
@@ -1230,3 +1233,11 @@ a.lang-code:active { transform: translateY(1px); }
 .skills-aside .tools-note { color: var(--on-ink-mut); }
 .skills-qualities { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: var(--on-ink); }
 .skills-qualities li::before { content: "— "; color: var(--accent); }
+
+/* Recherche & outils de calcul : les publications gardent leur fond d'encre,
+   dans un encadré, au sein d'une section claire. */
+.pub-panel { background: var(--ink); color: var(--on-ink); border-radius: var(--radius); padding: clamp(24px, 4vw, 56px); }
+.pub-panel .pub-list { border-top: 0; padding-top: 0; }
+.pub-panel .btn-outline { border-color: var(--on-ink); color: var(--on-ink); }
+/* Sous un intertitre, la liste n'a pas besoin d'un second filet. */
+.proj-group-head + .proj-index { border-top: 0; }

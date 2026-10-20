@@ -256,71 +256,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* PROJETS */}
-        <section className="section" id="projets">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2></div></div>
-            {/* Les projets « mis en avant » sont les études de structure : ils
-                gardent la grande rangée. L'architecture suit, en grille serrée,
-                pour ne pas brouiller le profil d'ingénieur structures. */}
-            <Projects projects={projects.filter((p) => p.featured)} t={t} />
-            {projects.some((p) => !p.featured) && (
-              <div className="proj-group">
-                <div className="proj-group-head reveal">
-                  <h3 className="proj-group-title">{t.architectureGroup}</h3>
-                </div>
-                <Projects projects={projects.filter((p) => !p.featured)} t={t} compact />
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* PROGRAMMES */}
-        {programs.length > 0 && (
-          <section className="section band-paper2" id="programmes">
-            <div className="wrap">
-              <div className="ed-head reveal">
-                <p className="ed-index">{n()}</p>
-                <div className="ed-head-text">
-                  <h2 className="ed-title">{st.programs ?? "Programmes"}</h2>
-                  
-                </div>
-              </div>
-              {/* CIRÉ garde la grande rangée ; les programmes suivants passent en cartes. */}
-              <Projects projects={programProjects.slice(0, 1)} t={t} />
-              {programProjects.length > 1 && (
-                <div className="proj-group proj-group-tight">
-                  <Projects projects={programProjects.slice(1)} t={t} compact />
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* ARTICLES & RÉFLEXIONS */}
-        {articles.length > 0 && (
-          <section className="section" id="articles">
-            <div className="wrap">
-              <div className="ed-head reveal">
-                <p className="ed-index">{n()}</p>
-                <div className="ed-head-text">
-                  <h2 className="ed-title">{st.articles}</h2>
-                  
-                </div>
-              </div>
-              <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
-            </div>
-          </section>
-        )}
-
-        {/* RECHERCHE */}
-        <section className="section band-ink" id="recherche">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
-            <PublicationList items={pubItems} t={t} />
-          </div>
-        </section>
-
         {/* EXPÉRIENCE */}
         <section className="section" id="experience">
           <div className="wrap">
@@ -380,6 +315,25 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
+        {/* PROJETS */}
+        <section className="section band-paper2" id="projets">
+          <div className="wrap">
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2></div></div>
+            {/* Les projets « mis en avant » sont les études de structure : ils
+                gardent la grande rangée. L'architecture suit, en grille serrée,
+                pour ne pas brouiller le profil d'ingénieur structures. */}
+            <Projects projects={projects.filter((p) => p.featured)} t={t} />
+            {projects.some((p) => !p.featured) && (
+              <div className="proj-group">
+                <div className="proj-group-head reveal">
+                  <h3 className="proj-group-title">{t.architectureGroup}</h3>
+                </div>
+                <Projects projects={projects.filter((p) => !p.featured)} t={t} compact />
+              </div>
+            )}
+          </div>
+        </section>
+
         {/* COMPÉTENCES */}
         <section className="section" id="competences">
           <div className="wrap">
@@ -428,8 +382,35 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             </div>
           </div>
         </section>
+        {/* RECHERCHE & OUTILS DE CALCUL — les programmes, puis les publications
+            qu'ils ont servi à produire : CIRÉ va avec l'étude du pont,
+            l'oscillation des portiques avec la dynamique. */}
+        <section className="section band-paper2" id="recherche">
+          <div className="wrap">
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{t.researchAndTools}</h2></div></div>
+            {programs.length > 0 && (
+              <div id="programmes">
+                <div className="proj-group-head reveal"><h3 className="proj-group-title">{st.programs ?? "Programmes"}</h3></div>
+                {/* CIRÉ garde la grande rangée ; les programmes suivants passent en cartes. */}
+                <Projects projects={programProjects.slice(0, 1)} t={t} />
+                {programProjects.length > 1 && (
+                  <div className="proj-group proj-group-tight">
+                    <Projects projects={programProjects.slice(1)} t={t} compact />
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="proj-group">
+              <div className="proj-group-head reveal"><h3 className="proj-group-title">{st.research}</h3></div>
+              <div className="pub-panel">
+                <PublicationList items={pubItems} t={t} />
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* FORMATION */}
-        <section className="section band-paper2" id="formation">
+        <section className="section" id="formation">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.education}</h2></div></div>
             <div className="edu">
@@ -442,6 +423,22 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             </div>
           </div>
         </section>
+
+        {/* ARTICLES & RÉFLEXIONS */}
+        {articles.length > 0 && (
+          <section className="section band-paper2" id="articles">
+            <div className="wrap">
+              <div className="ed-head reveal">
+                <p className="ed-index">{n()}</p>
+                <div className="ed-head-text">
+                  <h2 className="ed-title">{st.articles}</h2>
+                  
+                </div>
+              </div>
+              <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
+            </div>
+          </section>
+        )}
 
         {/* CONTACT */}
         <section className="section" id="contact">

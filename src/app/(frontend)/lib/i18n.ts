@@ -85,6 +85,7 @@ const fr = {
   /* Intertitre des projets d'architecture, rangés sous les projets de
      structure dans une grille plus serrée. */
   architectureGroup: "Conception architecturale",
+  researchAndTools: "Recherche & outils de calcul",
   keyResult: "Résultat clé",
   programFeatures: "Ce que fait le programme",
   programLink: "Voir le code sur GitHub",
@@ -175,6 +176,7 @@ const en: typeof fr = {
   independentWork: "Independent work",
   internships: "Internships & site work",
   architectureGroup: "Architectural design",
+  researchAndTools: "Research & computing tools",
   keyResult: "Key result",
   programFeatures: "What it does",
   programLink: "View the code on GitHub",

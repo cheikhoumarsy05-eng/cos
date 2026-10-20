@@ -85,13 +85,14 @@ const fr = {
   /* Intertitre des projets d'architecture, rangés sous les projets de
      structure dans une grille plus serrée. */
   architectureGroup: "Conception architecturale",
-  architectureLead: "Plans et volumes de logements, du programme au dossier de permis de construire.",
   keyResult: "Résultat clé",
   programFeatures: "Ce que fait le programme",
   programLink: "Voir le code sur GitHub",
   readPublication: "Lire la publication",
   skillsDomain: "Domaine",
   skillsItems: "Compétences / référentiels",
+  skillsTools: "Outils",
+  skillsQualities: "Qualités",
 
   seeRenders: "Voir les rendus",
   seeProject: "Voir le projet",
@@ -174,13 +175,14 @@ const en: typeof fr = {
   independentWork: "Independent work",
   internships: "Internships & site work",
   architectureGroup: "Architectural design",
-  architectureLead: "Floor plans and massing for housing, from the brief to the building permit application.",
   keyResult: "Key result",
   programFeatures: "What it does",
   programLink: "View the code on GitHub",
   readPublication: "Read the publication",
   skillsDomain: "Area",
   skillsItems: "Skills / standards",
+  skillsTools: "Tools",
+  skillsQualities: "Qualities",
 
   seeRenders: "See renders",
   seeProject: "See project",

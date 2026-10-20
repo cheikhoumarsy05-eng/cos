@@ -164,6 +164,12 @@ function CompactCard({ project, onOpen, rowRef, t }: { project: Project; onOpen:
       <button className="proj-title-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
         <h4>{project.title}</h4>
       </button>
+      {project.program && (
+        <>
+          <p className="proj-card-desc">{project.desc}</p>
+          <div className="tag-list">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
+        </>
+      )}
       <div className="proj-actions">
         <button className="proj-open arrow" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
           {project.images.length === 0 ? t.seeProject : project.program ? t.seeVisuals : project.drawings ? t.seeDrawings : t.seeRenders}
@@ -238,7 +244,9 @@ export default function Projects({ projects, t, compact }: { projects: Project[]
               </div>
               <p className="proj-desc">{project.desc}</p>
               <div className="proj-foot">
-                <div className="tag-list">{(project.program ? project.tags : project.tags.slice(0, 3)).map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
+                {/* Les bulles ne restent qu'aux programmes, où elles disent les outils ;
+                    sur les projets, le type et les caractéristiques suffisent. */}
+                {project.program && <div className="tag-list">{project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>}
                 <div className="proj-actions">
                   <button className="proj-open arrow" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
                     {project.images.length === 0 ? t.seeProject : project.program ? t.seeVisuals : project.drawings ? t.seeDrawings : t.seeRenders}

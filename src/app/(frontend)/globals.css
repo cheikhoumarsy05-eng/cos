@@ -1185,11 +1185,13 @@ a.lang-code:active { transform: translateY(1px); }
 /* Projets : rangées moins hautes. */
 .proj-row { padding: clamp(22px, 3vw, 40px) 0; }
 .proj-row .proj-frame { aspect-ratio: 16 / 9; }
+.proj-card-desc { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
 .proj-card .proj-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 
 /* Recherche : les travaux secondaires en cartes côte à côte. */
-.pub-rest { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); margin-top: clamp(36px, 4.5vw, 64px); padding-top: clamp(36px, 4.5vw, 64px); border-top: 1px solid rgba(255,255,255,0.18); }
-@media (max-width: 860px) { .pub-rest { grid-template-columns: 1fr; } }
+.pub-rest { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); }
+@media (max-width: 1000px) { .pub-rest { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 680px) { .pub-rest { grid-template-columns: 1fr; } }
 .pub-item.pub-card + .pub-item.pub-card { margin-top: 0; padding-top: 0; border-top: 0; }
 .pub-card .pub-title { font-size: clamp(22px, 2.4vw, 30px); line-height: 1.04; }
 .pub-card .pub-sub { font-size: 15px; margin-top: 10px; }
@@ -1212,5 +1214,19 @@ a.lang-code:active { transform: translateY(1px); }
 .xp-cols .xp-role { font-size: clamp(19px, 1.9vw, 24px); }
 .xp-cols .xp-col > .xp-group:first-child { padding-top: clamp(16px, 2vw, 22px); }
 
-/* Compétences : trois domaines par ligne. */
-@media (min-width: 1000px) { .expertise-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* Compétences : en-tête du tableau masqué à l'écran, gardé pour les lecteurs d'écran. */
+.skills-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Disposition en deux colonnes : tableau des domaines, encadré foncé à droite. */
+.skills-split { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start; margin-top: clamp(28px, 4vw, 48px); }
+@media (max-width: 900px) { .skills-split { grid-template-columns: 1fr; } }
+.skills-split .skills-table { margin-top: 0; }
+.skills-split .skills-domain { width: 38%; }
+.skills-aside { position: sticky; top: 96px; background: var(--ink); color: var(--on-ink); border-radius: var(--radius); padding: clamp(22px, 2.6vw, 32px); }
+@media (max-width: 900px) { .skills-aside { position: static; } }
+.skills-aside-title { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.skills-aside-block { margin-top: clamp(22px, 2.6vw, 30px); padding-top: clamp(18px, 2.2vw, 24px); border-top: 1px solid rgba(242, 240, 236, 0.22); }
+.skills-aside .tool { border-color: rgba(242, 240, 236, 0.35); color: var(--on-ink); }
+.skills-aside .tool.key { background: var(--on-ink); border-color: var(--on-ink); color: var(--ink); }
+.skills-aside .tools-note { color: var(--on-ink-mut); }
+.skills-qualities { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: var(--on-ink); }
+.skills-qualities li::before { content: "— "; color: var(--accent); }

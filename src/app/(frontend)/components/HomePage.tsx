@@ -259,7 +259,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* PROJETS */}
         <section className="section" id="projets">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2><p className="ed-lead">{st.projectsLead}</p></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2></div></div>
             {/* Les projets « mis en avant » sont les études de structure : ils
                 gardent la grande rangée. L'architecture suit, en grille serrée,
                 pour ne pas brouiller le profil d'ingénieur structures. */}
@@ -268,7 +268,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
               <div className="proj-group">
                 <div className="proj-group-head reveal">
                   <h3 className="proj-group-title">{t.architectureGroup}</h3>
-                  <p className="proj-group-lead">{t.architectureLead}</p>
                 </div>
                 <Projects projects={projects.filter((p) => !p.featured)} t={t} compact />
               </div>
@@ -284,7 +283,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 <p className="ed-index">{n()}</p>
                 <div className="ed-head-text">
                   <h2 className="ed-title">{st.programs ?? "Programmes"}</h2>
-                  {st.programsLead && <p className="ed-lead">{st.programsLead}</p>}
+                  
                 </div>
               </div>
               {/* CIRÉ garde la grande rangée ; les programmes suivants passent en cartes. */}
@@ -306,7 +305,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 <p className="ed-index">{n()}</p>
                 <div className="ed-head-text">
                   <h2 className="ed-title">{st.articles}</h2>
-                  {st.articlesLead && <p className="ed-lead">{st.articlesLead}</p>}
+                  
                 </div>
               </div>
               <ArticleCards articles={articles.map(toArticleCard)} locale={locale} t={t} />
@@ -325,7 +324,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* EXPÉRIENCE */}
         <section className="section" id="experience">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2><p className="ed-lead">{st.experienceLead}</p></div></div>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2></div></div>
             {/* Deux colonnes : l'activité indépendante à gauche, les stages à droite. */}
             <div className="xp xp-cols">
               <div className="xp-col">
@@ -384,40 +383,49 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         {/* COMPÉTENCES */}
         <section className="section" id="competences">
           <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2>{st.skillsLead && <p className="ed-lead">{st.skillsLead}</p>}</div></div>
-            <div className="expertise-grid reveal">
-              {(skills.domains ?? []).map((d: any) => (
-                <div className="expertise-card" key={d.id ?? d.title}>
-                  <div className="expertise-head"><h3 className="expertise-title">{d.title}</h3></div>
-                  {/* Les compétences sont saisies en une ligne séparée par des
-                      points médians : on les redécoupe en pastilles. */}
-                  <div className="tag-list skills-tags">
-                    {String(d.items ?? "").split("·").map((s: string) => s.trim()).filter(Boolean).map((s: string) => (
-                      <span className="tag" key={s}>{s}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            {(skills.tools ?? []).length > 0 && (
-              <div className="skills-tools reveal">
-                <h3 className="subhead">{skills.toolsLabel}</h3>
-                <div className="tool-grid">
-                  {(skills.tools as any[]).map((t: any) => (
-                    <span className={"tool" + (t.key ? " key" : "")} key={t.id ?? t.name}>{t.name}</span>
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2></div></div>
+            {/* Deux colonnes : les domaines en tableau à gauche, les outils et les
+                qualités dans un encadré à droite, qui reste visible au défilement.
+                Les compétences sont saisies en une ligne séparée par des points
+                médians : on les relie par « · ». */}
+            <div className="skills-split">
+              <table className="skills-table reveal">
+                <thead>
+                  <tr><th scope="col">{t.skillsDomain}</th><th scope="col">{t.skillsItems}</th></tr>
+                </thead>
+                <tbody>
+                  {(skills.domains ?? []).map((d: any) => (
+                    <tr key={d.id ?? d.title}>
+                      <th scope="row" className="skills-domain">{d.title}</th>
+                      <td className="skills-items">
+                        {String(d.items ?? "").split("·").map((x: string) => x.trim()).filter(Boolean).join(" · ")}
+                      </td>
+                    </tr>
                   ))}
-                </div>
-                {skills.toolsNote && <p className="tools-note small-label">{skills.toolsNote}</p>}
-              </div>
-            )}
-            {(skills.personal ?? []).length > 0 && (
-              <div className="skills-personal reveal">
-                <h3 className="subhead">{skills.personalLabel}</h3>
-                <div className="softskills">
-                  {(skills.personal ?? []).map((s: any) => <span className="s" key={s.id ?? s.value}>{s.value}</span>)}
-                </div>
-              </div>
-            )}
+                </tbody>
+              </table>
+              <aside className="skills-aside reveal">
+                {(skills.tools ?? []).length > 0 && (
+                  <div>
+                    <h3 className="skills-aside-title">{t.skillsTools}</h3>
+                    <div className="tool-grid">
+                      {(skills.tools as any[]).map((tool: any) => (
+                        <span className={"tool" + (tool.key ? " key" : "")} key={tool.id ?? tool.name}>{tool.name}</span>
+                      ))}
+                    </div>
+                    {skills.toolsNote && <p className="tools-note small-label">{skills.toolsNote}</p>}
+                  </div>
+                )}
+                {(skills.personal ?? []).length > 0 && (
+                  <div className="skills-aside-block">
+                    <h3 className="skills-aside-title">{t.skillsQualities}</h3>
+                    <ul className="skills-qualities">
+                      {(skills.personal as any[]).map((x: any) => <li key={x.id ?? x.value}>{x.value}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </aside>
+            </div>
           </div>
         </section>
         {/* FORMATION */}

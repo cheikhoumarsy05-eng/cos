@@ -15,8 +15,8 @@ export type PublicationItem = {
   sideFacts?: SideFact[] | null;
 };
 
-/* `compact` : carte des travaux secondaires — titre, source, résultat clé et
-   DOI ; les chiffres et le détail de la démarche restent au travail principal. */
+/* `compact` : carte — titre, source, résultat clé et DOI, sans les chiffres
+   ni le détail de la démarche. */
 function Publication({ item, t, compact }: { item: PublicationItem; t: Dict; compact?: boolean }) {
   return (
     <div className="pub">
@@ -68,37 +68,28 @@ function Publication({ item, t, compact }: { item: PublicationItem; t: Dict; com
 }
 
 /**
- * Les travaux publiés, tous visibles au scroll : le premier en grand, les
- * suivants en cartes côte à côte.
+ * Les travaux publiés, tous visibles au scroll, en cartes côte à côte.
  *
  * Ils étaient auparavant derrière un carrousel : deux des trois publications
  * n'étaient alors atteintes que par un clic sur une flèche ou un point, donc
- * vues par une minorité de visiteurs. Les cartes gardent l'essentiel — le
- * résultat clé et le DOI, seule preuve vérifiable par un tiers — et laissent
- * les chiffres et la démarche au travail principal.
+ * vues par une minorité de visiteurs. Les cartes gardent l'essentiel : le
+ * résultat clé et le DOI, seule preuve vérifiable par un tiers.
  *
  * Sans état ni écouteur, le composant reste rendu sur le serveur.
  */
 export default function PublicationList({ items, t }: { items: PublicationItem[]; t: Dict }) {
   if (items.length === 0) return null;
-  const [first, ...rest] = items;
 
   return (
     <div className="pub-list">
-      <div className="pub-item reveal">
-        <p className="pub-head"><span className="pub-num">01</span></p>
-        <Publication item={first} t={t} />
+      <div className="pub-rest">
+        {items.map((item, i) => (
+          <div className="pub-item pub-card reveal" key={item.id ?? item.title}>
+            <p className="pub-head"><span className="pub-num">{String(i + 1).padStart(2, "0")}</span></p>
+            <Publication item={item} t={t} compact />
+          </div>
+        ))}
       </div>
-      {rest.length > 0 && (
-        <div className="pub-rest">
-          {rest.map((item, i) => (
-            <div className="pub-item pub-card reveal" key={item.id ?? item.title}>
-              <p className="pub-head"><span className="pub-num">{String(i + 2).padStart(2, "0")}</span></p>
-              <Publication item={item} t={t} compact />
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

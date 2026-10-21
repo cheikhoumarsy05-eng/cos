@@ -20,6 +20,7 @@ import * as migration_20260914_202558_statistiques_telechargement_cv from './202
 import * as migration_20260915_231836_brouillons_articles from './20260915_231836_brouillons_articles';
 import * as migration_20260916_013928_statistiques_articles from './20260916_013928_statistiques_articles';
 import * as migration_20261017_151107_section_programmes from './20261017_151107_section_programmes';
+import * as migration_20261021_114645_engagement_associatif from './20261021_114645_engagement_associatif';
 
 export const migrations = [
   {
@@ -130,6 +131,11 @@ export const migrations = [
   {
     up: migration_20261017_151107_section_programmes.up,
     down: migration_20261017_151107_section_programmes.down,
-    name: '20261017_151107_section_programmes'
+    name: '20261017_151107_section_programmes',
+  },
+  {
+    up: migration_20261021_114645_engagement_associatif.up,
+    down: migration_20261021_114645_engagement_associatif.down,
+    name: '20261021_114645_engagement_associatif'
   },
 ];

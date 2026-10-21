@@ -261,7 +261,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2></div></div>
             {/* Comme dans le CV : les expériences professionnelles d'abord, puis
-                les activités indépendantes. Période à gauche, puis le poste,
+                les activités indépendantes, enfin l'engagement associatif. Période à gauche, puis le poste,
                 l'entreprise et les missions, derrière un filet vertical. */}
             <div className="xp-block">
               <h3 className="xp-block-title reveal">{t.professionalExperience}</h3>
@@ -296,6 +296,24 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 ))}
               </div>
             </div>
+            {(c.volunteering as any[]).length > 0 && (
+              <div className="xp-block">
+                <h3 className="xp-block-title reveal">{t.volunteering}</h3>
+                <div className="xp">
+                  {(c.volunteering as any[]).map((v) => (
+                    <div className="xp-row reveal" key={`as-${v.id}`}>
+                      <div className="xp-when">{v.when}</div>
+                      <div className="xp-body">
+                        <h4 className="xp-role">{v.role}</h4>
+                        <p className="xp-org">{v.org}{v.city ? <span className="xp-city"> · {v.city}</span> : null}</p>
+                        {(v.points ?? []).length === 0 && v.summary && <p className="xp-summary">{v.summary}</p>}
+                        <ul className="xp-points">{(v.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 

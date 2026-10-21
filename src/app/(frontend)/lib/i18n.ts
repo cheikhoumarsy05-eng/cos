@@ -79,8 +79,9 @@ const fr = {
 
   keyPoints: "Points clés",
   /* Intertitres de la section Expérience, dans l'ordre du CV : expériences
-     professionnelles, puis activités indépendantes. */
+     professionnelles, activités indépendantes, puis engagement associatif. */
   independentWork: "Activités indépendantes",
+  volunteering: "Engagement associatif",
   professionalExperience: "Expériences professionnelles",
   internships: "Stages & chantier",
   /* Intertitre des projets d'architecture, rangés sous les projets de
@@ -194,6 +195,7 @@ const en: typeof fr = {
 
   keyPoints: "Key points",
   independentWork: "Freelance work",
+  volunteering: "Volunteering",
   professionalExperience: "Professional experience",
   internships: "Internships & site work",
   architectureGroup: "Architectural design",

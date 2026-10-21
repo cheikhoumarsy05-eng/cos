@@ -72,6 +72,7 @@ export interface Config {
     articles: Article;
     experience: Experience;
     freelance: Freelance;
+    volunteering: Volunteering;
     education: Education;
     messages: Message;
     'cv-downloads': CvDownload;
@@ -90,6 +91,7 @@ export interface Config {
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     experience: ExperienceSelect<false> | ExperienceSelect<true>;
     freelance: FreelanceSelect<false> | FreelanceSelect<true>;
+    volunteering: VolunteeringSelect<false> | VolunteeringSelect<true>;
     education: EducationSelect<false> | EducationSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     'cv-downloads': CvDownloadsSelect<false> | CvDownloadsSelect<true>;
@@ -427,6 +429,33 @@ export interface Freelance {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteering".
+ */
+export interface Volunteering {
+  id: number;
+  order: number;
+  when: string;
+  role: string;
+  org: string;
+  /**
+   * Affichée après l'association. Laisser vide pour ne rien afficher.
+   */
+  city?: string | null;
+  /**
+   * Une ligne, affichée avant les actions. Optionnel.
+   */
+  summary?: string | null;
+  points?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "education".
  */
 export interface Education {
@@ -558,6 +587,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'freelance';
         value: number | Freelance;
+      } | null)
+    | ({
+        relationTo: 'volunteering';
+        value: number | Volunteering;
       } | null)
     | ({
         relationTo: 'education';
@@ -759,6 +792,26 @@ export interface FreelanceSelect<T extends boolean = true> {
     | {
         value?: T;
         strong?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteering_select".
+ */
+export interface VolunteeringSelect<T extends boolean = true> {
+  order?: T;
+  when?: T;
+  role?: T;
+  org?: T;
+  city?: T;
+  summary?: T;
+  points?:
+    | T
+    | {
+        value?: T;
         id?: T;
       };
   updatedAt?: T;

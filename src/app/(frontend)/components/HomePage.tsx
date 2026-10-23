@@ -65,7 +65,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       features: ((p.features ?? []) as any[]).map((f) => f.value),
       url: p.url ?? undefined,
       // Démonstrations interactives : reconnues au nom du programme.
-      demo: /^cir/i.test(p.name) ? "cire" : /oscillation/i.test(p.name) ? "oscillation" : undefined,
+      demo: /^cir/i.test(p.name) ? "cire" : /oscillation/i.test(p.name) ? "oscillation" : /^k[aà]ttan/i.test(p.name) ? "kattan" : undefined,
     };
   });
 

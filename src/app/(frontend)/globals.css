@@ -1314,6 +1314,12 @@ a.lang-code:active { transform: translateY(1px); }
 @media (hover: hover) { .proj-demo:hover { background: var(--accent); color: var(--on-ink); } }
 .proj-demo:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
+/* Démo vidéo : un écran de téléphone, centré, à côté de sa légende. */
+.video-demo { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(16px, 3vw, 40px); align-items: center; margin-top: clamp(14px, 2vw, 22px); }
+.video-demo-lead { margin: 0; font-size: 15px; line-height: 1.6; color: var(--stone-2); max-width: 42ch; }
+.video-demo-player { display: block; height: min(70dvh, 640px); width: auto; aspect-ratio: 390 / 844; border: 1px solid var(--line); border-radius: 22px; background: var(--paper-2); }
+@media (max-width: 640px) { .video-demo { grid-template-columns: 1fr; justify-items: center; } .video-demo-player { height: min(62dvh, 560px); } }
+
 /* Démo CIRÉ : deux travées côte à côte, puis la trace des deux réponses. */
 .tmd-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2vw, 24px); margin-top: clamp(14px, 2vw, 22px); }
 @media (max-width: 640px) { .tmd-panels { grid-template-columns: 1fr; } }

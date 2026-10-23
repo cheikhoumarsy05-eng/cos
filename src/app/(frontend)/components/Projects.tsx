@@ -203,16 +203,27 @@ function DemoDialog({ project, onClose, t }: { project: Project; onClose: () => 
         <div className="detail-head">
           <div>
             <span className="detail-num">{project.index}</span>
-            <p className="detail-kind">{t.demoKind}</p>
-            <h3 className="detail-title">{project.demo === "cire" ? t.tmdTitle : t.demoTitle}</h3>
+            <p className="detail-kind">{project.demo === "kattan" ? t.videoKind : t.demoKind}</p>
+            <h3 className="detail-title">{project.demo === "kattan" ? t.kattanTitle : project.demo === "cire" ? t.tmdTitle : t.demoTitle}</h3>
           </div>
           <button className="detail-close" onClick={() => dialogRef.current?.close()} aria-label={t.close}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
           </button>
         </div>
-        {project.demo === "cire" ? <TmdDemo t={t} /> : <OscillationDemo t={t} />}
+        {project.demo === "kattan" ? <VideoDemo t={t} /> : project.demo === "cire" ? <TmdDemo t={t} /> : <OscillationDemo t={t} />}
       </div>
     </dialog>
+  );
+}
+
+/* Kàttan : une courte vidéo, filmée sur un compte de démonstration, plutôt
+   qu'un lien vers le dépôt, qui reste privé. */
+function VideoDemo({ t }: { t: Dict }) {
+  return (
+    <div className="video-demo">
+      <p className="video-demo-lead">{t.kattanLead}</p>
+      <video className="video-demo-player" src="/demos/kattan.mp4" poster="/demos/kattan-poster.jpg" width={390} height={844} autoPlay muted loop playsInline controls />
+    </div>
   );
 }
 

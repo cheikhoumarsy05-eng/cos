@@ -210,7 +210,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .hero-grid { display: grid; gap: clamp(12px, 1.8vw, 20px); }
 .hero-top { display: block; }
 .hero-folio { display: flex; align-items: center; margin: 0 0 14px; font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
-.hero-name { font-family: var(--font-display); font-weight: 900; font-size: clamp(44px, min(9.5vw, 13vh), 190px); line-height: 0.88; letter-spacing: -0.04em; text-transform: uppercase; margin: 0; }
+.hero-name { font-family: var(--font-display); font-weight: 900; font-size: clamp(48px, min(10.45vw, 14.3vh), 209px); line-height: 0.88; letter-spacing: -0.04em; text-transform: uppercase; margin: 0; }
 .hero-name .accent { color: var(--accent); }
 .hero-sub { font-family: var(--font-body); font-size: clamp(16px, 1.7vw, 20px); line-height: 1.4; color: var(--ink-2); max-width: 42ch; margin-top: clamp(14px, 1.8vw, 20px); font-weight: 500; }
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: clamp(16px, 2vw, 24px); }
@@ -752,7 +752,7 @@ a.lang-code:active { transform: translateY(1px); }
 .art-cover-empty { position: absolute; inset: 0; background-image: linear-gradient(to right, color-mix(in srgb, var(--stone) 20%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--stone) 20%, transparent) 1px, transparent 1px); background-size: 26px 26px; opacity: 0.45; }
 
 .art-body { display: flex; flex-direction: column; flex: 1; padding: clamp(18px, 2vw, 26px); }
-.art-meta { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.art-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
 .art-cat { color: var(--accent); }
 .art-date { color: var(--stone); }
 .art-title { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(17px, 1.7vw, 21px); line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); margin-top: 12px; transition: color 0.2s var(--e-out); }

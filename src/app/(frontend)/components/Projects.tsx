@@ -162,18 +162,23 @@ function CompactCard({ project, onOpen, rowRef, actions, t }: { project: Project
       <button className="proj-media proj-media-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-label={fmt(t.openProject, { title: project.title })}>
         <MediaField project={project} t={t} />
       </button>
-      {/* Les programmes gardent leur numéro, à la suite de la grande rangée. */}
+      {/* Les programmes : leur numéro puis directement leur nom (« 01 CIRÉ »),
+          le domaine se lisant dans la description. Les projets gardent leur type. */}
       {project.program ? (
-        <div className="proj-head">
+        <div className="proj-head proj-head-title">
           <span className="proj-num">{project.index}</span>
-          <span className="proj-kind">{project.type}</span>
+          <button className="proj-title-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
+            <h4>{project.title}</h4>
+          </button>
         </div>
       ) : (
-        <span className="proj-kind">{project.type}</span>
+        <>
+          <span className="proj-kind">{project.type}</span>
+          <button className="proj-title-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
+            <h4>{project.title}</h4>
+          </button>
+        </>
       )}
-      <button className="proj-title-btn" onClick={(e) => onOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
-        <h4>{project.title}</h4>
-      </button>
       {project.program && (
         <>
           <p className="proj-card-desc">{project.desc}</p>
@@ -237,7 +242,7 @@ export default function Projects({ projects, t, compact }: { projects: Project[]
   const handleOpen = useCallback((id: string, trigger: HTMLElement) => { triggerRef.current = trigger; setOpenId(id); }, []);
   const actions = (project: Project) => (
     <div className="proj-actions">
-      <button className="proj-open arrow" onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
+      <button className={"proj-open" + (project.program ? "" : " arrow")} onClick={(e) => handleOpen(project.id, e.currentTarget)} aria-haspopup="dialog">
         {project.images.length === 0 ? t.seeProject : project.program ? t.seeVisuals : project.drawings ? t.seeDrawings : t.seeRenders}
       </button>
       {project.demo && (

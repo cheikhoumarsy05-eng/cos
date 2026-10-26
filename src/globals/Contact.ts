@@ -14,6 +14,7 @@ export const Contact: GlobalConfig = {
     { name: "phoneHref", type: "text", required: true, defaultValue: "+221766301088" },
     { name: "linkedin", type: "text", required: true, defaultValue: "https://www.linkedin.com/in/cheikh-oumar-sy-29912b23b" },
     { name: "github", type: "text", required: true, defaultValue: "https://github.com/cheikhoumarsy05-eng" },
+    { name: "instagram", type: "text", defaultValue: "https://www.instagram.com/cosinus28/", admin: { description: "Laisser vide pour masquer Instagram." } },
     { name: "location", type: "text", required: true, localized: true, defaultValue: "Dakar — Sénégal" },
   ],
 };

@@ -1,6 +1,7 @@
 import { Archivo, Spectral, Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "../(frontend)/globals.css";
+import ServiceWorkerCleanup from "./ServiceWorkerCleanup";
 
 /**
  * Enveloppe commune aux deux mises en page racine, française et anglaise.
@@ -63,6 +64,7 @@ export default function RootShell({ lang, children }: { lang: "fr" | "en"; child
             Les téléchargements du CV, eux, se comptent en base par la route
             « /cv » : un fichier statique n'exécute aucun script. */}
         <Analytics />
+        <ServiceWorkerCleanup />
       </body>
     </html>
   );

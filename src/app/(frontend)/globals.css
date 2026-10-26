@@ -238,7 +238,6 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 /* ABOUT */
 .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
 @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
-.about-lead { font-family: var(--font-display); font-weight: 800; font-size: clamp(26px, 3.6vw, 46px); line-height: 1.02; letter-spacing: -0.02em; text-transform: uppercase; max-width: 18ch; }
 .about-body { font-size: 17px; line-height: 1.65; color: var(--ink-2); max-width: 60ch; margin-top: 22px; }
 .about-body + .about-body { margin-top: 16px; }
 .about-stat { font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 2.4vw, 30px); line-height: 1.3; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); margin-top: clamp(26px, 4vw, 38px); max-width: 30ch; }
@@ -304,11 +303,6 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 
 /* SKILLS */
 .subhead { font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: 0; text-transform: uppercase; margin-bottom: 18px; }
-.tool-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-.tool { font-family: var(--font-display); font-weight: 600; padding: 9px 15px; border: 2px solid var(--line); border-radius: 2px; font-size: 13px; letter-spacing: 0.02em; text-transform: uppercase; transition: border-color 0.2s var(--e-out), color 0.2s var(--e-out), background 0.2s var(--e-out); }
-.tool.key { border-color: var(--ink); background: var(--ink); color: var(--on-ink); }
-@media (hover: hover) { .tool:hover { border-color: var(--accent); color: var(--accent); } }
-@media (hover: hover) { .tool.key:hover { background: var(--accent); border-color: var(--accent); color: var(--on-ink); } }
 .softskills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
 .softskills .s { font-family: var(--font-body); padding: 8px 14px; border: 1px solid var(--line); border-radius: 2px; font-size: 14px; color: var(--stone-2); }
 
@@ -370,7 +364,6 @@ a.lang-code:active { transform: translateY(1px); }
 .contact-coords .row:last-child { border-bottom: 1px solid var(--line); }
 .contact-coords .k { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone-2); margin-bottom: 6px; }
 .contact-coords .v { font-size: 17px; }
-.cc-links { display: flex; gap: 20px; flex-wrap: wrap; }
 
 /* FOOTER */
 .foot { border-top: 3px solid var(--ink); padding-block: 36px; }
@@ -504,9 +497,19 @@ a.lang-code:active { transform: translateY(1px); }
 .proj-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 900px) { .proj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .proj-grid { grid-template-columns: 1fr; } }
+/* Cartes côte à côte : un filet vertical entre elles, comme entre les
+   publications, pour qu'elles ne se collent pas. Sur téléphone, dans les
+   rangées qui défilent, chacune a son cadre (voir « Accueil allégé »). */
+@media (min-width: 901px) {
+  .proj-grid-3 > .proj-card:not(:nth-child(3n + 1)), .proj-grid-2 > .proj-card:nth-child(2n) { border-left: 1px solid var(--line); padding-left: clamp(20px, 3vw, 36px); }
+}
+@media (min-width: 561px) and (max-width: 900px) {
+  .proj-grid > .proj-card:nth-child(2n) { border-left: 1px solid var(--line); padding-left: clamp(20px, 3vw, 36px); }
+}
 .proj-card { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 .proj-card .proj-media { width: 100%; margin-bottom: 4px; }
 .proj-card .proj-title-btn { margin: 0; }
+.proj-head-title { align-items: center; }
 .proj-card .proj-title-btn h4 { font-family: var(--font-display); font-weight: 900; font-size: clamp(20px, 2.2vw, 26px); line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; transition: color 0.2s var(--e-out); }
 @media (hover: hover) { .proj-card .proj-title-btn:hover h4 { color: var(--accent); } }
 
@@ -672,7 +675,6 @@ a.lang-code:active { transform: translateY(1px); }
 /* Outils & logiciels : bloc autonome sous le tableau, pastilles pleines pour la maîtrise quotidienne. */
 .skills-tags { margin-top: clamp(16px, 2vw, 22px); }
 .skills-tools { margin-top: clamp(34px, 4vw, 52px); }
-.tools-note { margin: 14px 0 0; }
 .skills-personal { margin-top: clamp(34px, 4vw, 52px); }
 
 @media (max-width: 760px) {
@@ -1116,6 +1118,9 @@ a.lang-code:active { transform: translateY(1px); }
 @media (hover: hover) {
   .proj-open:hover, .art-link:hover .art-more { background: var(--accent); color: var(--on-ink); }
 }
+/* Publications : même bouton que le Journal ; ici le bouton est le lien. */
+@media (hover: hover) { .pub-more:hover { background: var(--accent); color: var(--on-ink); } }
+.pub-more:active { background: var(--accent); color: var(--on-ink); }
 /* La carte article étant elle-même le lien, la pression se lit sur elle. */
 .proj-open:active, .art-link:active .art-more { background: var(--accent); color: var(--on-ink); }
 
@@ -1194,6 +1199,11 @@ a.lang-code:active { transform: translateY(1px); }
 .proj-media-col .proj-media-btn { display: block; width: 100%; text-align: left; }
 .proj-card-desc { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
 .proj-card .proj-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+/* Dans une carte, les boutons tiennent côte à côte : compacts et nivelés. */
+.proj-card .proj-actions { row-gap: 10px; column-gap: 6px; }
+/* Boutons nivelés : même hauteur, même marge intérieure, même corps de texte. */
+.proj-card .proj-open, .proj-card .proj-demo, .proj-card .proj-git { box-sizing: border-box; height: 34px; min-height: 0; padding: 0 9px; font-size: 12px; line-height: 1; gap: 5px; letter-spacing: 0.01em; }
+.proj-card .proj-demo svg, .proj-card .proj-git svg { width: 12px; height: 12px; }
 
 /* Recherche : les travaux secondaires en cartes côte à côte. */
 .pub-rest { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); }
@@ -1203,6 +1213,10 @@ a.lang-code:active { transform: translateY(1px); }
 .pub-card .pub-title { font-size: clamp(22px, 2.4vw, 30px); line-height: 1.04; }
 .pub-card .pub-sub { font-size: 15px; margin-top: 10px; }
 .pub-card .pub-actions { margin-top: clamp(20px, 2.6vw, 28px); }
+/* Publications côte à côte : un filet vertical entre elles, pour qu'elles ne
+   se collent pas. Sur téléphone, chacune a son cadre (voir « Accueil allégé »). */
+@media (min-width: 1001px) { .pub-rest > .pub-card + .pub-card { border-left: 1px solid rgba(255, 255, 255, 0.18); padding-left: clamp(28px, 4vw, 56px); } }
+@media (min-width: 761px) and (max-width: 1000px) { .pub-rest > .pub-card:nth-child(2n) { border-left: 1px solid rgba(255, 255, 255, 0.18); padding-left: clamp(28px, 4vw, 56px); } }
 
 /* Articles : une rangée de cartes, l'image au-dessus du texte. */
 .art-wrap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 2.6vw, 32px); }
@@ -1225,20 +1239,33 @@ a.lang-code:active { transform: translateY(1px); }
 
 /* Compétences : en-tête du tableau masqué à l'écran, gardé pour les lecteurs d'écran. */
 .skills-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-/* Disposition en deux colonnes : tableau des domaines, encadré foncé à droite. */
-.skills-split { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start; margin-top: clamp(28px, 4vw, 48px); }
-@media (max-width: 900px) { .skills-split { grid-template-columns: 1fr; } }
-.skills-split .skills-table { margin-top: 0; }
-.skills-split .skills-domain { width: 38%; }
-.skills-aside { position: sticky; top: 96px; background: var(--ink); color: var(--on-ink); border-radius: var(--radius); padding: clamp(22px, 2.6vw, 32px); }
-@media (max-width: 900px) { .skills-aside { position: static; } }
-.skills-aside-title { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
-.skills-aside-block { margin-top: clamp(22px, 2.6vw, 30px); padding-top: clamp(18px, 2.2vw, 24px); border-top: 1px solid rgba(242, 240, 236, 0.22); }
-.skills-aside .tool { border-color: rgba(242, 240, 236, 0.35); color: var(--on-ink); }
-.skills-aside .tool.key { background: var(--on-ink); border-color: var(--on-ink); color: var(--ink); }
-.skills-aside .tools-note { color: var(--on-ink-mut); }
-.skills-qualities { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: var(--on-ink); }
-.skills-qualities li::before { content: "— "; color: var(--accent); }
+/* Compétences d'abord, sur toute la largeur ; les logiciels dessous. */
+.skills-domain { width: 32%; }
+
+/* LOGICIELS — encadré en bas de la section Compétences : une famille par bande,
+   son nom à gauche, ses logiciels en grille serrée (noms courts, logo à gauche).
+   Sur téléphone, le nom de famille passe au-dessus et les logiciels s'enchaînent
+   en pastilles, pour que l'encadré reste court. */
+.soft { margin-top: clamp(40px, 5vw, 64px); }
+.soft-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px clamp(20px, 4vw, 48px); padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+.soft-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(24px, 3vw, 36px); line-height: 1; letter-spacing: -0.02em; }
+.soft-box { margin-top: clamp(18px, 2.4vw, 26px); border: 1px solid var(--line); }
+.soft-group { display: grid; grid-template-columns: minmax(150px, 0.5fr) minmax(0, 2fr); gap: clamp(14px, 2.4vw, 32px); padding: clamp(12px, 1.6vw, 18px) clamp(18px, 2.6vw, 30px); }
+.soft-group + .soft-group { border-top: 1px solid var(--line); }
+.soft-group-label { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); padding-top: 10px; }
+.soft-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); column-gap: clamp(16px, 2.4vw, 32px); }
+.soft-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.soft-logo { flex: none; width: 32px; height: 32px; display: grid; place-items: center; }
+.soft-logo svg, .soft-logo img { width: 100%; height: 100%; }
+.soft-name { font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.3vw, 16px); line-height: 1.2; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 760px) {
+  .soft-group { grid-template-columns: 1fr; gap: 10px; padding: 14px; }
+  .soft-group-label { padding-top: 0; font-size: 11px; }
+  .soft-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .soft-item { gap: 7px; padding: 4px 10px 4px 4px; border: 1px solid var(--line); border-radius: 2px; background: var(--paper); }
+  .soft-logo { width: 24px; height: 24px; }
+  .soft-name { font-size: 13px; }
+}
 
 /* Recherche & outils de calcul : les publications gardent leur fond d'encre,
    dans un encadré, au sein d'une section claire. */
@@ -1261,21 +1288,27 @@ a.lang-code:active { transform: translateY(1px); }
 .skills-table tbody tr:nth-child(6) .skills-ic svg * { transition-delay: 0.75s; }
 @media (prefers-reduced-motion: reduce) { .skills-ic svg * { stroke-dashoffset: 0; transition: none; } }
 
-/* Compétences sur téléphone : l'encadré des outils d'abord, chaque domaine
-   avec son titre en petites capitales orange sur toute la largeur. */
-@media (max-width: 900px) {
-  .skills-aside { order: -1; }
-  .skills-qualities { display: block; font-size: 14px; line-height: 1.55; }
-  .skills-qualities li { display: inline; }
-  .skills-qualities li::before { content: none; }
-  .skills-qualities li + li::before { content: " · "; color: var(--on-ink-mut); }
-  .skills-aside .tool-grid { gap: 6px; }
-  .skills-aside .tool { padding: 6px 10px; font-size: 12px; }
+/* Logiciels : à l'apparition de l'encadré, chaque logiciel monte et se pose,
+   l'un après l'autre (--i), son logo un léger temps après lui. Au survol, le
+   logo se soulève. */
+.soft .soft-item { opacity: 0; transform: translateY(10px); transition: opacity 0.45s var(--e-out), transform 0.45s var(--e-out); transition-delay: calc(var(--i, 0) * 45ms + 120ms); }
+.soft .soft-logo { transform: scale(0.6) rotate(-8deg); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transition-delay: calc(var(--i, 0) * 45ms + 220ms); }
+.soft.in .soft-item { opacity: 1; transform: none; }
+.soft.in .soft-logo { transform: none; }
+.soft-group-label { transition: color 0.3s var(--e-out); }
+@media (hover: hover) {
+  .soft.in .soft-item:hover .soft-logo { transform: translateY(-3px) scale(1.08); transition-delay: 0s; transition-duration: 0.2s; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .soft .soft-item, .soft .soft-logo { opacity: 1; transform: none; transition: none; }
+}
+
+/* Compétences sur téléphone : chaque domaine avec son titre en petites
+   capitales orange sur toute la largeur. */
 @media (max-width: 760px) {
-  .skills-split .skills-domain { width: auto; font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-  .skills-split .skills-table tr { padding: 12px 0; }
-  .skills-split .skills-items { color: var(--ink); font-size: 14.5px; line-height: 1.5; margin-top: 8px; padding-left: 46px; }
+  .skills-table .skills-domain { width: auto; font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .skills-table tr { padding: 12px 0; }
+  .skills-table .skills-items { color: var(--ink); font-size: 14.5px; line-height: 1.5; margin-top: 8px; padding-left: 46px; }
 }
 
 /* Monogramme de l'en-tête : il pivote légèrement au survol de la marque. */
@@ -1310,7 +1343,7 @@ a.lang-code:active { transform: translateY(1px); }
 .osc-readout { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: var(--stone-2); }
 
 /* Bouton « Voir la démo », à côté de « Voir les visuels ». */
-.proj-demo { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 12px; border: 2px solid var(--accent); border-radius: 999px; color: var(--accent); font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.03em; text-transform: uppercase; transition: background 0.2s var(--e-out), color 0.2s var(--e-out); }
+.proj-demo { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 12px; border: 2px solid var(--accent); border-radius: var(--radius); color: var(--accent); font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.03em; text-transform: uppercase; transition: background 0.2s var(--e-out), color 0.2s var(--e-out); }
 @media (hover: hover) { .proj-demo:hover { background: var(--accent); color: var(--on-ink); } }
 .proj-demo:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
@@ -1347,8 +1380,95 @@ a.lang-code:active { transform: translateY(1px); }
 .tmd-key-tmd::before { background: var(--ink); }
 .tmd-legend .osc-replay { margin-left: auto; }
 
-/* Pied de page : LinkedIn et GitHub en icônes carrées. */
+/* Pied de page : LinkedIn, GitHub et Instagram en icônes carrées. */
 .foot-icon { width: 40px; height: 40px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 2px; color: var(--ink); transition: background 0.2s var(--e-out), color 0.2s var(--e-out), border-color 0.2s var(--e-out); }
 @media (hover: hover) { .foot-icon:hover { background: var(--accent); border-color: var(--accent); color: var(--on-ink); } }
 .foot-icon:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .foot-links { gap: 10px; }
+
+/* ============================================================
+   ACCUEIL ALLÉGÉ — aperçus, pages détaillées, téléphone
+   ============================================================ */
+/* Bouton vers la page complète, sous un aperçu. */
+.see-all { margin-top: clamp(24px, 3vw, 36px); }
+/* Pages Projets et Recherche : le retour au portfolio, au-dessus du titre. */
+.subpage-back { margin: 0 0 clamp(18px, 2.4vw, 28px); font-size: 14px; }
+/* Aperçu des programmes : la description sur deux lignes, sans les outils. */
+.preview .proj-card .tag-list { display: none; }
+.preview .proj-card-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* Programmes nivelés : les cartes partagent les mêmes lignes de grille
+   (sous-grille) — titre, description, image, boutons. Chaque ligne prend la
+   hauteur de la plus haute des cartes : les images et les boutons s'alignent
+   d'une carte à l'autre, sans grand blanc sous la description. */
+.preview .proj-grid { grid-template-rows: repeat(4, auto); row-gap: 0; }
+.preview .proj-grid > .proj-card { grid-row: span 4; display: grid; grid-template-rows: subgrid; row-gap: 10px; align-content: start; justify-items: start; }
+.preview .proj-card.is-program .proj-media { margin: 0; width: 100%; align-self: start; }
+.preview .proj-card.is-program .proj-actions { margin-top: 0; align-self: start; }
+
+@media (max-width: 760px) {
+  /* Défilement latéral : une seule rangée de cartes, la suivante dépasse du
+     bord pour inviter à glisser. La rangée déborde jusqu'aux bords de l'écran. */
+  .hscroll .proj-grid, .hscroll .pub-rest, .art-wrap {
+    display: flex; flex-direction: row; align-items: stretch; gap: 14px; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .hscroll .proj-grid::-webkit-scrollbar, .hscroll .pub-rest::-webkit-scrollbar, .art-wrap::-webkit-scrollbar { display: none; }
+  /* Dans l'encadré sombre des publications, la rangée reste dans le cadre. */
+  .hscroll .pub-rest { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; }
+  .hscroll .pub-rest > .pub-card { border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 2px; padding: 18px 16px; }
+  .hscroll .proj-grid > .proj-card { border: 1px solid var(--line); border-radius: 2px; padding: 12px 10px; }
+  /* La rangée nivelée des programmes défile aussi, en grille sur une ligne. */
+  .hscroll.preview .proj-grid { display: grid; grid-auto-flow: column; grid-auto-columns: 82%; grid-template-columns: none; grid-template-rows: repeat(4, auto); column-gap: 14px; }
+  .hscroll .proj-grid > *, .hscroll .pub-rest > *, .art-wrap > * { flex: 0 0 82%; min-width: 0; scroll-snap-align: start; }
+  /* Hors de l'écran sur le côté, une carte ne déclencherait jamais son
+     apparition : dans une rangée qui défile, elles sont visibles d'emblée. */
+  .hscroll .reveal, .art-wrap .reveal { opacity: 1; transform: none; }
+
+  /* Espacements resserrés : les grands blancs sont faits pour l'ordinateur. */
+  .section { padding-block: 40px; }
+  .section:not([class*="band-"]):has(+ .section:not([class*="band-"])) { padding-bottom: 22px; }
+  .section:not([class*="band-"]) + .section:not([class*="band-"]) { padding-top: 22px; }
+  .ed-head { margin-bottom: 24px; padding-top: 14px; }
+  .xp-block + .xp-block { margin-top: 30px; }
+  .proj-group { margin-top: 36px; }
+  .proj-group-tight { margin-top: 22px; }
+  .see-all { margin-top: 20px; }
+}
+
+/* ============================================================
+   EXPÉRIENCE — frise verticale de cartes chiffrées
+   ============================================================ */
+.tl { list-style: none; margin: 0; padding: 0; }
+.tl-item { position: relative; padding-left: 34px; }
+/* Le rail : il relie les points, et s'arrête au dernier. */
+.tl-item::before { content: ""; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+.tl-item:first-child::before { top: 22px; }
+.tl-item:last-child::before { bottom: auto; height: 22px; }
+.tl-item:only-child::before { display: none; }
+.tl-dot { position: absolute; left: 5px; top: 20px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--paper); }
+.band-paper2 .tl-dot { box-shadow: 0 0 0 4px var(--paper-2); }
+.is-ongoing .tl-dot { background: var(--paper); border: 2px solid var(--accent); box-sizing: border-box; }
+.tl-item + .tl-item { margin-top: 14px; }
+.tl-card { display: flex; gap: clamp(14px, 2vw, 26px); align-items: flex-start; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(14px, 1.8vw, 20px) clamp(14px, 2vw, 24px); }
+.tl-fig { flex: none; min-width: clamp(64px, 8vw, 96px); margin: 0; }
+.tl-num { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(26px, 3vw, 38px); line-height: 1; letter-spacing: -0.02em; color: var(--accent); }
+.tl-fig-label { display: block; margin-top: 6px; font-size: 12px; line-height: 1.3; color: var(--stone-2); }
+.tl-body { min-width: 0; }
+.tl-when { margin: 0 0 4px; font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.tl-role { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(16px, 1.6vw, 19px); line-height: 1.2; color: var(--ink); }
+.tl-org { margin: 4px 0 0; font-size: 14px; color: var(--stone-2); }
+.tl-desc { margin: 8px 0 0; max-width: 62ch; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+@media (max-width: 560px) {
+  .tl-item { padding-left: 28px; }
+  .tl-item::before { left: 8px; }
+  .tl-dot { left: 2px; }
+  /* Sur téléphone, le chiffre et sa légende passent sur une ligne au-dessus
+     du texte, qui garde ainsi toute la largeur de la carte. */
+  .tl-card { flex-direction: column; gap: 8px; padding: 12px 14px; }
+  .tl-fig { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+  .tl-num { font-size: 24px; }
+  .tl-fig-label { margin-top: 0; }
+  .tl-desc { font-size: 14px; }
+}

@@ -89,7 +89,7 @@ const run = async () => {
     portraitSrc: "/img/portrait.webp", portraitFallback: "/img/portrait.jpg",
     portraitAlt: "Cheikh Oumar Sy, ingénieur en génie civil",
     facts: [
-      { k: "Langues", v: "Français · Anglais technique · Wolof" },
+      { k: "Langues", v: "Français · Anglais · Wolof" },
       { k: "Permis", v: "Permis B" },
       { k: "Outils clés", v: "RSA · CYPECAD · Revit · Python" },
     ],
@@ -185,7 +185,7 @@ const run = async () => {
   await payload.updateGlobal({ slug: "contact", data: {
     title: "Disponible pour un stage de 4 à 6 mois.",
     lead: "Calcul des structures, bureau de contrôle technique ou recherche appliquée — parlons de la mission qui vous attend. Réponse rapide, du bureau d'études au terrain.",
-    email: "cheikhoumarsy05@gmail.com", phone: "+221 76 630 10 88", phoneHref: "+221766301088",
+    email: "cheikhoumarsy05@gmail.com", phone: "+221 76 630 10 68", phoneHref: "+221766301068",
     linkedin: "https://www.linkedin.com/in/cheikh-oumar-sy-29912b23b", github: "https://github.com/cheikhoumarsy05-eng",
     location: "Dakar — Sénégal",
   } });

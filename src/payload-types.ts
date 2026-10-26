@@ -376,6 +376,14 @@ export interface Experience {
    * 2 à 3 lignes, affichées avant les missions. Optionnel.
    */
   summary?: string | null;
+  /**
+   * Ex. : 222, 15+, R+7. Laisser vide pour ne rien afficher.
+   */
+  figure?: string | null;
+  /**
+   * Ex. : villas suivies.
+   */
+  figureLabel?: string | null;
   points?:
     | {
         value: string;
@@ -408,6 +416,14 @@ export interface Freelance {
   when: string;
   title: string;
   body: string;
+  /**
+   * Ex. : 222, 15+, R+7. Laisser vide pour ne rien afficher.
+   */
+  figure?: string | null;
+  /**
+   * Ex. : villas suivies.
+   */
+  figureLabel?: string | null;
   points?:
     | {
         value: string;
@@ -445,6 +461,14 @@ export interface Volunteering {
    * Une ligne, affichée avant les actions. Optionnel.
    */
   summary?: string | null;
+  /**
+   * Ex. : 222, 15+, R+7. Laisser vide pour ne rien afficher.
+   */
+  figure?: string | null;
+  /**
+   * Ex. : villas suivies.
+   */
+  figureLabel?: string | null;
   points?:
     | {
         value: string;
@@ -756,6 +780,8 @@ export interface ExperienceSelect<T extends boolean = true> {
   org?: T;
   city?: T;
   summary?: T;
+  figure?: T;
+  figureLabel?: T;
   points?:
     | T
     | {
@@ -781,6 +807,8 @@ export interface FreelanceSelect<T extends boolean = true> {
   when?: T;
   title?: T;
   body?: T;
+  figure?: T;
+  figureLabel?: T;
   points?:
     | T
     | {
@@ -808,6 +836,8 @@ export interface VolunteeringSelect<T extends boolean = true> {
   org?: T;
   city?: T;
   summary?: T;
+  figure?: T;
+  figureLabel?: T;
   points?:
     | T
     | {
@@ -1196,6 +1226,10 @@ export interface Contact {
   phoneHref: string;
   linkedin: string;
   github: string;
+  /**
+   * Laisser vide pour masquer Instagram.
+   */
+  instagram?: string | null;
   location: string;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1430,6 +1464,7 @@ export interface ContactSelect<T extends boolean = true> {
   phoneHref?: T;
   linkedin?: T;
   github?: T;
+  instagram?: T;
   location?: T;
   updatedAt?: T;
   createdAt?: T;

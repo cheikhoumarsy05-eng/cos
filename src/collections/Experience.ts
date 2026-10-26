@@ -13,6 +13,10 @@ export const Experience: CollectionConfig = {
     { name: "org", type: "text", required: true, label: "Organisation" },
     { name: "city", type: "text", localized: true, label: "Ville", admin: { description: "Affichée après l'organisation. Laisser vide pour ne rien afficher." } },
     { name: "summary", type: "textarea", localized: true, label: "Description courte", admin: { description: "2 à 3 lignes, affichées avant les missions. Optionnel." } },
+    /* Chiffre fort de la carte, dans la frise de la section Expérience :
+       « 222 » + « villas suivies ». Laisser vide pour une carte sans chiffre. */
+    { name: "figure", type: "text", label: "Chiffre fort", admin: { description: "Ex. : 222, 15+, R+7. Laisser vide pour ne rien afficher." } },
+    { name: "figureLabel", type: "text", localized: true, label: "Légende du chiffre", admin: { description: "Ex. : villas suivies." } },
     {
       name: "points",
       type: "array",

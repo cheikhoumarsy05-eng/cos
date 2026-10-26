@@ -1,4 +1,4 @@
-import { LOCALES, LOCALE_NAMES, localeHref, articleHref, type Locale } from "../lib/i18n";
+import { LOCALES, LOCALE_NAMES, localeHref, articleHref, pageHref, type Locale } from "../lib/i18n";
 
 /**
  * Bascule de langue : les deux codes, côte à côte.
@@ -20,12 +20,15 @@ export default function LangSwitch({
   label,
   variant = "topnav",
   slug,
+  path,
 }: {
   locale: Locale;
   label: string;
   variant?: "topnav" | "overlay";
   /** Sur une page d'article, bascule vers le même article dans l'autre langue. */
   slug?: string;
+  /** Sur une page du site (« projets », « programmes »), bascule vers la même page. */
+  path?: string;
 }) {
   return (
     <span
@@ -46,7 +49,7 @@ export default function LangSwitch({
             ) : (
               <a
                 className="lang-code"
-                href={slug ? articleHref(code, slug) : localeHref(code)}
+                href={slug ? articleHref(code, slug) : path ? pageHref(code, path) : localeHref(code)}
                 hrefLang={code}
                 lang={code}
                 title={LOCALE_NAMES[code]}

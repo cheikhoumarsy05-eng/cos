@@ -23,6 +23,8 @@ function revalidateHome(payload?: Payload) {
     // « /en », il faut donc invalider les deux entrées statiques.
     revalidatePath("/");
     revalidatePath("/en");
+    // Les pages Projets et Programmes lisent les mêmes contenus que l'accueil.
+    for (const path of ["/projets", "/programmes", "/en/projets", "/en/programmes"]) revalidatePath(path);
     payload?.logger?.info?.("Revalidated homepage (/ and /en) after CMS change");
   } catch {
     // No Next.js request context (seed / migrate / CLI). Safe to ignore.

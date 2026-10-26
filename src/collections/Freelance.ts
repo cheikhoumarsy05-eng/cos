@@ -11,6 +11,10 @@ export const Freelance: CollectionConfig = {
     { name: "when", type: "text", required: true, localized: true, label: "Période" },
     { name: "title", type: "text", required: true, localized: true, label: "Titre" },
     { name: "body", type: "textarea", required: true, localized: true, label: "Description" },
+    /* Chiffre fort de la carte, dans la frise de la section Expérience :
+       « 222 » + « villas suivies ». Laisser vide pour une carte sans chiffre. */
+    { name: "figure", type: "text", label: "Chiffre fort", admin: { description: "Ex. : 222, 15+, R+7. Laisser vide pour ne rien afficher." } },
+    { name: "figureLabel", type: "text", localized: true, label: "Légende du chiffre", admin: { description: "Ex. : villas suivies." } },
     /* Mêmes champs que la collection Expérience : les deux listes sont rendues
        dans une même section, une entrée indépendante doit pouvoir être aussi
        documentée qu'un stage. */

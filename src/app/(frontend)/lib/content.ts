@@ -198,6 +198,44 @@ export function toProject(p: any) {
 }
 
 /**
+ * Les programmes empruntent la fiche des projets : même rangée, même ouverture
+ * animée, mêmes bulles d'outils. Seules les figures changent : montrées
+ * entières, un graphique ou une capture de téléphone ne se recadre pas.
+ * Partagé par l'accueil (aperçu) et la page Programmes (liste complète).
+ */
+export function toProgramProjects(programs: any[]) {
+  // Légende courte, comme celle des projets : « Écran Parcours », pas la
+  // description entière, qui couvrirait la figure sur téléphone.
+  const shortCaption = (alt: string | undefined, fallback: string) => {
+    const head = (alt ?? "").split(/[:,]/)[0].trim();
+    return head && head.length <= 34 ? head : fallback;
+  };
+  return programs.map((p, i) => {
+    const images = ((p.images ?? []) as any[]).flatMap((im) => {
+      const src = mediaUrl(im.upload) ?? im.src;
+      return src ? [{ src, alt: mediaAlt(im.upload) ?? im.alt ?? "" }] : [];
+    });
+    return {
+      id: `programme-${p.id}`,
+      index: String(i + 1).padStart(2, "0"),
+      type: p.category,
+      title: p.name,
+      // Les outils sont déjà dans les bulles : pas de ligne de caractéristiques.
+      specs: [],
+      desc: p.summary,
+      tags: String(p.stack).split("·").map((s) => s.trim()).filter(Boolean),
+      images,
+      fieldLabel: shortCaption(images[0]?.alt, p.category),
+      program: true,
+      features: ((p.features ?? []) as any[]).map((f) => f.value),
+      url: p.url ?? undefined,
+      // Démonstrations interactives : reconnues au nom du programme.
+      demo: /^cir/i.test(p.name) ? ("cire" as const) : /oscillation/i.test(p.name) ? ("oscillation" as const) : /^k[aà]ttan/i.test(p.name) ? ("kattan" as const) : undefined,
+    };
+  });
+}
+
+/**
  * Nombre de mots d'un contenu Lexical.
  *
  * Le texte se trouve dans les nœuds `text` disséminés dans l'arbre : titres,

@@ -15,7 +15,7 @@ export type PublicationItem = {
   sideFacts?: SideFact[] | null;
 };
 
-/* `compact` : carte — titre, source, résultat clé et DOI, sans les chiffres
+/* `compact` : carte — titre, source et DOI, sans le résultat clé, les chiffres
    ni le détail de la démarche. */
 function Publication({ item, t, compact }: { item: PublicationItem; t: Dict; compact?: boolean }) {
   return (
@@ -40,14 +40,16 @@ function Publication({ item, t, compact }: { item: PublicationItem; t: Dict; com
             ))}
           </ul>
         )}
-        {item.keyResult && (
+        {/* Sur l'accueil, la carte se limite au titre, à la source et au DOI :
+            le résultat clé se lit dans la publication. */}
+        {!compact && item.keyResult && (
           <p className="pub-keyresult">
             <span className="pub-keyresult-k">{t.keyResult}</span>
             {item.keyResult}
           </p>
         )}
         <div className="pub-actions">
-          <a className="btn btn-primary arrow" href={item.doiUrl} target="_blank" rel="noopener">
+          <a className="art-more arrow pub-more" href={item.doiUrl} target="_blank" rel="noopener">
             {t.readPublication}
           </a>
           <span className="pub-doi">DOI · {item.doi}</span>

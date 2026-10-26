@@ -21,6 +21,8 @@ import * as migration_20260915_231836_brouillons_articles from './20260915_23183
 import * as migration_20260916_013928_statistiques_articles from './20260916_013928_statistiques_articles';
 import * as migration_20261017_151107_section_programmes from './20261017_151107_section_programmes';
 import * as migration_20261021_114645_engagement_associatif from './20261021_114645_engagement_associatif';
+import * as migration_20261025_213901_contact_instagram from './20261025_213901_contact_instagram';
+import * as migration_20261025_235438_experience_chiffres from './20261025_235438_experience_chiffres';
 
 export const migrations = [
   {
@@ -136,6 +138,16 @@ export const migrations = [
   {
     up: migration_20261021_114645_engagement_associatif.up,
     down: migration_20261021_114645_engagement_associatif.down,
-    name: '20261021_114645_engagement_associatif'
+    name: '20261021_114645_engagement_associatif',
+  },
+  {
+    up: migration_20261025_213901_contact_instagram.up,
+    down: migration_20261025_213901_contact_instagram.down,
+    name: '20261025_213901_contact_instagram',
+  },
+  {
+    up: migration_20261025_235438_experience_chiffres.up,
+    down: migration_20261025_235438_experience_chiffres.down,
+    name: '20261025_235438_experience_chiffres'
   },
 ];

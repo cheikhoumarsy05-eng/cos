@@ -2,13 +2,15 @@ import Interactions from "./Interactions";
 import Projects from "./Projects";
 import PublicationList from "./PublicationList";
 import Image from "next/image";
-import { getContent, getArticles, mediaUrl, mediaAlt, toProject, toArticleCard } from "../lib/content";
+import { getContent, getArticles, mediaUrl, mediaAlt, toProject, toProgramProjects, toArticleCard } from "../lib/content";
 import LangSwitch from "./LangSwitch";
 import ArticleCards from "./ArticleCards";
 import ContactForm from "./ContactForm";
 import SkillIcon from "./SkillIcons";
 import Monogram from "./Monogram";
-import { dict, type Locale } from "../lib/i18n";
+import SiteFooter from "./SiteFooter";
+import SoftwareList from "./SoftwareList";
+import { dict, pageHref, type Locale } from "../lib/i18n";
 import { SITE_URL } from "@/lib/site";
 import type { Project } from "@/data/projects";
 
@@ -33,41 +35,18 @@ export default async function HomePage({ locale }: { locale: Locale }) {
 
   // normalize CMS project docs into the component's shape
   const projects: Project[] = (c.projects as any[]).map(toProject);
-  const shortCaption = (alt: string | undefined, fallback: string) => {
-    const head = (alt ?? "").split(/[:,]/)[0].trim();
-    return head && head.length <= 34 ? head : fallback;
-  };
   // Le CV suit la langue du site : la route /cv sert la version anglaise sur « ?lang=en ».
   const cvHref = locale === "en" ? `${site.cvUrl}${String(site.cvUrl).includes("?") ? "&" : "?"}lang=en` : site.cvUrl;
-  const programs = c.programs as any[];
-  // Les programmes empruntent la fiche des projets : même rangée, même ouverture
-  // animée, mêmes bulles d'outils. Seules les figures changent : montrées
-  // entières, un graphique ou une capture de téléphone ne se recadre pas.
-  const programProjects: Project[] = programs.map((p, i) => {
-    const images = ((p.images ?? []) as any[]).flatMap((im) => {
-      const src = mediaUrl(im.upload) ?? im.src;
-      return src ? [{ src, alt: mediaAlt(im.upload) ?? im.alt ?? "" }] : [];
-    });
-    return {
-      id: `programme-${p.id}`,
-      index: String(i + 1).padStart(2, "0"),
-      type: p.category,
-      title: p.name,
-      // Les outils sont déjà dans les bulles : pas de ligne de caractéristiques.
-      specs: [],
-      desc: p.summary,
-      tags: String(p.stack).split("·").map((s) => s.trim()).filter(Boolean),
-      images,
-      // Légende courte, comme celle des projets : « Écran Parcours », pas la
-      // description entière, qui couvrirait la figure sur téléphone.
-      fieldLabel: shortCaption(images[0]?.alt, p.category),
-      program: true,
-      features: ((p.features ?? []) as any[]).map((f) => f.value),
-      url: p.url ?? undefined,
-      // Démonstrations interactives : reconnues au nom du programme.
-      demo: /^cir/i.test(p.name) ? "cire" : /oscillation/i.test(p.name) ? "oscillation" : /^k[aà]ttan/i.test(p.name) ? "kattan" : undefined,
-    };
-  });
+  const programProjects: Project[] = toProgramProjects(c.programs as any[]);
+
+  // Frise de la section Expérience : un même format de carte pour les trois blocs.
+  type TimelineItem = { key: string; when: string; title: string; org?: string; desc?: string; figure?: string; figureLabel?: string };
+  const place = (org?: string, city?: string) => [org, city].filter(Boolean).join(" · ") || undefined;
+  const timelineGroups = ([
+    { key: "pro", title: t.professionalExperience, items: (c.experience as any[]).map((e): TimelineItem => ({ key: `xp-${e.id}`, when: e.when, title: e.role, org: place(e.org, e.city), desc: e.summary, figure: e.figure, figureLabel: e.figureLabel })) },
+    { key: "freelance", title: t.independentWork, items: (c.freelance as any[]).map((f): TimelineItem => ({ key: `fl-${f.id}`, when: f.when, title: f.title, desc: f.body, figure: f.figure, figureLabel: f.figureLabel })) },
+    { key: "benevolat", title: t.volunteering, items: (c.volunteering as any[]).map((v): TimelineItem => ({ key: `as-${v.id}`, when: v.when, title: v.role, org: place(v.org, v.city), desc: v.summary, figure: v.figure, figureLabel: v.figureLabel })) },
+  ]).filter((g) => g.items.length > 0);
 
   // Données structurées schema.org, construites depuis le CMS pour rester
   // synchronisées avec le contenu. Les DOI rendent les publications
@@ -87,7 +66,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         ...(contact.email ? { email: `mailto:${contact.email}` } : {}),
         ...(contact.phoneHref ? { telephone: contact.phoneHref } : {}),
         address: { "@type": "PostalAddress", addressLocality: "Dakar", addressCountry: "SN" },
-        sameAs: [contact.linkedin, contact.github].filter(Boolean),
+        sameAs: [contact.linkedin, contact.github, contact.instagram].filter(Boolean),
         knowsAbout: ((skills.technical ?? []) as any[]).map((k) => k.value),
       },
       ...((pub.items ?? []) as any[]).map((it) => ({
@@ -185,12 +164,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                   {hero.nameLine1}<br />{hero.nameLine2}<br /><span className="accent">{hero.nameAccent}</span>
                 </h1>
                 {hero.role && <p className="hero-role">{hero.role}</p>}
-                {hero.disciplines && <p className="hero-disciplines">{hero.disciplines}</p>}
-                <p className="hero-sub">{hero.sub}</p>
-                <div className="hero-actions">
-                  <a className="btn btn-primary arrow" href="#projets">{t.seeProjects}</a>
-                  <a className="btn btn-outline" href={cvHref} target="_blank" rel="noopener">{t.downloadMyCv}</a>
-                </div>
               </div>
               {heroImg && (
                 <div className="hero-media">
@@ -203,11 +176,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 </div>
               )}
             </div>
-            <div className="hero-strip">
-              <div className="item"><span className="k">{t.status}</span><span className="v avail"><span className="dot" aria-hidden="true" />{hero.availability}</span></div>
-              <div className="item"><span className="k">{t.location}</span><span className="v">{hero.location}</span></div>
-              <div className="item"><span className="k">{t.domain}</span><span className="v">{hero.domain}</span></div>
-            </div>
           </div>
         </section>
 
@@ -217,7 +185,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.about}</h2></div></div>
             <div className="about-grid">
               <div className="reveal">
-                <p className="about-lead">{about.lead}</p>
                 {(about.body ?? []).map((b: any) => <p className="about-body" key={b.id ?? b.value}>{b.value}</p>)}
                 <p className="about-stat">
                   <span>{about.statYears}</span> {about.statYearsText}{" "}
@@ -260,60 +227,34 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         <section className="section" id="experience">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2></div></div>
-            {/* Comme dans le CV : les expériences professionnelles d'abord, puis
-                les activités indépendantes, enfin l'engagement associatif. Période à gauche, puis le poste,
-                l'entreprise et les missions, derrière un filet vertical. */}
-            <div className="xp-block">
-              <h3 className="xp-block-title reveal">{t.professionalExperience}</h3>
-              <div className="xp">
-                {(c.experience as any[]).map((e) => (
-                  <div className="xp-row reveal" key={e.id}>
-                    <div className="xp-when">{e.when}</div>
-                    <div className="xp-body">
-                      <h4 className="xp-role">{e.role}</h4>
-                      <p className="xp-org">{e.org}{e.city ? <span className="xp-city"> · {e.city}</span> : null}</p>
-                      {e.summary && <p className="xp-summary">{e.summary}</p>}
-                      <ul className="xp-points">{(e.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="xp-block">
-              <h3 className="xp-block-title reveal">{t.independentWork}</h3>
-              <div className="xp">
-                {(c.freelance as any[]).map((f) => (
-                  <div className="xp-row reveal" key={`fl-${f.id}`}>
-                    <div className="xp-when">{f.when}</div>
-                    <div className="xp-body">
-                      <h4 className="xp-role">{f.title}</h4>
-                      {/* La description résume ce que disent les missions : on ne
-                          l'affiche qu'en l'absence de celles-ci. */}
-                      {(f.points ?? []).length === 0 && f.body && <p className="xp-summary">{f.body}</p>}
-                      <ul className="xp-points">{(f.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {(c.volunteering as any[]).length > 0 && (
-              <div className="xp-block">
-                <h3 className="xp-block-title reveal">{t.volunteering}</h3>
-                <div className="xp">
-                  {(c.volunteering as any[]).map((v) => (
-                    <div className="xp-row reveal" key={`as-${v.id}`}>
-                      <div className="xp-when">{v.when}</div>
-                      <div className="xp-body">
-                        <h4 className="xp-role">{v.role}</h4>
-                        <p className="xp-org">{v.org}{v.city ? <span className="xp-city"> · {v.city}</span> : null}</p>
-                        {(v.points ?? []).length === 0 && v.summary && <p className="xp-summary">{v.summary}</p>}
-                        <ul className="xp-points">{(v.points ?? []).map((pt: any) => <li key={pt.id ?? pt.value}>{pt.value}</li>)}</ul>
+            {/* Trois blocs — expérience professionnelle, freelance, bénévolat —,
+                chacun en frise verticale : une carte par poste, le chiffre fort à
+                gauche, la date au-dessus de l'intitulé, une phrase de description.
+                Un point creux signale une activité en cours. Les missions
+                détaillées restent dans l'admin. */}
+            {timelineGroups.map((g) => (
+              <div className="xp-block" key={g.key}>
+                <h3 className="xp-block-title reveal">{g.title}</h3>
+                <ol className="tl">
+                  {g.items.map((it) => (
+                    <li className={"tl-item reveal" + (/en cours|present|ongoing/i.test(it.when) ? " is-ongoing" : "")} key={it.key}>
+                      <span className="tl-dot" aria-hidden="true" />
+                      <div className="tl-card">
+                        {it.figure && (
+                          <p className="tl-fig"><span className="tl-num">{it.figure}</span>{it.figureLabel && <span className="tl-fig-label">{it.figureLabel}</span>}</p>
+                        )}
+                        <div className="tl-body">
+                          <p className="tl-when">{it.when}</p>
+                          <h4 className="tl-role">{it.title}</h4>
+                          {it.org && <p className="tl-org">{it.org}</p>}
+                          {it.desc && <p className="tl-desc">{it.desc}</p>}
+                        </div>
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ol>
               </div>
-            )}
+            ))}
           </div>
         </section>
 
@@ -321,18 +262,13 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         <section className="section band-paper2" id="projets">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.projects}</h2></div></div>
-            {/* Les projets « mis en avant » sont les études de structure : ils
-                gardent la grande rangée. L'architecture suit, en grille serrée,
-                pour ne pas brouiller le profil d'ingénieur structures. */}
-            <Projects projects={projects.filter((p) => p.featured)} t={t} />
-            {projects.some((p) => !p.featured) && (
-              <div className="proj-group">
-                <div className="proj-group-head reveal">
-                  <h3 className="proj-group-title">{t.architectureGroup}</h3>
-                </div>
-                <Projects projects={projects.filter((p) => !p.featured)} t={t} compact />
-              </div>
-            )}
+            {/* Aperçu : les études de structure, en cartes (défilement latéral
+                sur téléphone). La liste complète, architecture comprise, est sur
+                la page Projets. */}
+            <div className="hscroll">
+              <Projects projects={projects.filter((p) => p.featured)} t={t} compact />
+            </div>
+            <p className="see-all reveal"><a className="btn btn-outline arrow" href={pageHref(locale, "projets")}>{t.seeAllProjects}</a></p>
           </div>
         </section>
 
@@ -340,91 +276,56 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         <section className="section" id="competences">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.skills}</h2></div></div>
-            {/* Deux colonnes : les domaines en tableau à gauche, les outils et les
-                qualités dans un encadré à droite, qui reste visible au défilement.
-                Les compétences sont saisies en une ligne séparée par des points
-                médians : on les relie par « · ». */}
-            <div className="skills-split">
-              <table className="skills-table reveal">
-                <thead>
-                  <tr><th scope="col">{t.skillsDomain}</th><th scope="col">{t.skillsItems}</th></tr>
-                </thead>
-                <tbody>
-                  {(skills.domains ?? []).map((d: any, i: number) => (
-                    <tr key={d.id ?? d.title}>
-                      <th scope="row" className="skills-domain"><span className="skills-domain-in"><SkillIcon index={i} /><span>{d.title}</span></span></th>
-                      <td className="skills-items">
-                        {String(d.items ?? "").split("·").map((x: string) => x.trim()).filter(Boolean).join(" · ")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <aside className="skills-aside reveal">
-                {(skills.tools ?? []).length > 0 && (
-                  <div>
-                    <h3 className="skills-aside-title">{t.skillsTools}</h3>
-                    <div className="tool-grid">
-                      {(skills.tools as any[]).map((tool: any) => (
-                        <span className={"tool" + (tool.key ? " key" : "")} key={tool.id ?? tool.name}>{tool.name}</span>
-                      ))}
-                    </div>
-                    {skills.toolsNote && <p className="tools-note small-label">{skills.toolsNote}</p>}
-                  </div>
-                )}
-                {(skills.personal ?? []).length > 0 && (
-                  <div className="skills-aside-block">
-                    <h3 className="skills-aside-title">{t.skillsQualities}</h3>
-                    <ul className="skills-qualities">
-                      {(skills.personal as any[]).map((x: any) => <li key={x.id ?? x.value}>{x.value}</li>)}
-                    </ul>
-                  </div>
-                )}
-              </aside>
-            </div>
+            {/* Les compétences d'abord : les domaines en tableau sur toute la
+                largeur. Les logiciels ferment la
+                section, rangés par famille avec leur logo. Les compétences sont
+                saisies en une ligne séparée par des points médians : on les relie
+                par « · ». */}
+            <table className="skills-table reveal">
+              <thead>
+                <tr><th scope="col">{t.skillsDomain}</th><th scope="col">{t.skillsItems}</th></tr>
+              </thead>
+              <tbody>
+                {(skills.domains ?? []).map((d: any, i: number) => (
+                  <tr key={d.id ?? d.title}>
+                    <th scope="row" className="skills-domain"><span className="skills-domain-in"><SkillIcon index={i} /><span>{d.title}</span></span></th>
+                    <td className="skills-items">
+                      {String(d.items ?? "").split("·").map((x: string) => x.trim()).filter(Boolean).join(" · ")}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <SoftwareList tools={skills.tools ?? []} locale={locale} title={t.software} />
           </div>
         </section>
-        {/* RECHERCHE & OUTILS DE CALCUL — les programmes, puis les publications
-            qu'ils ont servi à produire : CIRÉ va avec l'étude du pont,
-            l'oscillation des portiques avec la dynamique. */}
-        <section className="section band-paper2" id="recherche">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{t.researchAndTools}</h2></div></div>
-            {programs.length > 0 && (
-              <div id="programmes">
-                <div className="proj-group-head reveal"><h3 className="proj-group-title">{st.programs ?? "Programmes"}</h3></div>
-                {/* CIRÉ garde la grande rangée ; les programmes suivants passent en cartes. */}
-                <Projects projects={programProjects.slice(0, 1)} t={t} />
-                {programProjects.length > 1 && (
-                  <div className="proj-group proj-group-tight">
-                    <Projects projects={programProjects.slice(1)} t={t} compact />
-                  </div>
-                )}
+        {/* PROGRAMMES — aperçu en cartes courtes, sans les outils (défilement
+            latéral sur téléphone). Grandes figures et démonstrations détaillées
+            sont sur la page Programmes. */}
+        {programProjects.length > 0 && (
+          <section className="section band-paper2" id="programmes">
+            <div className="wrap">
+              <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.programs ?? "Programmes"}</h2></div></div>
+              <div className="hscroll preview">
+                <Projects projects={programProjects} t={t} compact />
               </div>
-            )}
-            <div className="proj-group">
-              <div className="proj-group-head reveal"><h3 className="proj-group-title">{st.research}</h3></div>
-              <div className="pub-panel">
+              <p className="see-all reveal"><a className="btn btn-outline arrow" href={pageHref(locale, "programmes")}>{t.seeAllPrograms}</a></p>
+            </div>
+          </section>
+        )}
+
+        {/* TRAVAUX DE RECHERCHE — les publications, en cartes côte à côte
+            (défilement latéral sur téléphone). */}
+        {pubItems.length > 0 && (
+          <section className="section" id="recherche">
+            <div className="wrap">
+              <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.research}</h2></div></div>
+              <div className="pub-panel hscroll">
                 <PublicationList items={pubItems} t={t} />
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* FORMATION */}
-        <section className="section" id="formation">
-          <div className="wrap">
-            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.education}</h2></div></div>
-            <div className="edu">
-              {(c.education as any[]).map((e) => (
-                <div className="edu-row" key={e.id}>
-                  <span className="edu-when">{e.when}</span>
-                  <div><p className="edu-title">{e.title}</p><p className="edu-org">{e.org}</p></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* ARTICLES & RÉFLEXIONS */}
         {articles.length > 0 && (
@@ -442,6 +343,21 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           </section>
         )}
 
+        {/* FORMATION */}
+        <section className="section" id="formation">
+          <div className="wrap">
+            <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.education}</h2></div></div>
+            <div className="edu">
+              {(c.education as any[]).map((e) => (
+                <div className="edu-row" key={e.id}>
+                  <span className="edu-when">{e.when}</span>
+                  <div><p className="edu-title">{e.title}</p><p className="edu-org">{e.org}</p></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* CONTACT */}
         <section className="section" id="contact">
           <div className="wrap">
@@ -458,7 +374,6 @@ export default async function HomePage({ locale }: { locale: Locale }) {
               <div className="contact-coords reveal">
                 <div className="row"><div className="k">{t.email}</div><div className="v"><a className="link" href={`mailto:${contact.email}`}>{contact.email}</a></div></div>
                 <div className="row"><div className="k">{t.phone}</div><div className="v"><a className="link" href={`tel:${contact.phoneHref}`}>{contact.phone}</a></div></div>
-                <div className="row"><div className="k">{t.socials}</div><div className="v cc-links"><a className="link" href={contact.linkedin} target="_blank" rel="noopener">LinkedIn</a><a className="link" href={contact.github} target="_blank" rel="noopener">GitHub</a></div></div>
                 <div className="row"><div className="k">{t.location}</div><div className="v">{contact.location}</div></div>
               </div>
               <ContactForm locale={locale} t={t} />
@@ -467,21 +382,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         </section>
       </main>
 
-      <footer className="foot">
-        <div className="wrap foot-inner">
-          <span>© {site.brand} · {new Date().getFullYear()}</span>
-          {/* Réseaux en icônes ; le nom reste lisible par les lecteurs d'écran. */}
-          <div className="foot-links">
-            <a className="foot-icon" href={contact.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z" /></svg>
-            </a>
-            <a className="foot-icon" href={contact.github} target="_blank" rel="noopener" aria-label="GitHub">
-              <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" /></svg>
-            </a>
-            {site.footerNote && <span>{site.footerNote}</span>}
-          </div>
-        </div>
-      </footer>
+      <SiteFooter site={site} contact={contact} />
 
       <Interactions />
     </>

@@ -18,6 +18,11 @@ export function localeHref(locale: Locale): string {
   return locale === DEFAULT_LOCALE ? "/" : `/${locale}`;
 }
 
+/** Adresse d'une page du site dans une langue : /projets en français, /en/projets en anglais. */
+export function pageHref(locale: Locale, path: string): string {
+  return locale === DEFAULT_LOCALE ? `/${path}` : `/${locale}/${path}`;
+}
+
 /** Adresse d'un article dans une langue : /articles/x en français, /en/articles/x en anglais. */
 export function articleHref(locale: Locale, slug: string): string {
   return locale === DEFAULT_LOCALE ? `/articles/${slug}` : `/${locale}/articles/${slug}`;
@@ -80,16 +85,16 @@ const fr = {
   keyPoints: "Points clés",
   /* Intertitres de la section Expérience, dans l'ordre du CV : expériences
      professionnelles, activités indépendantes, puis engagement associatif. */
-  independentWork: "Activités indépendantes",
-  volunteering: "Engagement associatif",
-  professionalExperience: "Expériences professionnelles",
+  independentWork: "Freelance",
+  volunteering: "Bénévolat",
+  professionalExperience: "Expérience professionnelle",
   internships: "Stages & chantier",
   /* Intertitre des projets d'architecture, rangés sous les projets de
      structure dans une grille plus serrée. */
   architectureGroup: "Conception architecturale",
   researchAndTools: "Programmes et travaux de recherche",
   numLocale: "fr-FR",
-  seeDemo: "Voir la démo",
+  seeDemo: "Démo",
   demoKind: "Démo interactive",
   demoDialog: "Démo interactive — {title}",
   demoTitle: "Oscillation libre d'un portique",
@@ -113,16 +118,17 @@ const fr = {
   keyResult: "Résultat clé",
   programFeatures: "Ce que fait le programme",
   programLink: "Voir le code sur GitHub",
-  readPublication: "Lire la publication",
+  readPublication: "Voir l'article",
   skillsDomain: "Domaine",
   skillsItems: "Compétences / référentiels",
   skillsTools: "Outils",
   skillsQualities: "Qualités",
+  software: "Logiciels",
 
   seeRenders: "Voir les rendus",
   seeProject: "Voir le projet",
   seeDrawings: "Voir les planches",
-  seeVisuals: "Voir les visuels",
+  seeVisuals: "Visuels",
   visuals: "visuels",
   views: "vues",
   sheets: "planches",
@@ -139,6 +145,8 @@ const fr = {
   articleBy: "Par",
   publishedOnLinkedin: "Publié initialement sur LinkedIn",
   backToPortfolio: "Retour au portfolio",
+  seeAllProjects: "Voir tous les projets",
+  seeAllPrograms: "Voir tous les programmes",
   allArticles: "Tous les articles",
   articleNotFound: "Article introuvable",
   requestDrawings: "Demander les plans",
@@ -197,14 +205,14 @@ const en: typeof fr = {
   zenodoPublication: "Zenodo publication",
 
   keyPoints: "Key points",
-  independentWork: "Freelance work",
+  independentWork: "Freelance",
   volunteering: "Volunteering",
   professionalExperience: "Professional experience",
   internships: "Internships & site work",
   architectureGroup: "Architectural design",
   researchAndTools: "Programs and research work",
   numLocale: "en-GB",
-  seeDemo: "See demo",
+  seeDemo: "Demo",
   demoKind: "Interactive demo",
   demoDialog: "Interactive demo — {title}",
   demoTitle: "Free vibration of a frame",
@@ -228,16 +236,17 @@ const en: typeof fr = {
   keyResult: "Key result",
   programFeatures: "What it does",
   programLink: "View the code on GitHub",
-  readPublication: "Read the publication",
+  readPublication: "View the article",
   skillsDomain: "Area",
   skillsItems: "Skills / standards",
   skillsTools: "Tools",
   skillsQualities: "Qualities",
+  software: "Software",
 
   seeRenders: "See renders",
   seeProject: "See project",
   seeDrawings: "See drawings",
-  seeVisuals: "See visuals",
+  seeVisuals: "Visuals",
   visuals: "visuals",
   views: "views",
   sheets: "drawings",
@@ -254,6 +263,8 @@ const en: typeof fr = {
   articleBy: "By",
   publishedOnLinkedin: "Originally published on LinkedIn",
   backToPortfolio: "Back to the portfolio",
+  seeAllProjects: "See all projects",
+  seeAllPrograms: "See all programs",
   allArticles: "All articles",
   articleNotFound: "Article not found",
   requestDrawings: "Request drawings",

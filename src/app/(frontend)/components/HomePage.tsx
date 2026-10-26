@@ -1,4 +1,5 @@
 import Interactions from "./Interactions";
+import AutoScroll from "./AutoScroll";
 import Projects from "./Projects";
 import PublicationList from "./PublicationList";
 import Image from "next/image";
@@ -385,6 +386,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       <SiteFooter site={site} contact={contact} />
 
       <Interactions />
+      <AutoScroll />
     </>
   );
 }

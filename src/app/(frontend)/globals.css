@@ -1425,6 +1425,8 @@ a.lang-code:active { transform: translateY(1px); }
   /* Hors de l'écran sur le côté, une carte ne déclencherait jamais son
      apparition : dans une rangée qui défile, elles sont visibles d'emblée. */
   .hscroll .reveal, .art-wrap .reveal { opacity: 1; transform: none; }
+  /* Bandeau continu (AutoScroll) : l'aimantation des cartes freinerait le défilement. */
+  .hscroll .is-marquee, .art-wrap.is-marquee { scroll-snap-type: none; }
 
   /* Espacements resserrés : les grands blancs sont faits pour l'ordinateur. */
   .section { padding-block: 40px; }

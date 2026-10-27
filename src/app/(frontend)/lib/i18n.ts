@@ -84,9 +84,18 @@ const fr = {
 
   keyPoints: "Points clés",
   /* Intertitres de la section Expérience, dans l'ordre du CV : expériences
-     professionnelles, activités indépendantes, puis engagement associatif. */
-  independentWork: "Freelance",
-  volunteering: "Bénévolat",
+     professionnelles, puis engagement associatif. Les activités indépendantes
+     ont leur propre section, « Mes services ». */
+  services: "Mes services",
+  serviceAsk: "Demander un service",
+  serviceChoose: "Décrivez-moi votre besoin, je vous réponds rapidement. Comment préférez-vous me contacter ?",
+  serviceViaWhatsapp: "Réponse la plus rapide",
+  serviceEmailLabel: "E-mail",
+  serviceClose: "Fermer",
+  serviceWaIntro: "Bonjour, je souhaite demander un service : ",
+  serviceEmailSubject: "Demande de service",
+  associatif: "Associatif",
+  learnMore: "En savoir plus",
   professionalExperience: "Expérience professionnelle",
   internships: "Stages & chantier",
   /* Intertitre des projets d'architecture, rangés sous les projets de
@@ -205,8 +214,16 @@ const en: typeof fr = {
   zenodoPublication: "Zenodo publication",
 
   keyPoints: "Key points",
-  independentWork: "Freelance",
-  volunteering: "Volunteering",
+  services: "My services",
+  serviceAsk: "Request a service",
+  serviceChoose: "Tell me what you need and I'll get back to you quickly. How would you like to reach me?",
+  serviceViaWhatsapp: "Fastest reply",
+  serviceEmailLabel: "Email",
+  serviceClose: "Close",
+  serviceWaIntro: "Hello, I would like to request a service: ",
+  serviceEmailSubject: "Service request",
+  associatif: "Community work",
+  learnMore: "Learn more",
   professionalExperience: "Professional experience",
   internships: "Internships & site work",
   architectureGroup: "Architectural design",

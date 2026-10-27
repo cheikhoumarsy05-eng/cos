@@ -240,6 +240,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
 .about-body { font-size: 17px; line-height: 1.65; color: var(--ink-2); max-width: 60ch; margin-top: 22px; }
 .about-body + .about-body { margin-top: 16px; }
+.about-cv { margin-top: clamp(20px, 2.6vw, 28px); }
 .about-stat { font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 2.4vw, 30px); line-height: 1.3; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); margin-top: clamp(26px, 4vw, 38px); max-width: 30ch; }
 .about-stat span { color: var(--accent); }
 .about-stat .u { color: var(--accent); }
@@ -364,6 +365,10 @@ a.lang-code:active { transform: translateY(1px); }
 .contact-coords .row:last-child { border-bottom: 1px solid var(--line); }
 .contact-coords .k { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone-2); margin-bottom: 6px; }
 .contact-coords .v { font-size: 17px; }
+.contact-socials { display: flex; flex-wrap: wrap; gap: 10px; }
+.contact-social { display: inline-grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); transition: background 0.2s var(--e-out), color 0.2s var(--e-out), border-color 0.2s var(--e-out); }
+@media (hover: hover) { .contact-social:hover { background: var(--ink); border-color: var(--ink); color: var(--on-ink); } }
+.contact-social:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 /* FOOTER */
 .foot { border-top: 3px solid var(--ink); padding-block: 36px; }
@@ -1425,8 +1430,24 @@ a.lang-code:active { transform: translateY(1px); }
   /* Hors de l'écran sur le côté, une carte ne déclencherait jamais son
      apparition : dans une rangée qui défile, elles sont visibles d'emblée. */
   .hscroll .reveal, .art-wrap .reveal { opacity: 1; transform: none; }
-  /* Bandeau continu (AutoScroll) : l'aimantation des cartes freinerait le défilement. */
+  /* Carrousel (AutoScroll) : l'aimantation des cartes contrarierait le glissement. */
   .hscroll .is-marquee, .art-wrap.is-marquee { scroll-snap-type: none; }
+  /* Ses flèches : de simples chevrons à l'accent, sans cadre, à mi-hauteur
+     des cartes, dans la marge de chaque côté. Le ruban qui les porte n'a pas
+     de hauteur ; --mi (la demi-hauteur de la rangée) est posée par AutoScroll. */
+  .rangee-nav { position: relative; height: 0; }
+  .rangee-fleche {
+    position: absolute; top: calc(-1 * var(--mi, 120px)); transform: translateY(-50%);
+    width: 36px; height: 44px; display: grid; place-items: center; padding: 0;
+    background: none; border: 0; color: var(--accent); cursor: pointer;
+    filter: drop-shadow(0 0 2px var(--paper)) drop-shadow(0 0 1px var(--paper));
+  }
+  .rangee-fleche svg { width: 24px; height: 24px; }
+  .rangee-fleche.prev { left: calc(-1 * var(--gutter)); }
+  .rangee-fleche.next { right: calc(-1 * var(--gutter)); }
+  .pub-panel .rangee-fleche.prev { left: -14px; }
+  .pub-panel .rangee-fleche.next { right: -14px; }
+  .rangee-fleche:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
   /* Espacements resserrés : les grands blancs sont faits pour l'ordinateur. */
   .section { padding-block: 40px; }
@@ -1474,3 +1495,71 @@ a.lang-code:active { transform: translateY(1px); }
   .tl-fig-label { margin-top: 0; }
   .tl-desc { font-size: 14px; }
 }
+
+/* ============ MES SERVICES ============
+   Les activités indépendantes présentées comme une offre. La section suit
+   l'Expérience sur le même fond : un filet les sépare. Chaque carte porte un
+   bandeau d'encre en tête — le registre « palissade » du site — avec l'icône
+   au trait et le titre en blanc ; au survol, le bandeau passe à l'accent. */
+#services { border-top: 1px solid var(--line); }
+.srv-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: clamp(16px, 2.2vw, 28px); }
+.srv-card { position: relative; display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color 0.25s var(--e-out), transform 0.25s var(--e-out), box-shadow 0.25s var(--e-out); }
+.srv-top { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 20px); background: var(--ink); color: var(--on-ink); padding: clamp(16px, 2vw, 22px) clamp(20px, 2.6vw, 30px); transition: background 0.25s var(--e-out); }
+.srv-ic { flex: none; display: inline-grid; place-items: center; width: 56px; height: 56px; border: 2px solid currentColor; border-radius: var(--radius); }
+.srv-ic svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.srv-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 1.9vw, 23px); line-height: 1.15; letter-spacing: -0.01em; color: inherit; margin: 0; }
+.srv-text { margin: clamp(18px, 2.2vw, 24px) clamp(20px, 2.6vw, 30px) clamp(22px, 2.6vw, 30px); font-size: 16.5px; line-height: 1.6; color: var(--ink-2); max-width: 60ch; }
+@media (hover: hover) {
+  .srv-card:hover { border-color: var(--ink); transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(20, 20, 20, 0.45); }
+  .srv-card:hover .srv-top { background: var(--accent); }
+}
+/* Bouton « Demander un service » et sa fenêtre : un panneau papier cerclé
+   d'encre, deux grands choix — WhatsApp en vert, l'e-mail à l'encre. Sur
+   téléphone, le panneau monte du bas de l'écran. */
+.srv-cta { margin-top: clamp(24px, 3vw, 36px); }
+.srv-dialog { border: 0; padding: 0; background: transparent; max-width: min(520px, calc(100% - 32px)); width: 100%; margin: auto; overflow: visible; }
+.srv-dialog::backdrop { background: color-mix(in srgb, var(--ink) 70%, transparent); backdrop-filter: blur(2px); }
+.srv-dialog[open] .srv-dialog-in { animation: srv-monte 0.35s var(--e-out); }
+@keyframes srv-monte { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+.srv-dialog-in { position: relative; background: var(--paper); border-top: 6px solid var(--accent); border-radius: var(--radius); padding: clamp(24px, 4vw, 36px); box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.5); }
+.srv-dialog-close { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; display: grid; place-items: center; background: none; border: 0; color: var(--stone-2); cursor: pointer; }
+.srv-dialog-close svg { width: 22px; height: 22px; }
+.srv-dialog-close:hover { color: var(--ink); }
+.srv-dialog-close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.srv-dialog-titre { font-family: var(--font-display); font-weight: 900; font-size: clamp(22px, 3vw, 30px); line-height: 1.05; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); margin: 0 40px 10px 0; }
+.srv-dialog-texte { font-size: 16px; line-height: 1.55; color: var(--ink-2); margin: 0 0 clamp(18px, 2.4vw, 24px); }
+.srv-dialog-choix { display: grid; gap: 12px; }
+.srv-choix { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border: 2px solid var(--ink); border-radius: var(--radius); color: var(--ink); transition: background 0.2s var(--e-out), color 0.2s var(--e-out), border-color 0.2s var(--e-out); }
+.srv-choix svg { flex: none; }
+.srv-choix span { display: grid; gap: 2px; min-width: 0; }
+.srv-choix strong { font-family: var(--font-display); font-weight: 800; font-size: 17px; text-transform: uppercase; letter-spacing: 0.02em; }
+.srv-choix small { font-size: 14px; color: var(--stone-2); overflow-wrap: anywhere; transition: color 0.2s var(--e-out); }
+.srv-choix.is-wa { background: #1FA855; border-color: #1FA855; color: #fff; }
+.srv-choix.is-wa small { color: rgba(255, 255, 255, 0.85); }
+@media (hover: hover) {
+  .srv-choix:hover { background: var(--ink); color: var(--on-ink); }
+  .srv-choix:hover small { color: var(--on-ink-mut); }
+  .srv-choix.is-wa:hover { background: #178A45; border-color: #178A45; color: #fff; }
+  .srv-choix.is-wa:hover small { color: rgba(255, 255, 255, 0.85); }
+}
+.srv-choix:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 560px) {
+  .srv-dialog { margin: auto 0 0; max-width: 100%; }
+  .srv-dialog-in { border-radius: 10px 10px 0 0; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) { .srv-card, .srv-top { transition: none; } .srv-card:hover { transform: none; } .srv-dialog[open] .srv-dialog-in { animation: none; } }
+
+/* ============ ASSOCIATIF ============
+   Une carte par association, à la manière d'une fiche de présentation : la
+   photo en bannière, puis le nom, la description et « En savoir plus ». Même
+   fond que la section précédente : un filet les sépare. */
+#associatif { border-top: 1px solid var(--line); }
+.asso-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 560px)); gap: clamp(16px, 2.2vw, 28px); }
+.asso-card { display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 28px -20px rgba(20, 20, 20, 0.45); }
+.asso-photo { position: relative; aspect-ratio: 16 / 10; background: var(--ink); }
+.asso-photo-vide { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; text-align: center; font-family: var(--font-display); font-weight: 900; font-size: clamp(22px, 3vw, 32px); text-transform: uppercase; color: var(--on-ink); }
+.asso-corps { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: clamp(20px, 2.8vw, 30px); }
+.asso-meta { margin: 0; font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.asso-nom { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.12; letter-spacing: -0.01em; color: var(--ink); }
+.asso-desc { margin: 0; font-size: 16.5px; line-height: 1.6; color: var(--ink-2); }
+.asso-btn { margin-top: 8px; }

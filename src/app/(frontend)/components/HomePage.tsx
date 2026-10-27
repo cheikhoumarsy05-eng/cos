@@ -7,6 +7,10 @@ import { getContent, getArticles, mediaUrl, mediaAlt, toProject, toProgramProjec
 import LangSwitch from "./LangSwitch";
 import ArticleCards from "./ArticleCards";
 import ContactForm from "./ContactForm";
+import ServiceIcon from "./ServiceIcons";
+import ServiceContact from "./ServiceContact";
+import { association } from "../lib/associations";
+import SocialIcon, { type Social } from "./SocialIcons";
 import SkillIcon from "./SkillIcons";
 import Monogram from "./Monogram";
 import SiteFooter from "./SiteFooter";
@@ -40,13 +44,13 @@ export default async function HomePage({ locale }: { locale: Locale }) {
   const cvHref = locale === "en" ? `${site.cvUrl}${String(site.cvUrl).includes("?") ? "&" : "?"}lang=en` : site.cvUrl;
   const programProjects: Project[] = toProgramProjects(c.programs as any[]);
 
-  // Frise de la section Expérience : un même format de carte pour les trois blocs.
+  // Frise de la section Expérience : les expériences professionnelles.
+  // Les activités indépendantes (collection `freelance`) forment la section
+  // « Mes services », l'engagement associatif (`volunteering`) la section « Associatif ».
   type TimelineItem = { key: string; when: string; title: string; org?: string; desc?: string; figure?: string; figureLabel?: string };
   const place = (org?: string, city?: string) => [org, city].filter(Boolean).join(" · ") || undefined;
   const timelineGroups = ([
     { key: "pro", title: t.professionalExperience, items: (c.experience as any[]).map((e): TimelineItem => ({ key: `xp-${e.id}`, when: e.when, title: e.role, org: place(e.org, e.city), desc: e.summary, figure: e.figure, figureLabel: e.figureLabel })) },
-    { key: "freelance", title: t.independentWork, items: (c.freelance as any[]).map((f): TimelineItem => ({ key: `fl-${f.id}`, when: f.when, title: f.title, desc: f.body, figure: f.figure, figureLabel: f.figureLabel })) },
-    { key: "benevolat", title: t.volunteering, items: (c.volunteering as any[]).map((v): TimelineItem => ({ key: `as-${v.id}`, when: v.when, title: v.role, org: place(v.org, v.city), desc: v.summary, figure: v.figure, figureLabel: v.figureLabel })) },
   ]).filter((g) => g.items.length > 0);
 
   // Données structurées schema.org, construites depuis le CMS pour rester
@@ -187,11 +191,10 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             <div className="about-grid">
               <div className="reveal">
                 {(about.body ?? []).map((b: any) => <p className="about-body" key={b.id ?? b.value}>{b.value}</p>)}
-                <p className="about-stat">
-                  <span>{about.statYears}</span> {about.statYearsText}{" "}
-                  <span>{about.statProjects}</span> {about.statProjectsText}{" "}
-                  <span>{about.statPublication}</span> {about.statPublicationText} — <em>{about.statNote}</em>
-                </p>
+                <p className="about-cv"><a className="btn btn-ink arrow" href={cvHref} target="_blank" rel="noopener">{t.downloadMyCv}</a></p>
+                {/* Les chiffres « 4 expériences… 20+ projets… 3 travaux » (champs
+                    stat* de l'admin) ont laissé place au texte de présentation,
+                    saisi dans les Paragraphes. Les champs restent en base. */}
                 {(stats.items ?? []).length > 0 && (
                   <dl className="tally" aria-label={stats.title}>
                     {(stats.items as any[]).map((s) => {
@@ -228,14 +231,13 @@ export default async function HomePage({ locale }: { locale: Locale }) {
         <section className="section" id="experience">
           <div className="wrap">
             <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{st.experience}</h2></div></div>
-            {/* Trois blocs — expérience professionnelle, freelance, bénévolat —,
-                chacun en frise verticale : une carte par poste, le chiffre fort à
+            {/* Expérience professionnelle, sans intertitre puisque c'est le seul
+                bloc de la section, en frise verticale : une carte par poste, le chiffre fort à
                 gauche, la date au-dessus de l'intitulé, une phrase de description.
                 Un point creux signale une activité en cours. Les missions
                 détaillées restent dans l'admin. */}
             {timelineGroups.map((g) => (
               <div className="xp-block" key={g.key}>
-                <h3 className="xp-block-title reveal">{g.title}</h3>
                 <ol className="tl">
                   {g.items.map((it) => (
                     <li className={"tl-item reveal" + (/en cours|present|ongoing/i.test(it.when) ? " is-ongoing" : "")} key={it.key}>
@@ -258,6 +260,63 @@ export default async function HomePage({ locale }: { locale: Locale }) {
             ))}
           </div>
         </section>
+
+        {/* MES SERVICES — les activités indépendantes présentées comme une
+            offre : une carte par service, son icône, son titre et un court
+            texte (champ Description de l'admin) ; les Missions, en liste, ne
+            sont pas affichées. Le bouton « Demander un service » ouvre une
+            fenêtre WhatsApp / e-mail. */}
+        {(c.freelance as any[]).length > 0 && (
+          <section className="section" id="services">
+            <div className="wrap">
+              <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{t.services}</h2></div></div>
+              <div className="srv-list">
+                {(c.freelance as any[]).map((f) => (
+                  <article className="srv-card reveal" key={f.id}>
+                    <div className="srv-top">
+                      <ServiceIcon title={f.title} />
+                      <h3 className="srv-title">{f.title}</h3>
+                    </div>
+                    {f.body && <p className="srv-text">{f.body}</p>}
+                  </article>
+                ))}
+              </div>
+              <ServiceContact phone={String(contact.phoneHref ?? contact.phone ?? "")} email={contact.email} t={t} />
+            </div>
+          </section>
+        )}
+
+        {/* ASSOCIATIF — une carte par association : la photo en bannière, le
+            nom, la description, puis « En savoir plus » vers son site. La photo
+            et le lien sont dans ASSOCIATIONS (lib/associations.ts), rangés par
+            nom d'association. */}
+        {(c.volunteering as any[]).length > 0 && (
+          <section className="section" id="associatif">
+            <div className="wrap">
+              <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{t.associatif}</h2></div></div>
+              <div className="asso-list">
+                {(c.volunteering as any[]).map((v) => {
+                  const a = association(v.org);
+                  return (
+                    <article className="asso-card reveal" key={v.id}>
+                      <div className="asso-photo">
+                        {a?.photo
+                          ? <Image src={a.photo} alt={a.photoAlt ?? v.org} fill sizes="(max-width: 760px) 100vw, 640px" style={{ objectFit: "cover" }} />
+                          : <span className="asso-photo-vide" aria-hidden="true">{v.org}</span>}
+                      </div>
+                      <div className="asso-corps">
+                        <p className="asso-meta">{[v.role, v.when].filter(Boolean).join(" · ")}</p>
+                        <h3 className="asso-nom">{v.org}</h3>
+                        {v.summary && <p className="asso-desc">{v.summary}</p>}
+                        {a?.url && <a className="btn btn-outline asso-btn" href={a.url} target="_blank" rel="noopener">{t.learnMore}</a>}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* PROJETS */}
         <section className="section band-paper2" id="projets">
@@ -376,6 +435,19 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 <div className="row"><div className="k">{t.email}</div><div className="v"><a className="link" href={`mailto:${contact.email}`}>{contact.email}</a></div></div>
                 <div className="row"><div className="k">{t.phone}</div><div className="v"><a className="link" href={`tel:${contact.phoneHref}`}>{contact.phone}</a></div></div>
                 <div className="row"><div className="k">{t.location}</div><div className="v">{contact.location}</div></div>
+                {/* Réseaux en icônes, WhatsApp compris — le numéro est celui du champ Téléphone. */}
+                <div className="row"><div className="k">{t.socials}</div><div className="v contact-socials">
+                  {([
+                    ["LinkedIn", contact.linkedin],
+                    ["GitHub", contact.github],
+                    ["Instagram", contact.instagram],
+                    ["WhatsApp", contact.phoneHref && `https://wa.me/${String(contact.phoneHref).replace(/\D/g, "")}`],
+                  ] as [Social, string | undefined][]).filter(([, href]) => href).map(([name, href]) => (
+                    <a className="contact-social" key={name} href={href} target="_blank" rel="noopener" aria-label={name} title={name}>
+                      <SocialIcon name={name} size={22} />
+                    </a>
+                  ))}
+                </div></div>
               </div>
               <ContactForm locale={locale} t={t} />
             </div>

@@ -9,6 +9,7 @@ import ArticleCards from "./ArticleCards";
 import ContactForm from "./ContactForm";
 import ServiceIcon from "./ServiceIcons";
 import ServiceContact from "./ServiceContact";
+import { SERVICE_EMAIL } from "@/lib/site";
 import { association } from "../lib/associations";
 import SocialIcon, { type Social } from "./SocialIcons";
 import SkillIcon from "./SkillIcons";
@@ -168,8 +169,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                 <h1 className="hero-name">
                   {hero.nameLine1}<br />{hero.nameLine2}<br /><span className="accent">{hero.nameAccent}</span>
                 </h1>
-                {hero.role && <p className="hero-role">{hero.role}</p>}
-              </div>
+                {hero.role && <p className="hero-role">{hero.role}</p>}              </div>
               {heroImg && (
                 <div className="hero-media">
                   <div className="frame">
@@ -270,8 +270,28 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           <section className="section" id="services">
             <div className="wrap">
               <div className="ed-head reveal"><p className="ed-index">{n()}</p><div className="ed-head-text"><h2 className="ed-title">{t.services}</h2></div></div>
+              {/* COS Academy, mise en avant en tête des services : elle remplace
+                  la carte « Formateur » de l'admin, masquée ci-dessous. */}
+              <article className="cosa reveal">
+                <div className="cosa-top">
+                  <span className="cosa-logo"><Image src="/logos/cos-academy.png" alt="COS Academy" width={600} height={341} sizes="140px" /></span>
+                  <p className="cosa-tag">{t.cosaTag}</p>
+                  <span className="cosa-badge">{t.cosaBadge}</span>
+                </div>
+                <div className="cosa-body">
+                  <div>
+                    <p className="cosa-text">{t.cosaText}</p>
+                    <a className="btn btn-primary arrow" href="https://academy.cosinus28.com/catalogue" target="_blank" rel="noopener">{t.cosaCta}</a>
+                  </div>
+                  <ul className="cosa-points">
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z" /></svg><span>{t.cosaVideos}</span></li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6v18h12V7z" /><path d="M14 3v4h4M9 12h6M9 16h6" /></svg><span>{t.cosaGuides}</span></li>
+                    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h6l2 2h10v11H3z" /><path d="M7 4h5l2 2" /></svg><span>{t.cosaDocs}<small>{t.cosaDocsDetail}</small></span></li>
+                  </ul>
+                </div>
+              </article>
               <div className="srv-list">
-                {(c.freelance as any[]).map((f) => (
+                {(c.freelance as any[]).filter((f) => !/^(formateur|trainer)/i.test(String(f.title ?? ""))).map((f) => (
                   <article className="srv-card reveal" key={f.id}>
                     <div className="srv-top">
                       <ServiceIcon title={f.title} />
@@ -281,7 +301,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
                   </article>
                 ))}
               </div>
-              <ServiceContact phone={String(contact.phoneHref ?? contact.phone ?? "")} email={contact.email} t={t} />
+              <ServiceContact phone={String(contact.phoneHref ?? contact.phone ?? "")} email={SERVICE_EMAIL} t={t} />
             </div>
           </section>
         )}

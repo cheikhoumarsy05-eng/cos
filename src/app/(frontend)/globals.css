@@ -211,8 +211,7 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .hero-top { display: block; }
 .hero-folio { display: flex; align-items: center; margin: 0 0 14px; font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .hero-name { font-family: var(--font-display); font-weight: 900; font-size: clamp(48px, min(10.45vw, 14.3vh), 209px); line-height: 0.88; letter-spacing: -0.04em; text-transform: uppercase; margin: 0; }
-.hero-name .accent { color: var(--accent); }
-.hero-sub { font-family: var(--font-body); font-size: clamp(16px, 1.7vw, 20px); line-height: 1.4; color: var(--ink-2); max-width: 42ch; margin-top: clamp(14px, 1.8vw, 20px); font-weight: 500; }
+.hero-name .accent { color: var(--accent); }.hero-sub { font-family: var(--font-body); font-size: clamp(16px, 1.7vw, 20px); line-height: 1.4; color: var(--ink-2); max-width: 42ch; margin-top: clamp(14px, 1.8vw, 20px); font-weight: 500; }
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: clamp(16px, 2vw, 24px); }
 .hero-media { position: relative; margin-top: clamp(28px, 4vw, 44px); }
 .hero-media .frame { position: relative; overflow: hidden; border-radius: var(--radius); aspect-ratio: 21 / 9; background: var(--paper-2); border: 2px solid var(--ink); }
@@ -1475,7 +1474,8 @@ a.lang-code:active { transform: translateY(1px); }
 .is-ongoing .tl-dot { background: var(--paper); border: 2px solid var(--accent); box-sizing: border-box; }
 .tl-item + .tl-item { margin-top: 14px; }
 .tl-card { display: flex; gap: clamp(14px, 2vw, 26px); align-items: flex-start; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(14px, 1.8vw, 20px) clamp(14px, 2vw, 24px); }
-.tl-fig { flex: none; min-width: clamp(64px, 8vw, 96px); margin: 0; }
+/* Largeur fixe : le texte de chaque carte commence au même endroit, quelle que soit la longueur de la légende. */
+.tl-fig { flex: none; width: clamp(84px, 9vw, 112px); margin: 0; }
 .tl-num { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(26px, 3vw, 38px); line-height: 1; letter-spacing: -0.02em; color: var(--accent); }
 .tl-fig-label { display: block; margin-top: 6px; font-size: 12px; line-height: 1.3; color: var(--stone-2); }
 .tl-body { min-width: 0; }
@@ -1490,7 +1490,7 @@ a.lang-code:active { transform: translateY(1px); }
   /* Sur téléphone, le chiffre et sa légende passent sur une ligne au-dessus
      du texte, qui garde ainsi toute la largeur de la carte. */
   .tl-card { flex-direction: column; gap: 8px; padding: 12px 14px; }
-  .tl-fig { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+  .tl-fig { display: flex; align-items: baseline; gap: 8px; width: auto; min-width: 0; }
   .tl-num { font-size: 24px; }
   .tl-fig-label { margin-top: 0; }
   .tl-desc { font-size: 14px; }
@@ -1502,6 +1502,19 @@ a.lang-code:active { transform: translateY(1px); }
    bandeau d'encre en tête — le registre « palissade » du site — avec l'icône
    au trait et le titre en blanc ; au survol, le bandeau passe à l'accent. */
 #services { border-top: 1px solid var(--line); }
+/* Carte COS Academy, en tête de la section Mes services. */
+.cosa { background: #fff; border: 2px solid var(--ink); border-radius: var(--radius); overflow: hidden; margin-bottom: clamp(16px, 2.2vw, 28px); }
+.cosa-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; background: var(--ink); padding: clamp(14px, 1.8vw, 18px) clamp(18px, 2.6vw, 30px); }
+.cosa-logo { display: inline-flex; background: #fff; border-radius: var(--radius); padding: 6px 10px; }
+.cosa-logo img { display: block; width: auto; height: clamp(38px, 4vw, 50px); }
+.cosa-tag { flex: 1; min-width: 160px; margin: 0; font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.cosa-badge { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 4px 12px; }
+.cosa-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(18px, 2.4vw, 32px); align-items: start; padding: clamp(18px, 2.6vw, 30px); }
+.cosa-text { margin: 0 0 18px; font-size: clamp(15px, 1.3vw, 17px); line-height: 1.6; color: var(--ink-2); }
+.cosa-points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.cosa-points li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+.cosa-points svg { flex: none; width: 22px; height: 22px; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cosa-points small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: var(--stone-2); }
 .srv-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: clamp(16px, 2.2vw, 28px); }
 .srv-card { position: relative; display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color 0.25s var(--e-out), transform 0.25s var(--e-out), box-shadow 0.25s var(--e-out); }
 .srv-top { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 20px); background: var(--ink); color: var(--on-ink); padding: clamp(16px, 2vw, 22px) clamp(20px, 2.6vw, 30px); transition: background 0.25s var(--e-out); }

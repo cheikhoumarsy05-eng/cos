@@ -10,6 +10,9 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cosinus28.v
 
 export const SITE_TITLE = "Cheikh Oumar Sy · Ingénieur Génie Civil — Structures";
 
+/** Adresse du bouton « Demander un service » (section Mes services) : la boîte de COS Academy, distincte du contact personnel. */
+export const SERVICE_EMAIL = "cos.academy1@gmail.com";
+
 export const SITE_DESCRIPTION =
   "Ingénieur junior en génie civil, spécialisé en structures : béton armé, charpente métallique, dynamique des structures. Disponible pour un poste en bureau d'études ou en contrôle technique.";
 
